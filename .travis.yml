@@ -7,7 +7,7 @@ before_script:
 
 script:
 - "./website/_build.sh"
-- "./website_deploy.sh"
+- "./website/_deploy.sh"
 
 env:
   global:
