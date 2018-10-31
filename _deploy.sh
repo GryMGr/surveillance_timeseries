@@ -44,8 +44,8 @@ function travis-branch-commit() {
         return 1
     fi
     local remote=origin
-    if [[ $GH_TOKEN ]]; then
-        remote=https://$GH_TOKEN@github.com/$TRAVIS_REPO_SLUG
+    if [[ $GITHUB_PAT ]]; then
+        remote=https://$GITHUB_PAT@github.com/$TRAVIS_REPO_SLUG
     fi
     if [[ $TRAVIS_BRANCH != master ]]; then
         msg "not pushing updates to branch $TRAVIS_BRANCH"
