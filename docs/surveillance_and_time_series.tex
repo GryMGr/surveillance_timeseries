@@ -89,24 +89,10 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018-10-31}
+    \date{2018-11-08}
 
 \usepackage{booktabs}
 
-\usepackage{amsthm}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}{Lemma}[section]
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
-\newtheorem{corollary}{Corollary}[section]
-\newtheorem{proposition}{Proposition}[section]
-\theoremstyle{definition}
-\newtheorem{example}{Example}[section]
-\theoremstyle{definition}
-\newtheorem{exercise}{Exercise}[section]
-\theoremstyle{remark}
-\newtheorem*{remark}{Remark}
-\newtheorem*{solution}{Solution}
 \begin{document}
 \maketitle
 
@@ -117,9 +103,10 @@
 }
 \listoftables
 \listoffigures
-\section{Information}\label{information}
+\section*{Preface}\label{preface}
+\addcontentsline{toc}{section}{Preface}
 
-This is a short presentation given at FHI blah.
+This is a short presentation given at FHI for the surveillance group.
 
 \section{Integrating the R package into the physical
 system}\label{integrating-the-r-package-into-the-physical-system}
@@ -499,7 +486,7 @@ git merge upstream/master
   \href{www.travis-ci.org}{travis-ci} unit tests have finished
 \end{enumerate}
 
-\includegraphics[width=38.11in]{images/pull_request_before_checks}
+\includegraphics{images/pull_request_before_checks.png}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -509,7 +496,7 @@ git merge upstream/master
   Please make sure that the unit tests \texttt{PASS} before merging in!!
 \end{enumerate}
 
-\includegraphics[width=38.11in]{images/pull_request_checks_failed}
+\includegraphics{images/pull_request_checks_failed.png}
 
 \subsection{Code style}\label{code-style}
 
