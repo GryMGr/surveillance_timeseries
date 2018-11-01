@@ -1,5 +1,5 @@
-book_filename: "website"
+book_filename: "surveillance_and_time_series"
 delete_merged_file: true
 language:
   ui:
-    chapter_name: "Chapter "
+    chapter_name: ""
