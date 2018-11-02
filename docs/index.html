@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Time Series Analysis</title>
+  <title>Time Series and Longitudinal Analysis</title>
   <meta name="description" content="A short course in learning which statistical methods should be applied where.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Time Series Analysis" />
+  <meta property="og:title" content="Time Series and Longitudinal Analysis" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="folkehelseinstituttet/surveillance_timeseries" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Time Series Analysis" />
+  <meta name="twitter:title" content="Time Series and Longitudinal Analysis" />
   
   <meta name="twitter:description" content="A short course in learning which statistical methods should be applied where." />
   
@@ -101,7 +101,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">Longitudinal Analysis</a></li>
+<li><a href="./">Time Series/Longitudinal</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
@@ -137,7 +137,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series and Longitudinal Analysis</a>
           </h1>
         </div>
 
@@ -146,13 +146,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="header">
-<h1 class="title">Time Series Analysis</h1>
+<h1 class="title">Time Series and Longitudinal Analysis</h1>
 <p class="author"><em>Richard White</em></p>
 <p class="date"><em>2018-11-02</em></p>
 </div>
 <div id="preface" class="section level1 unnumbered">
 <h1>Preface</h1>
-<p>Time series analysis</p>
+<p>When dealing with data measured over time, there are two kinds of analyses that can be performed.</p>
+<p>“Time series” analyses generally deal with one variable (the outcome). We can then either:</p>
+<ol style="list-style-type: decimal">
+<li>Predict the future only using the previous observations. E.g. predict tomorrow’s temperature, using today’s and yesterday’s temperature as exposures. We will not be focusing on these kinds of analyses.</li>
+<li>Estimate descriptive statistics about the data. E.g. Today’s data is much higher than expected (outbreak?). We will focus on these kinds of analyses.</li>
+</ol>
+<p>If we have more than one variable measured over time (e.g. outcome and an exposure) then we can run regression analyses. E.g. seeing how the number of tuberculosis patients (outcome) is affected by the number of immigrants to Norway (exposure) over a 20 year period. We will focus on these kinds of analyses.</p>
+<p>It is important to note that if we define our exposure as “time” then we can use the regression framework to estimate descriptive statistics about the data. This means we can use the same regression framework for the two kinds of analyses we will be focusing on.</p>
+<p>“Regression analyses” are very similar to ordinary regressions that you have been working with for many years. The only difference is that they <strong>may</strong> have more advanced data structures that your normal methods cannot handle.</p>
 
 </div>
             </section>
