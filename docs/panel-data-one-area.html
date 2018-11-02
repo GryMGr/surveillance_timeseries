@@ -254,7 +254,7 @@ nfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op
 <p><em>NOTE:</em> See that this is basically the same as a normal regression.</p>
 <p>If we want to identify outbreaks, then we need to use the standard prediction interval formula:</p>
 <p><span class="math display">\[
-\text{95% CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
+95\% \text{ CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
 \]</span> This allows us to identify what the expected thresholds are:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred &lt;-<span class="st"> </span><span class="kw">predict</span>(nfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>, <span class="dt">se.fit =</span> T, <span class="dt">newdata =</span> d)
 d[, threshold0 <span class="op">:</span><span class="er">=</span><span class="st"> </span>pred<span class="op">$</span>fit]

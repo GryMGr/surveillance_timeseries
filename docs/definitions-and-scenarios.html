@@ -165,7 +165,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">1.4</span> Useful Code</h2>
 <p>This code is used to calculate prediction intervals. In its most basic form it is:</p>
 <p><span class="math display">\[
-\text{95% CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
+95\% \text{ CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
 \]</span> However, due to the skewness of the count data, we often choose to use a <code>2/3s transformation</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FarringtonThreshold &lt;-<span class="st"> </span><span class="cf">function</span>(pred, phi, <span class="dt">alpha =</span> <span class="ot">NULL</span>, <span class="dt">z =</span> <span class="ot">NULL</span>, <span class="dt">skewness.transform =</span> <span class="st">&quot;none&quot;</span>) {
   mu0 &lt;-<span class="st"> </span>pred<span class="op">$</span>fit

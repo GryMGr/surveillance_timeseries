@@ -169,61 +169,22 @@ we can use the regression framework to estimate descriptive statistics
 about the data. This means we can use the same regression framework for
 the two kinds of analyses we will be focusing on.
 
-``Regression analyses'' are very similar to ordinary regressions that
-you have been working with for many years. The only difference is that
-they \textbf{may} have more advanced data structures that your normal
-methods cannot handle.
+The ``regression framework'' is very similar to ordinary regressions
+that you have been working with for many years. The only difference is
+that some of the data \textbf{may} have more advanced data structures
+that your normal methods cannot handle.
 
-\chapter{Reference}\label{reference}
+\chapter{Definitions and Scenarios}\label{definitions-and-scenarios}
 
-\section{Scope of this course}\label{scope-of-this-course}
-
-When dealing with longitudinal data, there are two kinds of analyses
-that can be performed.
-
-``Time series'' analyses generally deal with one variable. The aim is to
-then predict the future only using the previous observations. A common
-example would be to predict tomorrow's temperature, using today's and
-yesterday's temperature as exposures. We will not be focusing on these
-kinds of analyses.
-
-``Regression analyses'' are very similar to ordinary regressions that
-you have been working with for many years. The only difference is that
-they \textbf{may} have more advanced data structures that your current
-methods cannot handle.
-
-For example, if you want to see how the number of tuberculosis patients
-(outcome) is affected by the number of immigrants to Norway (exposure)
-over a 20 year period, then the number of patients in each year might be
-associated with each other, which might break assumptions of the
-regression models that you normally use (independent residuals). To
-account for the advanced structure of the data (correlation between
-different years) we will use more advanced regression techniques. This
-is what we will be focusing on in this course.
-
-To recap: this course will let you run ``normal regressions'' in
-situations where the data structure would ordinarily prohibit you from
-running regression models. These situations mostly pertain to clusters
-of correlated data.
-
-\newpage
-
-\section{Introduction}\label{introduction}
-
-There are two important definitions in this course:
-
-\begin{itemize}
-\tightlist
-\item
-  Panel data
-\item
-  Autocorrelation
-\end{itemize}
+\section{Panel Data}\label{panel-data}
 
 Panel data is a set of data with measurements repeated at equally spaced
-points. For example, weight data recorded every day, or every week, or
-every year would be considered panel data. A person who records three
-weight measurements randomly in 2018 would not be considered panel data.
+points. For example, number of influenza cases recorded every day, or
+every week, or every year would be considered panel data. The number of
+influenza cases on Jan 31, Feb 3, and Nov 21 in 2018 would not be
+considered panel data.
+
+\section{Autocorrelation}\label{autocorrelation}
 
 When you have panel data, autocorrelation is the correlation between
 subsequent observations. For example, if you have daily observations,
@@ -231,21 +192,19 @@ then the 1 day autocorrelation is the correlation between observations 1
 day apart, and likewise the 2 day autocorrelation is the correlation
 between observations 2 days apart.
 
-In this course we will consider 5 scenarios where we have multiple
+\section{Scenarios}\label{scenarios}
+
+In this course we will consider three scenarios where we have multiple
 observations for each geographical area:
 
 \begin{itemize}
 \tightlist
 \item
-  Panel data: One geographical area, no autocorrelation
-\item
-  Panel data: One geographical area, with autocorrelation
+  Panel data: One geographical area, with/without autocorrelation
 \item
   Not panel data: Multiple geographical areas
 \item
-  Panel data: Multiple geographical areas, no autocorrelation
-\item
-  Panel data: Multiple geographical areas, with autocorrelation
+  Panel data: Multiple geographical areas, with/without autocorrelation
 \end{itemize}
 
 Note, the following scenario can be covered by standard regression
@@ -258,278 +217,461 @@ models:
   geographical area
 \end{itemize}
 
-\newpage
+\section{Useful Code}\label{useful-code}
 
-\section{Method summary}\label{method-summary}
+This code is used to calculate prediction intervals. In its most basic
+form it is:
 
-\subsection{Panel data: One geographical area, no
-autocorrelation}\label{panel-data-one-geographical-area-no-autocorrelation}
+\[
+95\% \text{ CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
+\] However, due to the skewness of the count data, we often choose to
+use a \texttt{2/3s\ transformation}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{FarringtonThreshold <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(pred, phi, }\DataTypeTok{alpha =} \OtherTok{NULL}\NormalTok{, }\DataTypeTok{z =} \OtherTok{NULL}\NormalTok{, }\DataTypeTok{skewness.transform =} \StringTok{"none"}\NormalTok{) \{}
+\NormalTok{  mu0 <-}\StringTok{ }\NormalTok{pred}\OperatorTok{$}\NormalTok{fit}
+\NormalTok{  tau <-}\StringTok{ }\NormalTok{phi }\OperatorTok{+}\StringTok{ }\NormalTok{(pred}\OperatorTok{$}\NormalTok{se.fit}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{/}\StringTok{ }\NormalTok{mu0}
+  \ControlFlowTok{switch}\NormalTok{(skewness.transform, }\DataTypeTok{none =}\NormalTok{ \{}
+\NormalTok{    se <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(mu0 }\OperatorTok{*}\StringTok{ }\NormalTok{tau)}
+\NormalTok{    exponent <-}\StringTok{ }\DecValTok{1}
+\NormalTok{  \}, }\StringTok{`}\DataTypeTok{1/2}\StringTok{`}\NormalTok{ =}\StringTok{ }\NormalTok{\{}
+\NormalTok{    se <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1} \OperatorTok{/}\StringTok{ }\DecValTok{4} \OperatorTok{*}\StringTok{ }\NormalTok{tau)}
+\NormalTok{    exponent <-}\StringTok{ }\DecValTok{1} \OperatorTok{/}\StringTok{ }\DecValTok{2}
+\NormalTok{  \}, }\StringTok{`}\DataTypeTok{2/3}\StringTok{`}\NormalTok{ =}\StringTok{ }\NormalTok{\{}
+\NormalTok{    se <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{4} \OperatorTok{/}\StringTok{ }\DecValTok{9} \OperatorTok{*}\StringTok{ }\NormalTok{mu0}\OperatorTok{^}\NormalTok{(}\DecValTok{1} \OperatorTok{/}\StringTok{ }\DecValTok{3}\NormalTok{) }\OperatorTok{*}\StringTok{ }\NormalTok{tau)}
+\NormalTok{    exponent <-}\StringTok{ }\DecValTok{2} \OperatorTok{/}\StringTok{ }\DecValTok{3}
+\NormalTok{  \}, \{}
+    \KeywordTok{stop}\NormalTok{(}\StringTok{"No proper exponent in algo.farrington.threshold."}\NormalTok{)}
+\NormalTok{  \})}
+  \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{is.null}\NormalTok{(z)) z <-}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{alpha }\OperatorTok{/}\StringTok{ }\DecValTok{2}\NormalTok{)}
+\NormalTok{  lu <-}\StringTok{ }\NormalTok{(mu0}\OperatorTok{^}\NormalTok{exponent }\OperatorTok{+}\StringTok{ }\NormalTok{z }\OperatorTok{*}
+\StringTok{    }\NormalTok{se)}\OperatorTok{^}\NormalTok{(}\DecValTok{1} \OperatorTok{/}\StringTok{ }\NormalTok{exponent)}
+
+  \KeywordTok{return}\NormalTok{(lu)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\chapter{Panel Data - One Area}\label{panel-data---one-area}
+
+\section{Aim}\label{aim}
+
+We are given a dataset containing daily counts of diseases from one
+geographical area. We want to identify:
+
+\begin{itemize}
+\tightlist
+\item
+  Does seasonality exist?
+\item
+  If seasonality exists, when are the high/low seasons?
+\item
+  Is there a general yearly trend (i.e.~increasing or decreasing from
+  year to year?)
+\item
+  Is daily rainfall associated with the number of cases?
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(data.table)}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{4}\NormalTok{)}
+
+\NormalTok{AMPLITUDE <-}\StringTok{ }\FloatTok{1.5}
+\NormalTok{SEASONAL_HORIZONTAL_SHIFT <-}\StringTok{ }\DecValTok{20}
+
+\NormalTok{d <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{date=}\KeywordTok{seq.Date}\NormalTok{(}
+  \DataTypeTok{from=}\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2000-01-01"}\NormalTok{),}
+  \DataTypeTok{to=}\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2018-12-31"}\NormalTok{),}
+  \DataTypeTok{by=}\DecValTok{1}\NormalTok{))}
+\NormalTok{d[,date}\OperatorTok{:}\ErrorTok{=}\KeywordTok{as.Date}\NormalTok{(date,}\DataTypeTok{origin=}\StringTok{"1970-01-1"}\NormalTok{)]}
+\NormalTok{d[,year}\OperatorTok{:}\ErrorTok{=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date,}\StringTok{"%G"}\NormalTok{))]}
+\NormalTok{d[,week}\OperatorTok{:}\ErrorTok{=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date,}\StringTok{"%V"}\NormalTok{))]}
+\NormalTok{d[,month}\OperatorTok{:}\ErrorTok{=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date,}\StringTok{"%m"}\NormalTok{))]}
+\NormalTok{d[,yearMinus2000}\OperatorTok{:}\ErrorTok{=}\NormalTok{year}\OperatorTok{-}\DecValTok{2000}\NormalTok{]}
+\NormalTok{d[,dailyrainfall}\OperatorTok{:}\ErrorTok{=}\KeywordTok{runif}\NormalTok{(.N, }\DataTypeTok{min=}\DecValTok{0}\NormalTok{, }\DataTypeTok{max=}\DecValTok{10}\NormalTok{)]}
+
+\NormalTok{d[,dayOfYear}\OperatorTok{:}\ErrorTok{=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date,}\StringTok{"%j"}\NormalTok{))]}
+\NormalTok{d[,seasonalEffect}\OperatorTok{:}\ErrorTok{=}\KeywordTok{sin}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{pi}\OperatorTok{*}\NormalTok{(dayOfYear}\OperatorTok{-}\NormalTok{SEASONAL_HORIZONTAL_SHIFT)}\OperatorTok{/}\DecValTok{365}\NormalTok{)]}
+\NormalTok{d[,mu }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{exp}\NormalTok{(}\FloatTok{0.1} \OperatorTok{+}\StringTok{ }\NormalTok{yearMinus2000}\OperatorTok{*}\FloatTok{0.1} \OperatorTok{+}\StringTok{ }\NormalTok{seasonalEffect}\OperatorTok{*}\NormalTok{AMPLITUDE)]}
+\NormalTok{d[,y}\OperatorTok{:}\ErrorTok{=}\KeywordTok{rpois}\NormalTok{(.N,mu)]}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Data}\label{data}
+
+Here we show the true data, and note that there is an increasing annual
+trend (the data gets higher as time goes on) and there is a seasonal
+pattern (one peak/trough per year)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{date,}\DataTypeTok{y=}\NormalTok{y))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd=}\FloatTok{0.25}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_date}\NormalTok{(}\StringTok{"Time"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Cases"}\NormalTok{)}
+\NormalTok{q}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{website_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+We split out the data for a few years and see a clear seasonal trend:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d[year }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{2005}\OperatorTok{:}\DecValTok{2010}\NormalTok{)],}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{dayOfYear,}\DataTypeTok{y=}\NormalTok{y))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\NormalTok{year)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{()}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_smooth}\NormalTok{(}\DataTypeTok{colour=}\StringTok{"red"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Day of year"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Cases"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-// STATA CODE
-glm y yearminus2000 dailyrainfall cos365 sin365, family(poisson)
+## Scale for 'y' is already present. Adding another scale for 'y', which
+## will replace the existing scale.
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# R CODE}
-\NormalTok{fit1 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall }\OperatorTok{+}\StringTok{ }\NormalTok{sin365 }\OperatorTok{+}\StringTok{ }\NormalTok{cos365, }\DataTypeTok{data=}\NormalTok{d, }\DataTypeTok{family=}\KeywordTok{poisson}\NormalTok{())}
-\KeywordTok{residuals}\NormalTok{(fit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{q}
 \end{Highlighting}
 \end{Shaded}
-
-\subsection{Panel data: One geographical area, with
-autocorrelation}\label{panel-data-one-geographical-area-with-autocorrelation}
 
 \begin{verbatim}
-// STATA CODE
-glm y yearminus2000 cos365 sin365, family(poisson) vce(robust)
+## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 \end{verbatim}
+
+\includegraphics{website_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\section{Model With Non-Parametric
+Seasonality}\label{model-with-non-parametric-seasonality}
+
+If we want to investigate the seasonality of our data, and identify when
+are the peaks and troughs, we can use non-parametric approaches. They
+are flexible and easy to implement, but they can lack power and be hard
+to interpret:
+
+\begin{itemize}
+\tightlist
+\item
+  Create a categorical variable for the seasons (e.g. \texttt{spring},
+  \texttt{summer}, \texttt{autumn}, \texttt{winter}) and include this in
+  the regression model
+\item
+  Create a categorical variable for the months (e.g. \texttt{Jan},
+  \texttt{Feb}, \ldots{}, \texttt{Dec}) and include this in the
+  regression model
+\end{itemize}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# R CODE}
-\NormalTok{fit <-}\StringTok{ }\NormalTok{MASS}\OperatorTok{::}\KeywordTok{glmmPQL}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000}\OperatorTok{+}\NormalTok{sin365 }\OperatorTok{+}\StringTok{ }\NormalTok{cos365, }\DataTypeTok{random =} \OperatorTok{~}\StringTok{ }\DecValTok{1} \OperatorTok{|}\StringTok{ }\NormalTok{ID,}
-                \DataTypeTok{family =}\NormalTok{ poisson, }\DataTypeTok{data =}\NormalTok{ d,}
-                \DataTypeTok{correlation=}\NormalTok{nlme}\OperatorTok{::}\KeywordTok{corAR1}\NormalTok{(}\DataTypeTok{form=}\OperatorTok{~}\NormalTok{dayOfSeries}\OperatorTok{|}\NormalTok{ID))}
-\NormalTok{r <-}\StringTok{ }\KeywordTok{residuals}\NormalTok{(fit1, }\DataTypeTok{type =} \StringTok{"normalized"}\NormalTok{)}
-\KeywordTok{pacf}\NormalTok{(r)}
+\NormalTok{nfit0 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall, }\DataTypeTok{data=}\NormalTok{d, }\DataTypeTok{family=}\KeywordTok{poisson}\NormalTok{())}
+\NormalTok{nfit1 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall }\OperatorTok{+}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(month), }\DataTypeTok{data=}\NormalTok{d, }\DataTypeTok{family=}\KeywordTok{poisson}\NormalTok{())}
 \end{Highlighting}
 \end{Shaded}
 
-\subsection{Not panel data: Multiple geographical
-areas}\label{not-panel-data-multiple-geographical-areas}
+We can test the \texttt{month} categorical variable using a likelihood
+ratio test:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lmtest}\OperatorTok{::}\KeywordTok{lrtest}\NormalTok{(nfit0, nfit1)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-// STATA CODE
-meglm y x yearMinus2000 || fylke:, family(poisson)
+## Likelihood ratio test
+## 
+## Model 1: y ~ yearMinus2000 + dailyrainfall
+## Model 2: y ~ yearMinus2000 + dailyrainfall + as.factor(month)
+##   #Df LogLik Df Chisq Pr(>Chisq)    
+## 1   3 -26904                        
+## 2  14 -13251 11 27307  < 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 \end{verbatim}
+
+And then we can look at the output of our regression:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# R CODE}
-\NormalTok{fit <-}\StringTok{ }\NormalTok{lme4}\OperatorTok{::}\KeywordTok{glmer}\NormalTok{(y}\OperatorTok{~}\NormalTok{x }\OperatorTok{+}\StringTok{ }\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{fylke),}\DataTypeTok{data=}\NormalTok{d,}\DataTypeTok{family=}\KeywordTok{poisson}\NormalTok{())}
+\KeywordTok{summary}\NormalTok{(nfit1)}
 \end{Highlighting}
 \end{Shaded}
-
-\subsection{Panel data: Multiple geographical areas, no
-autocorrelation}\label{panel-data-multiple-geographical-areas-no-autocorrelation}
 
 \begin{verbatim}
-// STATA CODE
-meglm y yearminus2000 cos365 sin365 || fylke:, family(poisson)
+## 
+## Call:
+## glm(formula = y ~ yearMinus2000 + dailyrainfall + as.factor(month), 
+##     family = poisson(), data = d)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -4.2874  -0.9578  -0.1498   0.5894   3.9130  
+## 
+## Coefficients:
+##                     Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)        -0.003849   0.028882  -0.133    0.894    
+## yearMinus2000       0.101654   0.001053  96.578   <2e-16 ***
+## dailyrainfall       0.000442   0.001852   0.239    0.811    
+## as.factor(month)2   0.751048   0.029854  25.157   <2e-16 ***
+## as.factor(month)3   1.303525   0.027328  47.700   <2e-16 ***
+## as.factor(month)4   1.543098   0.026781  57.619   <2e-16 ***
+## as.factor(month)5   1.425207   0.026992  52.801   <2e-16 ***
+## as.factor(month)6   0.955465   0.028647  33.354   <2e-16 ***
+## as.factor(month)7   0.286169   0.032060   8.926   <2e-16 ***
+## as.factor(month)8  -0.541443   0.039932 -13.559   <2e-16 ***
+## as.factor(month)9  -1.114005   0.049322 -22.586   <2e-16 ***
+## as.factor(month)10 -1.350683   0.053389 -25.299   <2e-16 ***
+## as.factor(month)11 -1.235671   0.051682 -23.909   <2e-16 ***
+## as.factor(month)12 -0.754107   0.042777 -17.629   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 45536.8  on 6939  degrees of freedom
+## Residual deviance:  8045.6  on 6926  degrees of freedom
+## AIC: 26529
+## 
+## Number of Fisher Scoring iterations: 5
 \end{verbatim}
 
+\emph{NOTE:} See that this is basically the same as a normal regression.
+
+If we want to identify outbreaks, then we need to use the standard
+prediction interval formula:
+
+\[
+95\% \text{ CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
+\] This allows us to identify what the expected thresholds are:
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# R CODE}
-\NormalTok{fit <-}\StringTok{ }\NormalTok{MASS}\OperatorTok{::}\KeywordTok{glmmPQL}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000}\OperatorTok{+}\NormalTok{sin365 }\OperatorTok{+}\StringTok{ }\NormalTok{cos365, }\DataTypeTok{random =} \OperatorTok{~}\StringTok{ }\DecValTok{1} \OperatorTok{|}\StringTok{ }\NormalTok{fylke,}
-                \DataTypeTok{family =}\NormalTok{ poisson, }\DataTypeTok{data =}\NormalTok{ d)}
-\NormalTok{r <-}\StringTok{ }\KeywordTok{residuals}\NormalTok{(fit1, }\DataTypeTok{type =} \StringTok{"normalized"}\NormalTok{)}
-\KeywordTok{pacf}\NormalTok{(r)}
+\NormalTok{pred <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(nfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{, }\DataTypeTok{se.fit =}\NormalTok{ T, }\DataTypeTok{newdata =}\NormalTok{ d)}
+\NormalTok{d[, threshold0 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{pred}\OperatorTok{$}\NormalTok{fit]}
+\NormalTok{d[, threshold2 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{FarringtonThreshold}\NormalTok{(pred, }\DataTypeTok{phi =} \DecValTok{1}\NormalTok{, }\DataTypeTok{z =} \DecValTok{2}\NormalTok{, }\DataTypeTok{skewness.transform =} \StringTok{"2/3"}\NormalTok{)]}
 \end{Highlighting}
 \end{Shaded}
 
-\subsection{Panel data: Multiple geographical areas, with
-autocorrelation}\label{panel-data-multiple-geographical-areas-with-autocorrelation}
-
-\begin{verbatim}
-// STATA CODE
-meglm y yearminus2000 cos365 sin365 || fylke:, family(poisson) vce(robust)
-\end{verbatim}
-
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# R CODE}
-\NormalTok{fit <-}\StringTok{ }\NormalTok{MASS}\OperatorTok{::}\KeywordTok{glmmPQL}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000}\OperatorTok{+}\NormalTok{sin365 }\OperatorTok{+}\StringTok{ }\NormalTok{cos365, }\DataTypeTok{random =} \OperatorTok{~}\StringTok{ }\DecValTok{1} \OperatorTok{|}\StringTok{ }\NormalTok{fylke,}
-                \DataTypeTok{family =}\NormalTok{ poisson, }\DataTypeTok{data =}\NormalTok{ d,}
-                \DataTypeTok{correlation=}\NormalTok{nlme}\OperatorTok{::}\KeywordTok{corAR1}\NormalTok{(}\DataTypeTok{form=}\OperatorTok{~}\NormalTok{dayOfSeries}\OperatorTok{|}\NormalTok{fylke))}
-\NormalTok{r <-}\StringTok{ }\KeywordTok{residuals}\NormalTok{(fit1, }\DataTypeTok{type =} \StringTok{"normalized"}\NormalTok{)}
-\KeywordTok{pacf}\NormalTok{(r)}
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d[year}\OperatorTok{>}\DecValTok{2015}\NormalTok{],}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{date,}\DataTypeTok{y=}\NormalTok{y))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{mapping=}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin=}\OperatorTok{-}\OtherTok{Inf}\NormalTok{,}\DataTypeTok{ymax=}\NormalTok{threshold2),}\DataTypeTok{fill=}\StringTok{"green"}\NormalTok{,}\DataTypeTok{alpha=}\FloatTok{0.5}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{mapping=}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin=}\NormalTok{threshold2,}\DataTypeTok{ymax=}\OtherTok{Inf}\NormalTok{),}\DataTypeTok{fill=}\StringTok{"red"}\NormalTok{,}\DataTypeTok{alpha=}\FloatTok{0.5}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd=}\FloatTok{0.25}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data=}\NormalTok{d[year}\OperatorTok{>}\DecValTok{2015} \OperatorTok{&}\StringTok{ }\NormalTok{y}\OperatorTok{>}\NormalTok{threshold2],}\DataTypeTok{colour=}\StringTok{"black"}\NormalTok{,}\DataTypeTok{size=}\FloatTok{2.5}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data=}\NormalTok{d[year}\OperatorTok{>}\DecValTok{2015} \OperatorTok{&}\StringTok{ }\NormalTok{y}\OperatorTok{>}\NormalTok{threshold2],}\DataTypeTok{colour=}\StringTok{"red"}\NormalTok{,}\DataTypeTok{size=}\FloatTok{1.5}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_date}\NormalTok{(}\StringTok{"Time"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Cases"}\NormalTok{)}
+\NormalTok{q}
 \end{Highlighting}
 \end{Shaded}
 
-\newpage
+\includegraphics{website_files/figure-latex/unnamed-chunk-9-1.pdf}
 
-\section{Identifying your scenario}\label{identifying-your-scenario}
+\section{Model With Parametric
+Seasonality}\label{model-with-parametric-seasonality}
 
-\subsection{Step 1: Do you have panel
-data?}\label{step-1-do-you-have-panel-data}
+Parametric approaches are more powerful but require more effort:
 
-This step should be fairly simple. If your data has equally spaced time
-intervals between them, you have panel data.
+\begin{itemize}
+\tightlist
+\item
+  Identify the periodicity of the seasonality (how many days between
+  peaks?)
+\item
+  Using trigonometry, transform \texttt{day\ of\ year} into variables
+  that appropriately model the observed periodicity
+\item
+  Obtain coefficient estimates
+\item
+  Back-transform these estimates into human-understandable values (day
+  of peak, day of trough)
+\end{itemize}
 
-\subsection{Step 2: Do you have multiple geographical
-areas?}\label{step-2-do-you-have-multiple-geographical-areas}
+\emph{NOTE:} You don't always have to investigate seasonality! It
+depends entirely on what the purpose of your analysis is!
 
-Again, fairly simple, just look at your data.
-
-\subsection{Step 3: Do you have
-autocorrelation?}\label{step-3-do-you-have-autocorrelation}
-
-Firstly, you must run a model pretending that you do not have
-autocorrelation.
-
-You then inspect the residuals from the model and see if autocorrelation
-exists. This is done with two statistical procedures: \texttt{pacf} (for
-\texttt{autoregressive\ models}, the most common type of
-autocorrelation), and \texttt{acf} (for
-\texttt{moving\ average\ models}, a less common type of
-autocorrelation).
-
-\newpage 
-
-\subsection{AR(1) data}\label{ar1-data}
+The Lomb-Scargle Periodogram shows a clear seasonality with a period of
+365 days.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{y <-}\StringTok{ }\KeywordTok{round}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{arima.sim}\NormalTok{(}\DataTypeTok{model=}\KeywordTok{list}\NormalTok{(}\StringTok{"ar"}\NormalTok{=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{)), }\DataTypeTok{rand.gen =}\NormalTok{ rnorm, }\DataTypeTok{n=}\DecValTok{1000}\NormalTok{)))}
-\end{Highlighting}
-\end{Shaded}
-
-With \texttt{autoregressive} data, a \texttt{pacf} plot contains a
-number of sharp significant lines, indicating how many subsequent
-observations have autocorrelation. i.e.~if one line is significant, it
-means that each observation is only correlated with its preceeding
-observation (\texttt{AR(1)}). If two lines are significant, it means
-that each observation is correlated with its two preceeding observations
-(\texttt{AR(2)}). The following plot represents \texttt{AR(1)} data.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{pacf}\NormalTok{(y)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{website_files/figure-latex/unnamed-chunk-7-1.pdf}
-
-\newpage
-
-With \texttt{autoregressive} data, an \texttt{acf} plot contains a
-number of decreasing lines. The following \texttt{acf} plot represents
-some sort of \texttt{AR} data. Note that the \texttt{acf} plot displays
-\texttt{lag\ 0} (which is pointless and can be ignored), while the
-\texttt{pacf} plot does not.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{acf}\NormalTok{(y)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{website_files/figure-latex/unnamed-chunk-8-1.pdf}
-
-\newpage 
-
-\subsection{AR(2) data}\label{ar2-data}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{y <-}\StringTok{ }\KeywordTok{round}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{arima.sim}\NormalTok{(}\DataTypeTok{model=}\KeywordTok{list}\NormalTok{(}\StringTok{"ar"}\NormalTok{=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.4}\NormalTok{)), }\DataTypeTok{rand.gen =}\NormalTok{ rnorm, }\DataTypeTok{n=}\DecValTok{1000}\NormalTok{)))}
-\end{Highlighting}
-\end{Shaded}
-
-The following \texttt{pacf} plot represents \texttt{AR(2)} data. This
-means that each observation is correlated with its two preceeding
-observations (\texttt{AR(2)}).
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{pacf}\NormalTok{(y)}
+\CommentTok{# R CODE }
+\NormalTok{lomb}\OperatorTok{::}\KeywordTok{lsp}\NormalTok{(d}\OperatorTok{$}\NormalTok{y,}\DataTypeTok{from=}\DecValTok{100}\NormalTok{,}\DataTypeTok{to=}\DecValTok{500}\NormalTok{,}\DataTypeTok{ofac=}\DecValTok{1}\NormalTok{,}\DataTypeTok{type=}\StringTok{"period"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{website_files/figure-latex/unnamed-chunk-10-1.pdf}
 
-\newpage
-
-The following \texttt{acf} plot represents some sort of \texttt{AR}
-data:
+We then generate two new variables \texttt{cos365} and \texttt{sin365}
+and perform a likelihood ratio test to see if they are significant or
+not. This is done with two simple poisson regressions.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{acf}\NormalTok{(y)}
+\CommentTok{# R CODE}
+\NormalTok{d[,cos365}\OperatorTok{:}\ErrorTok{=}\KeywordTok{cos}\NormalTok{(dayOfYear}\OperatorTok{*}\DecValTok{2}\OperatorTok{*}\NormalTok{pi}\OperatorTok{/}\DecValTok{365}\NormalTok{)]}
+\NormalTok{d[,sin365}\OperatorTok{:}\ErrorTok{=}\KeywordTok{sin}\NormalTok{(dayOfYear}\OperatorTok{*}\DecValTok{2}\OperatorTok{*}\NormalTok{pi}\OperatorTok{/}\DecValTok{365}\NormalTok{)]}
+
+\NormalTok{pfit0 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall, }\DataTypeTok{data=}\NormalTok{d, }\DataTypeTok{family=}\KeywordTok{poisson}\NormalTok{())}
+\NormalTok{pfit1 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall }\OperatorTok{+}\StringTok{ }\NormalTok{sin365 }\OperatorTok{+}\StringTok{ }\NormalTok{cos365, }\DataTypeTok{data=}\NormalTok{d, }\DataTypeTok{family=}\KeywordTok{poisson}\NormalTok{())}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{website_files/figure-latex/unnamed-chunk-11-1.pdf}
-
-\newpage 
-
-\subsection{MA(1) data}\label{ma1-data}
+We can test the seasonality using a likelihood ratio test (which we
+already strongly suspected due to the periodogram):
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{y <-}\StringTok{ }\KeywordTok{round}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{arima.sim}\NormalTok{(}\DataTypeTok{model=}\KeywordTok{list}\NormalTok{(}\StringTok{"ma"}\NormalTok{=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.9}\NormalTok{)), }\DataTypeTok{rand.gen =}\NormalTok{ rnorm, }\DataTypeTok{n=}\DecValTok{1000}\NormalTok{)))}
+\NormalTok{lmtest}\OperatorTok{::}\KeywordTok{lrtest}\NormalTok{(pfit0, pfit1)}
 \end{Highlighting}
 \end{Shaded}
 
-With \texttt{moving\ average} data, a \texttt{pacf} plot contains a
-number of decreasing lines. The following \texttt{pacf} plot represents
-some sort of \texttt{MA} data.:
+\begin{verbatim}
+## Likelihood ratio test
+## 
+## Model 1: y ~ yearMinus2000 + dailyrainfall
+## Model 2: y ~ yearMinus2000 + dailyrainfall + sin365 + cos365
+##   #Df LogLik Df Chisq Pr(>Chisq)    
+## 1   3 -26904                        
+## 2   5 -12892  2 28024  < 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+And then we can look at the output of our regression:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{pacf}\NormalTok{(y)}
+\KeywordTok{summary}\NormalTok{(pfit1)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{website_files/figure-latex/unnamed-chunk-13-1.pdf}
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = y ~ yearMinus2000 + dailyrainfall + sin365 + cos365, 
+##     family = poisson(), data = d)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -4.0676  -0.9229  -0.1170   0.5861   3.4103  
+## 
+## Coefficients:
+##                 Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)    0.0887436  0.0176742   5.021 5.14e-07 ***
+## yearMinus2000  0.1016117  0.0010525  96.539  < 2e-16 ***
+## dailyrainfall  0.0002287  0.0018476   0.124    0.901    
+## sin365         1.3972586  0.0103200 135.393  < 2e-16 ***
+## cos365        -0.5035265  0.0086308 -58.341  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 45536.8  on 6939  degrees of freedom
+## Residual deviance:  7328.5  on 6935  degrees of freedom
+## AIC: 25794
+## 
+## Number of Fisher Scoring iterations: 5
+\end{verbatim}
 
-\newpage
+We also see that the (significant!) coefficient for \texttt{year} is
+\texttt{0.1} which means that for each additional year, the outcome
+increases by \texttt{exp(0.1)=1.11}. We also see that the coefficient
+for \texttt{dailyrainfall} was not significant, which means that we did
+not find a significant association between the outcome and
+\texttt{dailyrainfall}.
 
-With \texttt{moving\ average} data, an \texttt{acf} plot contains a
-number of sharp significant lines, demarking how many subsequent
-observations have autocorrelation. i.e.~if one line is significant, it
-means that each observation is only correlated with its preceeding
-observation. If two lines are significant, it means that each
-observation is correlated with its two preceeding observations. The
-following plot represents \texttt{MA(1)} data. Note that the
-\texttt{acf} plot displays \texttt{lag\ 0} (which is pointless and can
-be ignored), while the \texttt{pacf} plot does not.
+\emph{NOTE:} See that this is basically the same as a normal regression.
+
+Through the likelihood ratio test we saw a clear significant seasonal
+effect. We can now use trigonometry to back-calculate the amplitude and
+location of peak/troughs from the \texttt{cos365} and \texttt{sin365}
+estimates:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{acf}\NormalTok{(y)}
+\NormalTok{b1 <-}\StringTok{ }\FloatTok{1.428417} \CommentTok{# sin coefficient}
+\NormalTok{b2 <-}\StringTok{ }\OperatorTok{-}\FloatTok{0.512912} \CommentTok{# cos coefficient}
+\NormalTok{amplitude <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(b1}\OperatorTok{^}\DecValTok{2} \OperatorTok{+}\StringTok{ }\NormalTok{b2}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{p <-}\StringTok{ }\KeywordTok{atan}\NormalTok{(b1}\OperatorTok{/}\NormalTok{b2) }\OperatorTok{*}\StringTok{ }\DecValTok{365}\OperatorTok{/}\DecValTok{2}\OperatorTok{/}\NormalTok{pi}
+\ControlFlowTok{if}\NormalTok{ (p }\OperatorTok{>}\StringTok{ }\DecValTok{0}\NormalTok{) \{}
+\NormalTok{    peak <-}\StringTok{ }\NormalTok{p}
+\NormalTok{    trough <-}\StringTok{ }\NormalTok{p }\OperatorTok{+}\StringTok{ }\DecValTok{365}\OperatorTok{/}\DecValTok{2}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{    peak <-}\StringTok{ }\NormalTok{p }\OperatorTok{+}\StringTok{ }\DecValTok{365}\OperatorTok{/}\DecValTok{2}
+\NormalTok{    trough <-}\StringTok{ }\NormalTok{p }\OperatorTok{+}\StringTok{ }\DecValTok{365}
+\NormalTok{\}}
+\ControlFlowTok{if}\NormalTok{ (b1 }\OperatorTok{<}\StringTok{ }\DecValTok{0}\NormalTok{) \{}
+\NormalTok{    g <-}\StringTok{ }\NormalTok{peak}
+\NormalTok{    peak <-}\StringTok{ }\NormalTok{trough}
+\NormalTok{    trough <-}\StringTok{ }\NormalTok{g}
+\NormalTok{\}}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"amplitude is estimated as %s, peak is estimated as %s, trough is estimated as %s"}\NormalTok{,}\KeywordTok{round}\NormalTok{(amplitude,}\DecValTok{2}\NormalTok{),}\KeywordTok{round}\NormalTok{(peak),}\KeywordTok{round}\NormalTok{(trough)))}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{website_files/figure-latex/unnamed-chunk-14-1.pdf}
-
-\newpage 
-
-\subsection{MA(2) data}\label{ma2-data}
+\begin{verbatim}
+## [1] "amplitude is estimated as 1.52, peak is estimated as 111, trough is estimated as 294"
+\end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{y <-}\StringTok{ }\KeywordTok{round}\NormalTok{(}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{arima.sim}\NormalTok{(}\DataTypeTok{model=}\KeywordTok{list}\NormalTok{(}\StringTok{"ma"}\NormalTok{=}\KeywordTok{c}\NormalTok{(}\FloatTok{0.9}\NormalTok{,}\FloatTok{0.6}\NormalTok{)), }\DataTypeTok{rand.gen =}\NormalTok{ rnorm, }\DataTypeTok{n=}\DecValTok{1000}\NormalTok{)))}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"true values are: amplitude: %s, peak: %s, trough: %s"}\NormalTok{,}\KeywordTok{round}\NormalTok{(AMPLITUDE,}\DecValTok{2}\NormalTok{),}\KeywordTok{round}\NormalTok{(}\DecValTok{365}\OperatorTok{/}\DecValTok{4}\OperatorTok{+}\NormalTok{SEASONAL_HORIZONTAL_SHIFT),}\KeywordTok{round}\NormalTok{(}\DecValTok{3}\OperatorTok{*}\DecValTok{365}\OperatorTok{/}\DecValTok{4}\OperatorTok{+}\NormalTok{SEASONAL_HORIZONTAL_SHIFT)))}
 \end{Highlighting}
 \end{Shaded}
 
-The following \texttt{pacf} plot represents some sort of \texttt{MA}
-data.
+\begin{verbatim}
+## [1] "true values are: amplitude: 1.5, peak: 111, trough: 294"
+\end{verbatim}
+
+\emph{NOTE:} An amplitude of 1.5 means that when comparing the average
+time of year to the peak, the peak is expected to be
+\texttt{exp(1.5)=4.5} times higher than average. We take the exponential
+because we have run a poisson regression (so think incident rate ratio).
+
+\section{Autocorrelation}\label{autocorrelation-1}
+
+We check the \texttt{pacf} of the residuals to ensure that there is no
+autocorrelation. If we observe autocorrelation in our residuals, then we
+need to use a \texttt{robust} variance estimator (i.e.~it makes our
+estimated variances bigger to account for our poor model fitting).
+
+Here we see that our non-parametric seasonality model has not accounted
+for all of the associations in the data, so there is some
+autocorrelation in the residuals:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{pacf}\NormalTok{(y)}
+\NormalTok{d[,residuals}\OperatorTok{:}\ErrorTok{=}\KeywordTok{residuals}\NormalTok{(nfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
+\NormalTok{d[,predicted}\OperatorTok{:}\ErrorTok{=}\KeywordTok{predict}\NormalTok{(nfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
+\KeywordTok{pacf}\NormalTok{(d}\OperatorTok{$}\NormalTok{residuals)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{website_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+Here we see that our parametric seasonality model has accounted for all
+of the associations in the data, so there is no autocorrelation in the
+residuals:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d[,residuals}\OperatorTok{:}\ErrorTok{=}\KeywordTok{residuals}\NormalTok{(pfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
+\NormalTok{d[,predicted}\OperatorTok{:}\ErrorTok{=}\KeywordTok{predict}\NormalTok{(pfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
+\KeywordTok{pacf}\NormalTok{(d}\OperatorTok{$}\NormalTok{residuals)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{website_files/figure-latex/unnamed-chunk-16-1.pdf}
-
-\newpage
-
-The following \texttt{acf} plot represents \texttt{MA(2)} data. This
-means that each observation is correlated with its two preceeding
-observations.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{acf}\NormalTok{(y)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{website_files/figure-latex/unnamed-chunk-17-1.pdf}
 
 \bibliography{book.bib,packages.bib}
 
