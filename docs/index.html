@@ -5,27 +5,27 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Surveillance and time series</title>
-  <meta name="description" content="X">
+  <title>Time Series Analysis</title>
+  <meta name="description" content="A short course in learning which statistical methods should be applied where.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Surveillance and time series" />
+  <meta property="og:title" content="Time Series Analysis" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="https://folkehelseinstituttet.github.io/surveillance_timeseries/" />
-  <meta property="og:image" content="https://folkehelseinstituttet.github.io/surveillance_timeseries/images/fhi.svg" />
-  <meta property="og:description" content="X" />
+  
+  
+  <meta property="og:description" content="A short course in learning which statistical methods should be applied where." />
   <meta name="github-repo" content="folkehelseinstituttet/surveillance_timeseries" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Surveillance and time series" />
+  <meta name="twitter:title" content="Time Series Analysis" />
   
-  <meta name="twitter:description" content="X" />
-  <meta name="twitter:image" content="https://folkehelseinstituttet.github.io/surveillance_timeseries/images/fhi.svg" />
+  <meta name="twitter:description" content="A short course in learning which statistical methods should be applied where." />
+  
 
 <meta name="author" content="Richard White">
 
 
-<meta name="date" content="2018-11-08">
+<meta name="date" content="2018-11-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 
-<link rel="next" href="integrating-the-r-package-into-the-physical-system.html">
+<link rel="next" href="reference.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,6 +50,43 @@
 
 
 
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
 
 <link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
@@ -64,39 +101,32 @@
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">Surveillance and time series</a></li>
+<li><a href="./">Longitudinal Analysis</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
-<li class="chapter" data-level="1" data-path="integrating-the-r-package-into-the-physical-system.html"><a href="integrating-the-r-package-into-the-physical-system.html"><i class="fa fa-check"></i><b>1</b> Integrating the R package into the physical system</a><ul>
-<li class="chapter" data-level="1.1" data-path="integrating-the-r-package-into-the-physical-system.html"><a href="integrating-the-r-package-into-the-physical-system.html#summary"><i class="fa fa-check"></i><b>1.1</b> Summary</a></li>
-<li class="chapter" data-level="1.2" data-path="integrating-the-r-package-into-the-physical-system.html"><a href="integrating-the-r-package-into-the-physical-system.html#runprocess.r"><i class="fa fa-check"></i><b>1.2</b> RunProcess.R</a><ul>
-<li class="chapter" data-level="1.2.1" data-path="integrating-the-r-package-into-the-physical-system.html"><a href="integrating-the-r-package-into-the-physical-system.html#aim"><i class="fa fa-check"></i><b>1.2.1</b> Aim</a></li>
-<li class="chapter" data-level="1.2.2" data-path="integrating-the-r-package-into-the-physical-system.html"><a href="integrating-the-r-package-into-the-physical-system.html#bounded-context"><i class="fa fa-check"></i><b>1.2.2</b> Bounded context</a></li>
+<li class="chapter" data-level="1" data-path="reference.html"><a href="reference.html"><i class="fa fa-check"></i><b>1</b> Reference</a><ul>
+<li class="chapter" data-level="1.1" data-path="reference.html"><a href="reference.html#scope-of-this-course"><i class="fa fa-check"></i><b>1.1</b> Scope of this course</a></li>
+<li class="chapter" data-level="1.2" data-path="reference.html"><a href="reference.html#introduction"><i class="fa fa-check"></i><b>1.2</b> Introduction</a></li>
+<li class="chapter" data-level="1.3" data-path="reference.html"><a href="reference.html#method-summary"><i class="fa fa-check"></i><b>1.3</b> Method summary</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="reference.html"><a href="reference.html#panel-data-one-geographical-area-no-autocorrelation"><i class="fa fa-check"></i><b>1.3.1</b> Panel data: One geographical area, no autocorrelation</a></li>
+<li class="chapter" data-level="1.3.2" data-path="reference.html"><a href="reference.html#panel-data-one-geographical-area-with-autocorrelation"><i class="fa fa-check"></i><b>1.3.2</b> Panel data: One geographical area, with autocorrelation</a></li>
+<li class="chapter" data-level="1.3.3" data-path="reference.html"><a href="reference.html#not-panel-data-multiple-geographical-areas"><i class="fa fa-check"></i><b>1.3.3</b> Not panel data: Multiple geographical areas</a></li>
+<li class="chapter" data-level="1.3.4" data-path="reference.html"><a href="reference.html#panel-data-multiple-geographical-areas-no-autocorrelation"><i class="fa fa-check"></i><b>1.3.4</b> Panel data: Multiple geographical areas, no autocorrelation</a></li>
+<li class="chapter" data-level="1.3.5" data-path="reference.html"><a href="reference.html#panel-data-multiple-geographical-areas-with-autocorrelation"><i class="fa fa-check"></i><b>1.3.5</b> Panel data: Multiple geographical areas, with autocorrelation</a></li>
 </ul></li>
-<li class="chapter" data-level="1.3" data-path="integrating-the-r-package-into-the-physical-system.html"><a href="integrating-the-r-package-into-the-physical-system.html#run.sh"><i class="fa fa-check"></i><b>1.3</b> 0_run.sh</a><ul>
-<li class="chapter" data-level="1.3.1" data-path="integrating-the-r-package-into-the-physical-system.html"><a href="integrating-the-r-package-into-the-physical-system.html#aim-1"><i class="fa fa-check"></i><b>1.3.1</b> Aim</a></li>
+<li class="chapter" data-level="1.4" data-path="reference.html"><a href="reference.html#identifying-your-scenario"><i class="fa fa-check"></i><b>1.4</b> Identifying your scenario</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="reference.html"><a href="reference.html#step-1-do-you-have-panel-data"><i class="fa fa-check"></i><b>1.4.1</b> Step 1: Do you have panel data?</a></li>
+<li class="chapter" data-level="1.4.2" data-path="reference.html"><a href="reference.html#step-2-do-you-have-multiple-geographical-areas"><i class="fa fa-check"></i><b>1.4.2</b> Step 2: Do you have multiple geographical areas?</a></li>
+<li class="chapter" data-level="1.4.3" data-path="reference.html"><a href="reference.html#step-3-do-you-have-autocorrelation"><i class="fa fa-check"></i><b>1.4.3</b> Step 3: Do you have autocorrelation?</a></li>
+<li class="chapter" data-level="1.4.4" data-path="reference.html"><a href="reference.html#ar1-data"><i class="fa fa-check"></i><b>1.4.4</b> AR(1) data</a></li>
+<li class="chapter" data-level="1.4.5" data-path="reference.html"><a href="reference.html#ar2-data"><i class="fa fa-check"></i><b>1.4.5</b> AR(2) data</a></li>
+<li class="chapter" data-level="1.4.6" data-path="reference.html"><a href="reference.html#ma1-data"><i class="fa fa-check"></i><b>1.4.6</b> MA(1) data</a></li>
+<li class="chapter" data-level="1.4.7" data-path="reference.html"><a href="reference.html#ma2-data"><i class="fa fa-check"></i><b>1.4.7</b> MA(2) data</a></li>
 </ul></li>
-<li class="chapter" data-level="1.4" data-path="integrating-the-r-package-into-the-physical-system.html"><a href="integrating-the-r-package-into-the-physical-system.html#runtest.r"><i class="fa fa-check"></i><b>1.4</b> RunTest.R</a><ul>
-<li class="chapter" data-level="1.4.1" data-path="integrating-the-r-package-into-the-physical-system.html"><a href="integrating-the-r-package-into-the-physical-system.html#aim-2"><i class="fa fa-check"></i><b>1.4.1</b> Aim</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="2" data-path="r-packages.html"><a href="r-packages.html"><i class="fa fa-check"></i><b>2</b> R packages</a><ul>
-<li class="chapter" data-level="2.1" data-path="r-packages.html"><a href="r-packages.html#summary-1"><i class="fa fa-check"></i><b>2.1</b> Summary</a></li>
-<li class="chapter" data-level="2.2" data-path="r-packages.html"><a href="r-packages.html#requirements"><i class="fa fa-check"></i><b>2.2</b> Requirements</a></li>
-<li class="chapter" data-level="2.3" data-path="r-packages.html"><a href="r-packages.html#deployment-via-travis-ci-and-drat"><i class="fa fa-check"></i><b>2.3</b> Deployment via travis-ci and drat</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="umbrella-infrastructure.html"><a href="umbrella-infrastructure.html"><i class="fa fa-check"></i><b>3</b> Umbrella Infrastructure</a><ul>
-<li class="chapter" data-level="3.1" data-path="umbrella-infrastructure.html"><a href="umbrella-infrastructure.html#executive-summary"><i class="fa fa-check"></i><b>3.1</b> Executive summary</a></li>
-<li class="chapter" data-level="3.2" data-path="umbrella-infrastructure.html"><a href="umbrella-infrastructure.html#what-is-an-automated-analysis"><i class="fa fa-check"></i><b>3.2</b> What is an automated analysis?</a></li>
-<li class="chapter" data-level="3.3" data-path="umbrella-infrastructure.html"><a href="umbrella-infrastructure.html#why-not-have-one-project-for-each-automated-analysis"><i class="fa fa-check"></i><b>3.3</b> Why not have one project for each automated analysis?</a></li>
-</ul></li>
-<li class="chapter" data-level="4" data-path="contributing.html"><a href="contributing.html"><i class="fa fa-check"></i><b>4</b> Contributing</a><ul>
-<li class="chapter" data-level="4.1" data-path="contributing.html"><a href="contributing.html#development-guidelines"><i class="fa fa-check"></i><b>4.1</b> Development guidelines</a></li>
-<li class="chapter" data-level="4.2" data-path="contributing.html"><a href="contributing.html#code-style"><i class="fa fa-check"></i><b>4.2</b> Code style</a></li>
 </ul></li>
 <li class="divider"></li>
-<li><a href="https://www.fhi.no/" target="blank">fhi.no</a></li>
+<li><a href="https://www.fhi.no/" target="blank">www.fhi.no</a></li>
 
 </ul>
 
@@ -107,7 +137,7 @@
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Surveillance and time series</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series Analysis</a>
           </h1>
         </div>
 
@@ -116,13 +146,13 @@
 
             <section class="normal" id="section-">
 <div id="header">
-<h1 class="title">Surveillance and time series</h1>
+<h1 class="title">Time Series Analysis</h1>
 <p class="author"><em>Richard White</em></p>
-<p class="date"><em>2018-11-08</em></p>
+<p class="date"><em>2018-11-02</em></p>
 </div>
 <div id="preface" class="section level1 unnumbered">
 <h1>Preface</h1>
-<p>This is a short presentation given at FHI for the surveillance group.</p>
+<p>Time series analysis</p>
 
 </div>
             </section>
@@ -131,7 +161,7 @@
         </div>
       </div>
 
-<a href="integrating-the-r-package-into-the-physical-system.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="reference.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -164,7 +194,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["surveillance_and_time_series.pdf", "surveillance_and_time_series.epub"],
+"download": ["website.pdf", "website.epub"],
 "toc": {
 "collapse": "section"
 }
