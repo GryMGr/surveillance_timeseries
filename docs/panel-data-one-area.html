@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Time Series and Longitudinal Analysis</title>
+  <meta name="description" content="A short course in learning which statistical methods should be applied where.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Time Series and Longitudinal Analysis" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A short course in learning which statistical methods should be applied where." />
+  <meta name="github-repo" content="folkehelseinstituttet/surveillance_timeseries" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Time Series and Longitudinal Analysis" />
+  
+  <meta name="twitter:description" content="A short course in learning which statistical methods should be applied where." />
+  
+
+<meta name="author" content="Richard White">
+
+
+<meta name="date" content="2018-11-02">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="definitions-and-scenarios.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series/Longitudinal</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="definitions-and-scenarios.html"><a href="definitions-and-scenarios.html"><i class="fa fa-check"></i><b>1</b> Definitions and Scenarios</a><ul>
+<li class="chapter" data-level="1.1" data-path="definitions-and-scenarios.html"><a href="definitions-and-scenarios.html#panel-data"><i class="fa fa-check"></i><b>1.1</b> Panel Data</a></li>
+<li class="chapter" data-level="1.2" data-path="definitions-and-scenarios.html"><a href="definitions-and-scenarios.html#autocorrelation"><i class="fa fa-check"></i><b>1.2</b> Autocorrelation</a></li>
+<li class="chapter" data-level="1.3" data-path="definitions-and-scenarios.html"><a href="definitions-and-scenarios.html#scenarios"><i class="fa fa-check"></i><b>1.3</b> Scenarios</a></li>
+<li class="chapter" data-level="1.4" data-path="definitions-and-scenarios.html"><a href="definitions-and-scenarios.html#useful-code"><i class="fa fa-check"></i><b>1.4</b> Useful Code</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html"><i class="fa fa-check"></i><b>2</b> Panel Data - One Area</a><ul>
+<li class="chapter" data-level="2.1" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#aim"><i class="fa fa-check"></i><b>2.1</b> Aim</a></li>
+<li class="chapter" data-level="2.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#data"><i class="fa fa-check"></i><b>2.2</b> Data</a></li>
+<li class="chapter" data-level="2.3" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#model-with-non-parametric-seasonality"><i class="fa fa-check"></i><b>2.3</b> Model With Non-Parametric Seasonality</a></li>
+<li class="chapter" data-level="2.4" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#model-with-parametric-seasonality"><i class="fa fa-check"></i><b>2.4</b> Model With Parametric Seasonality</a></li>
+<li class="chapter" data-level="2.5" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#autocorrelation-1"><i class="fa fa-check"></i><b>2.5</b> Autocorrelation</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://www.fhi.no/" target="blank">www.fhi.no</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series and Longitudinal Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="panel-data---one-area" class="section level1">
+<h1><span class="header-section-number">2</span> Panel Data - One Area</h1>
+<div id="aim" class="section level2">
+<h2><span class="header-section-number">2.1</span> Aim</h2>
+<p>We are given a dataset containing daily counts of diseases from one geographical area. We want to identify:</p>
+<ul>
+<li>Does seasonality exist?</li>
+<li>If seasonality exists, when are the high/low seasons?</li>
+<li>Is there a general yearly trend (i.e. increasing or decreasing from year to year?)</li>
+<li>Is daily rainfall associated with the number of cases?</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(data.table)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">set.seed</span>(<span class="dv">4</span>)
+
+AMPLITUDE &lt;-<span class="st"> </span><span class="fl">1.5</span>
+SEASONAL_HORIZONTAL_SHIFT &lt;-<span class="st"> </span><span class="dv">20</span>
+
+d &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">date=</span><span class="kw">seq.Date</span>(
+  <span class="dt">from=</span><span class="kw">as.Date</span>(<span class="st">&quot;2000-01-01&quot;</span>),
+  <span class="dt">to=</span><span class="kw">as.Date</span>(<span class="st">&quot;2018-12-31&quot;</span>),
+  <span class="dt">by=</span><span class="dv">1</span>))
+d[,date<span class="op">:</span><span class="er">=</span><span class="kw">as.Date</span>(date,<span class="dt">origin=</span><span class="st">&quot;1970-01-1&quot;</span>)]
+d[,year<span class="op">:</span><span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date,<span class="st">&quot;%G&quot;</span>))]
+d[,week<span class="op">:</span><span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date,<span class="st">&quot;%V&quot;</span>))]
+d[,month<span class="op">:</span><span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date,<span class="st">&quot;%m&quot;</span>))]
+d[,yearMinus2000<span class="op">:</span><span class="er">=</span>year<span class="op">-</span><span class="dv">2000</span>]
+d[,dailyrainfall<span class="op">:</span><span class="er">=</span><span class="kw">runif</span>(.N, <span class="dt">min=</span><span class="dv">0</span>, <span class="dt">max=</span><span class="dv">10</span>)]
+
+d[,dayOfYear<span class="op">:</span><span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date,<span class="st">&quot;%j&quot;</span>))]
+d[,seasonalEffect<span class="op">:</span><span class="er">=</span><span class="kw">sin</span>(<span class="dv">2</span><span class="op">*</span>pi<span class="op">*</span>(dayOfYear<span class="op">-</span>SEASONAL_HORIZONTAL_SHIFT)<span class="op">/</span><span class="dv">365</span>)]
+d[,mu <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">exp</span>(<span class="fl">0.1</span> <span class="op">+</span><span class="st"> </span>yearMinus2000<span class="op">*</span><span class="fl">0.1</span> <span class="op">+</span><span class="st"> </span>seasonalEffect<span class="op">*</span>AMPLITUDE)]
+d[,y<span class="op">:</span><span class="er">=</span><span class="kw">rpois</span>(.N,mu)]</code></pre></div>
+</div>
+<div id="data" class="section level2">
+<h2><span class="header-section-number">2.2</span> Data</h2>
+<p>Here we show the true data, and note that there is an increasing annual trend (the data gets higher as time goes on) and there is a seasonal pattern (one peak/trough per year)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>date,<span class="dt">y=</span>y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">lwd=</span><span class="fl">0.25</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_date</span>(<span class="st">&quot;Time&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
+q</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>We split out the data for a few years and see a clear seasonal trend:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d[year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2005</span><span class="op">:</span><span class="dv">2010</span>)],<span class="kw">aes</span>(<span class="dt">x=</span>dayOfYear,<span class="dt">y=</span>y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>year)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Day of year&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)</code></pre></div>
+<pre><code>## Scale for &#39;y&#39; is already present. Adding another scale for &#39;y&#39;, which
+## will replace the existing scale.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q</code></pre></div>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="website_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="model-with-non-parametric-seasonality" class="section level2">
+<h2><span class="header-section-number">2.3</span> Model With Non-Parametric Seasonality</h2>
+<p>If we want to investigate the seasonality of our data, and identify when are the peaks and troughs, we can use non-parametric approaches. They are flexible and easy to implement, but they can lack power and be hard to interpret:</p>
+<ul>
+<li>Create a categorical variable for the seasons (e.g. <code>spring</code>, <code>summer</code>, <code>autumn</code>, <code>winter</code>) and include this in the regression model</li>
+<li>Create a categorical variable for the months (e.g. <code>Jan</code>, <code>Feb</code>, …, <code>Dec</code>) and include this in the regression model</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nfit0 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op">~</span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall, <span class="dt">data=</span>d, <span class="dt">family=</span><span class="kw">poisson</span>())
+nfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op">~</span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall <span class="op">+</span><span class="st"> </span><span class="kw">as.factor</span>(month), <span class="dt">data=</span>d, <span class="dt">family=</span><span class="kw">poisson</span>())</code></pre></div>
+<p>We can test the <code>month</code> categorical variable using a likelihood ratio test:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lmtest<span class="op">::</span><span class="kw">lrtest</span>(nfit0, nfit1)</code></pre></div>
+<pre><code>## Likelihood ratio test
+## 
+## Model 1: y ~ yearMinus2000 + dailyrainfall
+## Model 2: y ~ yearMinus2000 + dailyrainfall + as.factor(month)
+##   #Df LogLik Df Chisq Pr(&gt;Chisq)    
+## 1   3 -26904                        
+## 2  14 -13251 11 27307  &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>And then we can look at the output of our regression:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(nfit1)</code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = y ~ yearMinus2000 + dailyrainfall + as.factor(month), 
+##     family = poisson(), data = d)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -4.2874  -0.9578  -0.1498   0.5894   3.9130  
+## 
+## Coefficients:
+##                     Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)        -0.003849   0.028882  -0.133    0.894    
+## yearMinus2000       0.101654   0.001053  96.578   &lt;2e-16 ***
+## dailyrainfall       0.000442   0.001852   0.239    0.811    
+## as.factor(month)2   0.751048   0.029854  25.157   &lt;2e-16 ***
+## as.factor(month)3   1.303525   0.027328  47.700   &lt;2e-16 ***
+## as.factor(month)4   1.543098   0.026781  57.619   &lt;2e-16 ***
+## as.factor(month)5   1.425207   0.026992  52.801   &lt;2e-16 ***
+## as.factor(month)6   0.955465   0.028647  33.354   &lt;2e-16 ***
+## as.factor(month)7   0.286169   0.032060   8.926   &lt;2e-16 ***
+## as.factor(month)8  -0.541443   0.039932 -13.559   &lt;2e-16 ***
+## as.factor(month)9  -1.114005   0.049322 -22.586   &lt;2e-16 ***
+## as.factor(month)10 -1.350683   0.053389 -25.299   &lt;2e-16 ***
+## as.factor(month)11 -1.235671   0.051682 -23.909   &lt;2e-16 ***
+## as.factor(month)12 -0.754107   0.042777 -17.629   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 45536.8  on 6939  degrees of freedom
+## Residual deviance:  8045.6  on 6926  degrees of freedom
+## AIC: 26529
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p><em>NOTE:</em> See that this is basically the same as a normal regression.</p>
+<p>If we want to identify outbreaks, then we need to use the standard prediction interval formula:</p>
+<p><span class="math display">\[
+\text{95% CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
+\]</span> This allows us to identify what the expected thresholds are:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred &lt;-<span class="st"> </span><span class="kw">predict</span>(nfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>, <span class="dt">se.fit =</span> T, <span class="dt">newdata =</span> d)
+d[, threshold0 <span class="op">:</span><span class="er">=</span><span class="st"> </span>pred<span class="op">$</span>fit]
+d[, threshold2 <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">FarringtonThreshold</span>(pred, <span class="dt">phi =</span> <span class="dv">1</span>, <span class="dt">z =</span> <span class="dv">2</span>, <span class="dt">skewness.transform =</span> <span class="st">&quot;2/3&quot;</span>)]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d[year<span class="op">&gt;</span><span class="dv">2015</span>],<span class="kw">aes</span>(<span class="dt">x=</span>date,<span class="dt">y=</span>y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_ribbon</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">ymin=</span><span class="op">-</span><span class="ot">Inf</span>,<span class="dt">ymax=</span>threshold2),<span class="dt">fill=</span><span class="st">&quot;green&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.5</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_ribbon</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">ymin=</span>threshold2,<span class="dt">ymax=</span><span class="ot">Inf</span>),<span class="dt">fill=</span><span class="st">&quot;red&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.5</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">lwd=</span><span class="fl">0.25</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>d[year<span class="op">&gt;</span><span class="dv">2015</span> <span class="op">&amp;</span><span class="st"> </span>y<span class="op">&gt;</span>threshold2],<span class="dt">colour=</span><span class="st">&quot;black&quot;</span>,<span class="dt">size=</span><span class="fl">2.5</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>d[year<span class="op">&gt;</span><span class="dv">2015</span> <span class="op">&amp;</span><span class="st"> </span>y<span class="op">&gt;</span>threshold2],<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>,<span class="dt">size=</span><span class="fl">1.5</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_date</span>(<span class="st">&quot;Time&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
+q</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="model-with-parametric-seasonality" class="section level2">
+<h2><span class="header-section-number">2.4</span> Model With Parametric Seasonality</h2>
+<p>Parametric approaches are more powerful but require more effort:</p>
+<ul>
+<li>Identify the periodicity of the seasonality (how many days between peaks?)</li>
+<li>Using trigonometry, transform <code>day of year</code> into variables that appropriately model the observed periodicity</li>
+<li>Obtain coefficient estimates</li>
+<li>Back-transform these estimates into human-understandable values (day of peak, day of trough)</li>
+</ul>
+<p><em>NOTE:</em> You don’t always have to investigate seasonality! It depends entirely on what the purpose of your analysis is!</p>
+<p>The Lomb-Scargle Periodogram shows a clear seasonality with a period of 365 days.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R CODE </span>
+lomb<span class="op">::</span><span class="kw">lsp</span>(d<span class="op">$</span>y,<span class="dt">from=</span><span class="dv">100</span>,<span class="dt">to=</span><span class="dv">500</span>,<span class="dt">ofac=</span><span class="dv">1</span>,<span class="dt">type=</span><span class="st">&quot;period&quot;</span>)</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>We then generate two new variables <code>cos365</code> and <code>sin365</code> and perform a likelihood ratio test to see if they are significant or not. This is done with two simple poisson regressions.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R CODE</span>
+d[,cos365<span class="op">:</span><span class="er">=</span><span class="kw">cos</span>(dayOfYear<span class="op">*</span><span class="dv">2</span><span class="op">*</span>pi<span class="op">/</span><span class="dv">365</span>)]
+d[,sin365<span class="op">:</span><span class="er">=</span><span class="kw">sin</span>(dayOfYear<span class="op">*</span><span class="dv">2</span><span class="op">*</span>pi<span class="op">/</span><span class="dv">365</span>)]
+
+pfit0 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op">~</span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall, <span class="dt">data=</span>d, <span class="dt">family=</span><span class="kw">poisson</span>())
+pfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op">~</span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall <span class="op">+</span><span class="st"> </span>sin365 <span class="op">+</span><span class="st"> </span>cos365, <span class="dt">data=</span>d, <span class="dt">family=</span><span class="kw">poisson</span>())</code></pre></div>
+<p>We can test the seasonality using a likelihood ratio test (which we already strongly suspected due to the periodogram):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lmtest<span class="op">::</span><span class="kw">lrtest</span>(pfit0, pfit1)</code></pre></div>
+<pre><code>## Likelihood ratio test
+## 
+## Model 1: y ~ yearMinus2000 + dailyrainfall
+## Model 2: y ~ yearMinus2000 + dailyrainfall + sin365 + cos365
+##   #Df LogLik Df Chisq Pr(&gt;Chisq)    
+## 1   3 -26904                        
+## 2   5 -12892  2 28024  &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>And then we can look at the output of our regression:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(pfit1)</code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = y ~ yearMinus2000 + dailyrainfall + sin365 + cos365, 
+##     family = poisson(), data = d)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -4.0676  -0.9229  -0.1170   0.5861   3.4103  
+## 
+## Coefficients:
+##                 Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)    0.0887436  0.0176742   5.021 5.14e-07 ***
+## yearMinus2000  0.1016117  0.0010525  96.539  &lt; 2e-16 ***
+## dailyrainfall  0.0002287  0.0018476   0.124    0.901    
+## sin365         1.3972586  0.0103200 135.393  &lt; 2e-16 ***
+## cos365        -0.5035265  0.0086308 -58.341  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 45536.8  on 6939  degrees of freedom
+## Residual deviance:  7328.5  on 6935  degrees of freedom
+## AIC: 25794
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>We also see that the (significant!) coefficient for <code>year</code> is <code>0.1</code> which means that for each additional year, the outcome increases by <code>exp(0.1)=1.11</code>. We also see that the coefficient for <code>dailyrainfall</code> was not significant, which means that we did not find a significant association between the outcome and <code>dailyrainfall</code>.</p>
+<p><em>NOTE:</em> See that this is basically the same as a normal regression.</p>
+<p>Through the likelihood ratio test we saw a clear significant seasonal effect. We can now use trigonometry to back-calculate the amplitude and location of peak/troughs from the <code>cos365</code> and <code>sin365</code> estimates:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">b1 &lt;-<span class="st"> </span><span class="fl">1.428417</span> <span class="co"># sin coefficient</span>
+b2 &lt;-<span class="st"> </span><span class="op">-</span><span class="fl">0.512912</span> <span class="co"># cos coefficient</span>
+amplitude &lt;-<span class="st"> </span><span class="kw">sqrt</span>(b1<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>b2<span class="op">^</span><span class="dv">2</span>)
+p &lt;-<span class="st"> </span><span class="kw">atan</span>(b1<span class="op">/</span>b2) <span class="op">*</span><span class="st"> </span><span class="dv">365</span><span class="op">/</span><span class="dv">2</span><span class="op">/</span>pi
+<span class="cf">if</span> (p <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) {
+    peak &lt;-<span class="st"> </span>p
+    trough &lt;-<span class="st"> </span>p <span class="op">+</span><span class="st"> </span><span class="dv">365</span><span class="op">/</span><span class="dv">2</span>
+} <span class="cf">else</span> {
+    peak &lt;-<span class="st"> </span>p <span class="op">+</span><span class="st"> </span><span class="dv">365</span><span class="op">/</span><span class="dv">2</span>
+    trough &lt;-<span class="st"> </span>p <span class="op">+</span><span class="st"> </span><span class="dv">365</span>
+}
+<span class="cf">if</span> (b1 <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>) {
+    g &lt;-<span class="st"> </span>peak
+    peak &lt;-<span class="st"> </span>trough
+    trough &lt;-<span class="st"> </span>g
+}
+<span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;amplitude is estimated as %s, peak is estimated as %s, trough is estimated as %s&quot;</span>,<span class="kw">round</span>(amplitude,<span class="dv">2</span>),<span class="kw">round</span>(peak),<span class="kw">round</span>(trough)))</code></pre></div>
+<pre><code>## [1] &quot;amplitude is estimated as 1.52, peak is estimated as 111, trough is estimated as 294&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;true values are: amplitude: %s, peak: %s, trough: %s&quot;</span>,<span class="kw">round</span>(AMPLITUDE,<span class="dv">2</span>),<span class="kw">round</span>(<span class="dv">365</span><span class="op">/</span><span class="dv">4</span><span class="op">+</span>SEASONAL_HORIZONTAL_SHIFT),<span class="kw">round</span>(<span class="dv">3</span><span class="op">*</span><span class="dv">365</span><span class="op">/</span><span class="dv">4</span><span class="op">+</span>SEASONAL_HORIZONTAL_SHIFT)))</code></pre></div>
+<pre><code>## [1] &quot;true values are: amplitude: 1.5, peak: 111, trough: 294&quot;</code></pre>
+<p><em>NOTE:</em> An amplitude of 1.5 means that when comparing the average time of year to the peak, the peak is expected to be <code>exp(1.5)=4.5</code> times higher than average. We take the exponential because we have run a poisson regression (so think incident rate ratio).</p>
+</div>
+<div id="autocorrelation-1" class="section level2">
+<h2><span class="header-section-number">2.5</span> Autocorrelation</h2>
+<p>We check the <code>pacf</code> of the residuals to ensure that there is no autocorrelation. If we observe autocorrelation in our residuals, then we need to use a <code>robust</code> variance estimator (i.e. it makes our estimated variances bigger to account for our poor model fitting).</p>
+<p>Here we see that our non-parametric seasonality model has not accounted for all of the associations in the data, so there is some autocorrelation in the residuals:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[,residuals<span class="op">:</span><span class="er">=</span><span class="kw">residuals</span>(nfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
+d[,predicted<span class="op">:</span><span class="er">=</span><span class="kw">predict</span>(nfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
+<span class="kw">pacf</span>(d<span class="op">$</span>residuals)</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>Here we see that our parametric seasonality model has accounted for all of the associations in the data, so there is no autocorrelation in the residuals:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[,residuals<span class="op">:</span><span class="er">=</span><span class="kw">residuals</span>(pfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
+d[,predicted<span class="op">:</span><span class="er">=</span><span class="kw">predict</span>(pfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
+<span class="kw">pacf</span>(d<span class="op">$</span>residuals)</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="definitions-and-scenarios.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["website.pdf", "website.epub"],
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-
-<link rel="next" href="definitions-and-scenarios.html">
+<link rel="prev" href="index.html">
+<link rel="next" href="panel-data-one-area.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -138,31 +138,66 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Time Series and Longitudinal Analysis</h1>
-<p class="author"><em>Richard White</em></p>
-<p class="date"><em>2018-11-02</em></p>
+<div id="definitions-and-scenarios" class="section level1">
+<h1><span class="header-section-number">1</span> Definitions and Scenarios</h1>
+<div id="panel-data" class="section level2">
+<h2><span class="header-section-number">1.1</span> Panel Data</h2>
+<p>Panel data is a set of data with measurements repeated at equally spaced points. For example, number of influenza cases recorded every day, or every week, or every year would be considered panel data. The number of influenza cases on Jan 31, Feb 3, and Nov 21 in 2018 would not be considered panel data.</p>
 </div>
-<div id="preface" class="section level1 unnumbered">
-<h1>Preface</h1>
-<p>When dealing with data measured over time, there are two kinds of analyses that can be performed.</p>
-<p>“Time series” analyses generally deal with one variable (the outcome). We can then either:</p>
-<ol style="list-style-type: decimal">
-<li>Predict the future only using the previous observations. E.g. predict tomorrow’s temperature, using today’s and yesterday’s temperature as exposures. We will not be focusing on these kinds of analyses.</li>
-<li>Estimate descriptive statistics about the data. E.g. Today’s data is much higher than expected (outbreak?). We will focus on these kinds of analyses.</li>
-</ol>
-<p>If we have more than one variable measured over time (e.g. outcome and an exposure) then we can run regression analyses. E.g. seeing how the number of tuberculosis patients (outcome) is affected by the number of immigrants to Norway (exposure) over a 20 year period. We will focus on these kinds of analyses.</p>
-<p>It is important to note that if we define our exposure as “time” then we can use the regression framework to estimate descriptive statistics about the data. This means we can use the same regression framework for the two kinds of analyses we will be focusing on.</p>
-<p>The “regression framework” is very similar to ordinary regressions that you have been working with for many years. The only difference is that some of the data <strong>may</strong> have more advanced data structures that your normal methods cannot handle.</p>
+<div id="autocorrelation" class="section level2">
+<h2><span class="header-section-number">1.2</span> Autocorrelation</h2>
+<p>When you have panel data, autocorrelation is the correlation between subsequent observations. For example, if you have daily observations, then the 1 day autocorrelation is the correlation between observations 1 day apart, and likewise the 2 day autocorrelation is the correlation between observations 2 days apart.</p>
+</div>
+<div id="scenarios" class="section level2">
+<h2><span class="header-section-number">1.3</span> Scenarios</h2>
+<p>In this course we will consider three scenarios where we have multiple observations for each geographical area:</p>
+<ul>
+<li>Panel data: One geographical area, with/without autocorrelation</li>
+<li>Not panel data: Multiple geographical areas</li>
+<li>Panel data: Multiple geographical areas, with/without autocorrelation</li>
+</ul>
+<p>Note, the following scenario can be covered by standard regression models:</p>
+<ul>
+<li>Multiple geographical areas, one time point/observation per geographical area</li>
+</ul>
+</div>
+<div id="useful-code" class="section level2">
+<h2><span class="header-section-number">1.4</span> Useful Code</h2>
+<p>This code is used to calculate prediction intervals. In its most basic form it is:</p>
+<p><span class="math display">\[
+\text{95% CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
+\]</span> However, due to the skewness of the count data, we often choose to use a <code>2/3s transformation</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">FarringtonThreshold &lt;-<span class="st"> </span><span class="cf">function</span>(pred, phi, <span class="dt">alpha =</span> <span class="ot">NULL</span>, <span class="dt">z =</span> <span class="ot">NULL</span>, <span class="dt">skewness.transform =</span> <span class="st">&quot;none&quot;</span>) {
+  mu0 &lt;-<span class="st"> </span>pred<span class="op">$</span>fit
+  tau &lt;-<span class="st"> </span>phi <span class="op">+</span><span class="st"> </span>(pred<span class="op">$</span>se.fit<span class="op">^</span><span class="dv">2</span>) <span class="op">/</span><span class="st"> </span>mu0
+  <span class="cf">switch</span>(skewness.transform, <span class="dt">none =</span> {
+    se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(mu0 <span class="op">*</span><span class="st"> </span>tau)
+    exponent &lt;-<span class="st"> </span><span class="dv">1</span>
+  }, <span class="st">`</span><span class="dt">1/2</span><span class="st">`</span> =<span class="st"> </span>{
+    se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">4</span> <span class="op">*</span><span class="st"> </span>tau)
+    exponent &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">2</span>
+  }, <span class="st">`</span><span class="dt">2/3</span><span class="st">`</span> =<span class="st"> </span>{
+    se &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">4</span> <span class="op">/</span><span class="st"> </span><span class="dv">9</span> <span class="op">*</span><span class="st"> </span>mu0<span class="op">^</span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>) <span class="op">*</span><span class="st"> </span>tau)
+    exponent &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">/</span><span class="st"> </span><span class="dv">3</span>
+  }, {
+    <span class="kw">stop</span>(<span class="st">&quot;No proper exponent in algo.farrington.threshold.&quot;</span>)
+  })
+  <span class="cf">if</span> (<span class="kw">is.null</span>(z)) z &lt;-<span class="st"> </span><span class="kw">qnorm</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>alpha <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)
+  lu &lt;-<span class="st"> </span>(mu0<span class="op">^</span>exponent <span class="op">+</span><span class="st"> </span>z <span class="op">*</span>
+<span class="st">    </span>se)<span class="op">^</span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span>exponent)
 
+  <span class="kw">return</span>(lu)
+}</code></pre></div>
+
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="definitions-and-scenarios.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="panel-data-one-area.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
