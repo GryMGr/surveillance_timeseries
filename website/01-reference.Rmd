@@ -25,7 +25,7 @@ Note, the following scenario can be covered by standard regression models:
 This code is used to calculate prediction intervals. In its most basic form it is:
 
 $$
-\text{95% CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
+95\% \text{ CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
 $$
 However, due to the skewness of the count data, we often choose to use a `2/3s transformation`.
 

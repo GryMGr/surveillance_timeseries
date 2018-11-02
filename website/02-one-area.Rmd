@@ -86,7 +86,7 @@ summary(nfit1)
 If we want to identify outbreaks, then we need to use the standard prediction interval formula:
 
 $$
-\text{95% CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
+95\% \text{ CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
 $$
 This allows us to identify what the expected thresholds are:
 
