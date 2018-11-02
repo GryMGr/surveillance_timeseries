@@ -1,22 +1,17 @@
 --- 
-title: "Surveillance and time series"
+title: "Time Series Analysis"
 author: "Richard White"
-date: "2018-11-08"
-knit: "bookdown::render_book"
-bibliography: [book.bib]
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-colorlinks: yes
-lot: yes
-lof: yes
-fontsize: 12pt
-site: bookdown::bookdown_site
-description: "X"
-url: 'https\://folkehelseinstituttet.github.io/surveillance_timeseries/'
 github-repo: folkehelseinstituttet/surveillance_timeseries
-cover-image: images/fhi.svg
+description: "A short course in learning which statistical methods should be applied where."
 ---
 
 # Preface {-}
 
-This is a short presentation given at FHI for the surveillance group.
+Time series analysis
