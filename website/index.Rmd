@@ -25,4 +25,4 @@ If we have more than one variable measured over time (e.g. outcome and an exposu
 
 It is important to note that if we define our exposure as "time" then we can use the regression framework to estimate descriptive statistics about the data. This means we can use the same regression framework for the two kinds of analyses we will be focusing on.
 
-"Regression analyses" are very similar to ordinary regressions that you have been working with for many years. The only difference is that they **may** have more advanced data structures that your normal methods cannot handle.
+The "regression framework" is very similar to ordinary regressions that you have been working with for many years. The only difference is that some of the data **may** have more advanced data structures that your normal methods cannot handle.
