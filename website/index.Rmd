@@ -1,5 +1,5 @@
 --- 
-title: "Time Series Analysis"
+title: "Time Series and Longitudinal Analysis"
 author: "Richard White"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -14,4 +14,15 @@ description: "A short course in learning which statistical methods should be app
 
 # Preface {-}
 
-Time series analysis
+When dealing with data measured over time, there are two kinds of analyses that can be performed.
+
+"Time series" analyses generally deal with one variable (the outcome). We can then either:
+
+1. Predict the future only using the previous observations. E.g. predict tomorrow's temperature, using today's and yesterday's temperature as exposures. We will not be focusing on these kinds of analyses.
+2. Estimate descriptive statistics about the data. E.g. Today's data is much higher than expected (outbreak?). We will focus on these kinds of analyses.
+
+If we have more than one variable measured over time (e.g. outcome and an exposure) then we can run regression analyses. E.g. seeing how the number of tuberculosis patients (outcome) is affected by the number of immigrants to Norway (exposure) over a 20 year period. We will focus on these kinds of analyses.
+
+It is important to note that if we define our exposure as "time" then we can use the regression framework to estimate descriptive statistics about the data. This means we can use the same regression framework for the two kinds of analyses we will be focusing on.
+
+"Regression analyses" are very similar to ordinary regressions that you have been working with for many years. The only difference is that they **may** have more advanced data structures that your normal methods cannot handle.

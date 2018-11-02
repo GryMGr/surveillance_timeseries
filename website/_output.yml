@@ -4,7 +4,7 @@ bookdown::gitbook:
     toc:
       collapse: section
       before: |
-        <li><a href="./">Longitudinal Analysis</a></li>
+        <li><a href="./">Time Series/Longitudinal</a></li>
       after: |
         <li><a href="https://www.fhi.no/" target="blank">www.fhi.no</a></li>
     download: ["pdf", "epub"]
