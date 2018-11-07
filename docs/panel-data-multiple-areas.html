@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Time Series and Longitudinal Analysis</title>
+  <meta name="description" content="A short course in learning which statistical methods should be applied where.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Time Series and Longitudinal Analysis" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A short course in learning which statistical methods should be applied where." />
+  <meta name="github-repo" content="folkehelseinstituttet/surveillance_timeseries" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Time Series and Longitudinal Analysis" />
+  
+  <meta name="twitter:description" content="A short course in learning which statistical methods should be applied where." />
+  
+
+<meta name="author" content="Richard White">
+
+
+<meta name="date" content="2018-11-07">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="panel-data-one-area.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Time Series/Longitudinal</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="definitions-and-scenarios.html"><a href="definitions-and-scenarios.html"><i class="fa fa-check"></i><b>1</b> Definitions and Scenarios</a><ul>
+<li class="chapter" data-level="1.1" data-path="definitions-and-scenarios.html"><a href="definitions-and-scenarios.html#panel-data"><i class="fa fa-check"></i><b>1.1</b> Panel Data</a></li>
+<li class="chapter" data-level="1.2" data-path="definitions-and-scenarios.html"><a href="definitions-and-scenarios.html#autocorrelation"><i class="fa fa-check"></i><b>1.2</b> Autocorrelation</a></li>
+<li class="chapter" data-level="1.3" data-path="definitions-and-scenarios.html"><a href="definitions-and-scenarios.html#scenarios"><i class="fa fa-check"></i><b>1.3</b> Scenarios</a></li>
+<li class="chapter" data-level="1.4" data-path="definitions-and-scenarios.html"><a href="definitions-and-scenarios.html#useful-code"><i class="fa fa-check"></i><b>1.4</b> Useful Code</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html"><i class="fa fa-check"></i><b>2</b> Panel Data - One Area</a><ul>
+<li class="chapter" data-level="2.1" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#aim"><i class="fa fa-check"></i><b>2.1</b> Aim</a></li>
+<li class="chapter" data-level="2.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#data"><i class="fa fa-check"></i><b>2.2</b> Data</a></li>
+<li class="chapter" data-level="2.3" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#model-with-non-parametric-seasonality"><i class="fa fa-check"></i><b>2.3</b> Model With Non-Parametric Seasonality</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#seasonality"><i class="fa fa-check"></i><b>2.3.1</b> Seasonality</a></li>
+<li class="chapter" data-level="2.3.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#yearly-trend"><i class="fa fa-check"></i><b>2.3.2</b> Yearly trend</a></li>
+<li class="chapter" data-level="2.3.3" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#association-with-rainfall"><i class="fa fa-check"></i><b>2.3.3</b> Association With Rainfall</a></li>
+<li class="chapter" data-level="2.3.4" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#outbreaks"><i class="fa fa-check"></i><b>2.3.4</b> Outbreaks</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#model-with-parametric-seasonality"><i class="fa fa-check"></i><b>2.4</b> Model With Parametric Seasonality</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#seasonality-1"><i class="fa fa-check"></i><b>2.4.1</b> Seasonality</a></li>
+<li class="chapter" data-level="2.4.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#yearly-trend-1"><i class="fa fa-check"></i><b>2.4.2</b> Yearly trend</a></li>
+<li class="chapter" data-level="2.4.3" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#association-with-rainfall-1"><i class="fa fa-check"></i><b>2.4.3</b> Association With Rainfall</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#autocorrelation-1"><i class="fa fa-check"></i><b>2.5</b> Autocorrelation</a></li>
+<li class="chapter" data-level="2.6" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#hints-for-future-analyses"><i class="fa fa-check"></i><b>2.6</b> Hints For Future Analyses</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#zeroes-in-your-individial---aggregated-dataset"><i class="fa fa-check"></i><b>2.6.1</b> Zeroes In Your Individial -&gt; Aggregated Dataset</a></li>
+<li class="chapter" data-level="2.6.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#lagging-of-exposures"><i class="fa fa-check"></i><b>2.6.2</b> Lagging Of Exposures</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html"><i class="fa fa-check"></i><b>3</b> Panel data - Multiple Areas</a><ul>
+<li class="chapter" data-level="3.1" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html#aim-1"><i class="fa fa-check"></i><b>3.1</b> Aim</a></li>
+<li class="chapter" data-level="3.2" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html#creating-the-data"><i class="fa fa-check"></i><b>3.2</b> Creating the data</a></li>
+<li class="chapter" data-level="3.3" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html#investigating-the-data"><i class="fa fa-check"></i><b>3.3</b> Investigating the data</a></li>
+<li class="chapter" data-level="3.4" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html#time-trend-within-geographical-areas"><i class="fa fa-check"></i><b>3.4</b> Time Trend Within Geographical Areas</a></li>
+<li class="chapter" data-level="3.5" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html#applying-the-regression-models"><i class="fa fa-check"></i><b>3.5</b> Applying The Regression Models</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://www.fhi.no/" target="blank">www.fhi.no</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Time Series and Longitudinal Analysis</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="panel-data---multiple-areas" class="section level1">
+<h1><span class="header-section-number">3</span> Panel data - Multiple Areas</h1>
+<div id="aim-1" class="section level2">
+<h2><span class="header-section-number">3.1</span> Aim</h2>
+<p>We are given a dataset containing yearly counts of diseases from multiple geographical areas.</p>
+<p>We will explore how this is different from the one area case.</p>
+<p>For this section, we will use linear regression to make the calculations easier to work with, but the principle is the same as with poisson and negative binomial regression.</p>
+</div>
+<div id="creating-the-data" class="section level2">
+<h2><span class="header-section-number">3.2</span> Creating the data</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(data.table)
+<span class="kw">library</span>(lme4)</code></pre></div>
+<pre><code>## Loading required package: Matrix</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+<span class="kw">set.seed</span>(<span class="dv">4</span>)
+
+fylkeIntercepts &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">fylke=</span><span class="dv">1</span><span class="op">:</span><span class="dv">3</span>,<span class="dt">fylkeIntercepts=</span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">30</span>))
+
+d &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">fylke=</span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>,<span class="dt">each=</span><span class="dv">100</span>))
+d &lt;-<span class="st"> </span><span class="kw">merge</span>(d,fylkeIntercepts,<span class="dt">by=</span><span class="st">&quot;fylke&quot;</span>)
+d[,mainIntercept<span class="op">:</span><span class="er">=</span><span class="dv">5</span>]
+d[,x<span class="op">:</span><span class="er">=</span><span class="kw">runif</span>(.N)]
+d[,year<span class="op">:</span><span class="er">=</span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">1950</span><span class="op">:</span><span class="dv">2020</span>),.N,<span class="dt">replace=</span>T)]
+d[,yearMinus1950<span class="op">:</span><span class="er">=</span>year<span class="op">-</span><span class="dv">1950</span>]
+d[,mu <span class="op">:</span><span class="er">=</span><span class="st"> </span>mainIntercept <span class="op">+</span><span class="st"> </span>fylkeIntercepts <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span><span class="op">*</span>yearMinus1950]
+d[,y<span class="op">:</span><span class="er">=</span><span class="kw">round</span>(<span class="kw">rnorm</span>(.N,mu,<span class="dt">sd=</span><span class="dv">1</span>))]
+<span class="co">#d[,y:=rpois(.N,mu)]</span>
+
+d[fylke<span class="op">==</span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">1950</span><span class="op">:</span><span class="dv">1980</span>),y<span class="op">:</span><span class="er">=</span><span class="ot">NA</span>]
+d[fylke<span class="op">==</span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">1980</span><span class="op">:</span><span class="dv">2000</span>),y<span class="op">:</span><span class="er">=</span><span class="ot">NA</span>]
+d[fylke<span class="op">==</span><span class="dv">3</span> <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2020</span>),y<span class="op">:</span><span class="er">=</span><span class="ot">NA</span>]
+
+d &lt;-<span class="st"> </span><span class="kw">na.omit</span>(d)</code></pre></div>
+
+</div>
+<div id="investigating-the-data" class="section level2">
+<h2><span class="header-section-number">3.3</span> Investigating the data</h2>
+<p>We begin by blindly looking at the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
+q</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>We then blindly run a linear regression and we see that the number of cases is decreasing over time.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>,<span class="dt">se=</span>F,<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
+q</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p>However, once we reveal the geographical clustering in the data, we can see that our regression model is extremely wrong:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">colour=</span><span class="kw">as.factor</span>(fylke)))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>,<span class="dt">se=</span>F,<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
+q</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+</div>
+<div id="time-trend-within-geographical-areas" class="section level2">
+<h2><span class="header-section-number">3.4</span> Time Trend Within Geographical Areas</h2>
+<p>What we actually want to do, is observe the time trends <code>within</code> each geographical area:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">lm</span>(y<span class="op">~</span><span class="kw">as.factor</span>(fylke) <span class="op">+</span><span class="st"> </span>yearMinus1950,<span class="dt">data=</span>d)
+d[,p<span class="op">:</span><span class="er">=</span><span class="kw">predict</span>(fit,<span class="dt">newdata=</span>d)]
+
+q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">colour=</span><span class="kw">as.factor</span>(fylke)))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">y=</span>p,<span class="dt">group=</span><span class="kw">as.factor</span>(fylke)),<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
+q</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>So how do we achieve this? Basically, by identifying how the areas differ from each other, and then raising/lowering each area as appropriate. The amount that each area differs from the global average is called the <code>area-specific intercept</code>.</p>
+<p>Once we have removed the <code>area-specific intercept</code> from each geographical area, we can (basically) just run a normal regression to find the overall time trend.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[,yMinusIntercept<span class="op">:</span><span class="er">=</span>y]
+d[fylke<span class="op">==</span><span class="dv">2</span>,yMinusIntercept<span class="op">:</span><span class="er">=</span>y<span class="op">--</span><span class="fl">30.0944</span>]
+d[fylke<span class="op">==</span><span class="dv">3</span>,yMinusIntercept<span class="op">:</span><span class="er">=</span>y<span class="op">--</span><span class="fl">59.6795</span>]
+
+q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>yMinusIntercept))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">colour=</span><span class="kw">as.factor</span>(fylke)))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>,<span class="dt">se=</span>F,<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases Minus Area-Specific Intercept&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
+q</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+</div>
+<div id="applying-the-regression-models" class="section level2">
+<h2><span class="header-section-number">3.5</span> Applying The Regression Models</h2>
+<p>blah blah</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="panel-data-one-area.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["website.pdf", "website.epub"],
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
