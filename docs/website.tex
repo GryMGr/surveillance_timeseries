@@ -125,7 +125,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018-11-02}
+    \date{2018-11-07}
 
 \usepackage{booktabs}
 
@@ -229,29 +229,35 @@ use a \texttt{2/3s\ transformation}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{FarringtonThreshold <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(pred, phi, }\DataTypeTok{alpha =} \OtherTok{NULL}\NormalTok{, }\DataTypeTok{z =} \OtherTok{NULL}\NormalTok{, }\DataTypeTok{skewness.transform =} \StringTok{"none"}\NormalTok{) \{}
-\NormalTok{  mu0 <-}\StringTok{ }\NormalTok{pred}\OperatorTok{$}\NormalTok{fit}
-\NormalTok{  tau <-}\StringTok{ }\NormalTok{phi }\OperatorTok{+}\StringTok{ }\NormalTok{(pred}\OperatorTok{$}\NormalTok{se.fit}\OperatorTok{^}\DecValTok{2}\NormalTok{) }\OperatorTok{/}\StringTok{ }\NormalTok{mu0}
-  \ControlFlowTok{switch}\NormalTok{(skewness.transform, }\DataTypeTok{none =}\NormalTok{ \{}
-\NormalTok{    se <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(mu0 }\OperatorTok{*}\StringTok{ }\NormalTok{tau)}
-\NormalTok{    exponent <-}\StringTok{ }\DecValTok{1}
-\NormalTok{  \}, }\StringTok{`}\DataTypeTok{1/2}\StringTok{`}\NormalTok{ =}\StringTok{ }\NormalTok{\{}
-\NormalTok{    se <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1} \OperatorTok{/}\StringTok{ }\DecValTok{4} \OperatorTok{*}\StringTok{ }\NormalTok{tau)}
-\NormalTok{    exponent <-}\StringTok{ }\DecValTok{1} \OperatorTok{/}\StringTok{ }\DecValTok{2}
-\NormalTok{  \}, }\StringTok{`}\DataTypeTok{2/3}\StringTok{`}\NormalTok{ =}\StringTok{ }\NormalTok{\{}
-\NormalTok{    se <-}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{4} \OperatorTok{/}\StringTok{ }\DecValTok{9} \OperatorTok{*}\StringTok{ }\NormalTok{mu0}\OperatorTok{^}\NormalTok{(}\DecValTok{1} \OperatorTok{/}\StringTok{ }\DecValTok{3}\NormalTok{) }\OperatorTok{*}\StringTok{ }\NormalTok{tau)}
-\NormalTok{    exponent <-}\StringTok{ }\DecValTok{2} \OperatorTok{/}\StringTok{ }\DecValTok{3}
-\NormalTok{  \}, \{}
-    \KeywordTok{stop}\NormalTok{(}\StringTok{"No proper exponent in algo.farrington.threshold."}\NormalTok{)}
-\NormalTok{  \})}
-  \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{is.null}\NormalTok{(z)) z <-}\StringTok{ }\KeywordTok{qnorm}\NormalTok{(}\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{alpha }\OperatorTok{/}\StringTok{ }\DecValTok{2}\NormalTok{)}
-\NormalTok{  lu <-}\StringTok{ }\NormalTok{(mu0}\OperatorTok{^}\NormalTok{exponent }\OperatorTok{+}\StringTok{ }\NormalTok{z }\OperatorTok{*}
-\StringTok{    }\NormalTok{se)}\OperatorTok{^}\NormalTok{(}\DecValTok{1} \OperatorTok{/}\StringTok{ }\NormalTok{exponent)}
-
-  \KeywordTok{return}\NormalTok{(lu)}
-\NormalTok{\}}
+\NormalTok{sykdomspuls}\OperatorTok{::}\NormalTok{FarringtonThreshold}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+## function (pred, phi, alpha = NULL, z = NULL, skewness.transform = "none") 
+## {
+##     mu0 <- pred$fit
+##     tau <- phi + (pred$se.fit^2)/mu0
+##     switch(skewness.transform, none = {
+##         se <- sqrt(mu0 * tau)
+##         exponent <- 1
+##     }, `1/2` = {
+##         se <- sqrt(1/4 * tau)
+##         exponent <- 1/2
+##     }, `2/3` = {
+##         se <- sqrt(4/9 * mu0^(1/3) * tau)
+##         exponent <- 2/3
+##     }, {
+##         stop("No proper exponent in algo.farrington.threshold.")
+##     })
+##     if (is.null(z)) 
+##         z <- qnorm(1 - alpha/2)
+##     lu <- (mu0^exponent + z * se)^(1/exponent)
+##     return(lu)
+## }
+## <bytecode: 0x48c1ee0>
+## <environment: namespace:sykdomspuls>
+\end{verbatim}
 
 \chapter{Panel Data - One Area}\label{panel-data---one-area}
 
@@ -455,7 +461,7 @@ prediction interval formula:
 \begin{Highlighting}[]
 \NormalTok{pred <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(nfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{, }\DataTypeTok{se.fit =}\NormalTok{ T, }\DataTypeTok{newdata =}\NormalTok{ d)}
 \NormalTok{d[, threshold0 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{pred}\OperatorTok{$}\NormalTok{fit]}
-\NormalTok{d[, threshold2 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{FarringtonThreshold}\NormalTok{(pred, }\DataTypeTok{phi =} \DecValTok{1}\NormalTok{, }\DataTypeTok{z =} \DecValTok{2}\NormalTok{, }\DataTypeTok{skewness.transform =} \StringTok{"2/3"}\NormalTok{)]}
+\NormalTok{d[, threshold2 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{sykdomspuls}\OperatorTok{::}\KeywordTok{FarringtonThreshold}\NormalTok{(pred, }\DataTypeTok{phi =} \DecValTok{1}\NormalTok{, }\DataTypeTok{z =} \DecValTok{2}\NormalTok{, }\DataTypeTok{skewness.transform =} \StringTok{"2/3"}\NormalTok{)]}
 \end{Highlighting}
 \end{Shaded}
 

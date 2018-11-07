@@ -25,7 +25,7 @@
 <meta name="author" content="Richard White">
 
 
-<meta name="date" content="2018-11-02">
+<meta name="date" content="2018-11-07">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -258,7 +258,7 @@ nfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op
 \]</span> This allows us to identify what the expected thresholds are:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred &lt;-<span class="st"> </span><span class="kw">predict</span>(nfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>, <span class="dt">se.fit =</span> T, <span class="dt">newdata =</span> d)
 d[, threshold0 <span class="op">:</span><span class="er">=</span><span class="st"> </span>pred<span class="op">$</span>fit]
-d[, threshold2 <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">FarringtonThreshold</span>(pred, <span class="dt">phi =</span> <span class="dv">1</span>, <span class="dt">z =</span> <span class="dv">2</span>, <span class="dt">skewness.transform =</span> <span class="st">&quot;2/3&quot;</span>)]</code></pre></div>
+d[, threshold2 <span class="op">:</span><span class="er">=</span><span class="st"> </span>sykdomspuls<span class="op">::</span><span class="kw">FarringtonThreshold</span>(pred, <span class="dt">phi =</span> <span class="dv">1</span>, <span class="dt">z =</span> <span class="dv">2</span>, <span class="dt">skewness.transform =</span> <span class="st">&quot;2/3&quot;</span>)]</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d[year<span class="op">&gt;</span><span class="dv">2015</span>],<span class="kw">aes</span>(<span class="dt">x=</span>date,<span class="dt">y=</span>y))
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_ribbon</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">ymin=</span><span class="op">-</span><span class="ot">Inf</span>,<span class="dt">ymax=</span>threshold2),<span class="dt">fill=</span><span class="st">&quot;green&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.5</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_ribbon</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">ymin=</span>threshold2,<span class="dt">ymax=</span><span class="ot">Inf</span>),<span class="dt">fill=</span><span class="st">&quot;red&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.5</span>)
