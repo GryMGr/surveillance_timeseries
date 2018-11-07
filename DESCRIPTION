@@ -9,5 +9,6 @@ Imports:
   lomb,
   lmtest,
   MASS,
-  lme4
-Remotes: rstudio/bookdown, raubreywhite/RAWmisc, folkehelseinstituttet/fhi, folkehelseinstituttet/sykdomspuls
+  lme4,
+  sykdomspuls
+Remotes: rstudio/bookdown
