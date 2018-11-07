@@ -93,7 +93,7 @@ This allows us to identify what the expected thresholds are:
 ```{r}
 pred <- predict(nfit1, type = "response", se.fit = T, newdata = d)
 d[, threshold0 := pred$fit]
-d[, threshold2 := FarringtonThreshold(pred, phi = 1, z = 2, skewness.transform = "2/3")]
+d[, threshold2 := sykdomspuls::FarringtonThreshold(pred, phi = 1, z = 2, skewness.transform = "2/3")]
 ```
 
 ```{r}
