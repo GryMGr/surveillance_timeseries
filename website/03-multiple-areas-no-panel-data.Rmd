@@ -4,76 +4,115 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Not panel data: Multiple areas
+# Panel data - Multiple Areas
 
 ## Aim
 
-We are given a dataset containing counts of diseases from multiple geographical areas. We want to identify:
+We are given a dataset containing yearly counts of diseases from multiple geographical areas.
 
-- Is there a general yearly trend (i.e. increasing or decreasing from year to year?)
-- Is variable `x` associated with the outcome?
+We will explore how this is different from the one area case. 
 
-\newpage
+For this section, we will use linear regression to make the calculations easier to work with, but the principle is the same as with poisson and negative binomial regression.
 
 ## Creating the data
-
-The data for this chapter is available at: http://rwhite.no/longitudinal_analysis/data/chapter_5.csv
 
 ```{r warning=FALSE}
 library(data.table)
 library(lme4)
+library(ggplot2)
 set.seed(4)
 
-fylkeIntercepts <- data.table(fylke=1:20,fylkeIntercepts=rnorm(20))
+fylkeIntercepts <- data.table(fylke=1:3,fylkeIntercepts=c(30,0,-30))
 
-d <- data.table(fylke=rep(1:20,each=100))
+d <- data.table(fylke=rep(1:3,each=100))
 d <- merge(d,fylkeIntercepts,by="fylke")
-d[,mainIntercept:=3]
+d[,mainIntercept:=5]
 d[,x:=runif(.N)]
-d[,year:=sample(c(1950:2018),.N,replace=T)]
-d[,mu := exp(mainIntercept + fylkeIntercepts + 3*x)]
-d[,y:=rpois(.N,mu)]
+d[,year:=sample(c(1950:2020),.N,replace=T)]
+d[,yearMinus1950:=year-1950]
+d[,mu := mainIntercept + fylkeIntercepts + 0.5*yearMinus1950]
+d[,y:=round(rnorm(.N,mu,sd=1))]
+#d[,y:=rpois(.N,mu)]
 
-fwrite(d,"data/chapter_5.csv")
+d[fylke==1 & !year %in% c(1950:1980),y:=NA]
+d[fylke==2 & !year %in% c(1980:2000),y:=NA]
+d[fylke==3 & !year %in% c(2000:2020),y:=NA]
+
+d <- na.omit(d)
 ```
 
 \newpage
 
 ## Investigating the data
 
-We can see from the data that we have 20 geographical areas (`fylke`) with 100 observations for each fylke, but the sampling did not happen consistently (some years have multiple measurements, other years have no measurements).
-
-This means we have:
-
-- multiple geographical areas
-- multiple observations in each geographical area
-- not panel data
+We begin by blindly looking at the data.
 
 ```{r}
-print(d)
+q <- ggplot(d,aes(x=year,y=y))
+q <- q + geom_point()
+q <- q + scale_x_continuous("Year")
+q <- q + scale_y_continuous("Cases")
+q
 ```
 
-\newpage
+We then blindly run a linear regression and we see that the number of cases is decreasing over time.
 
-## Regression
-
-For this scenario, we use the `lme4::glmer` function in R. We need to introduce a `(1|fylke)` term to identify the geographical areas (i.e. clusters). In STATA we use the `meglm` function and introduce a `|| fylke:` term to identify the geographical areas (i.e. clusters).
-
-```{}
-// STATA CODE STARTS
-insheet using "chapter_5.csv", clear
-
-gen yearMinus2000 = year-2000
-meglm y x yearMinus2000 || fylke:, family(poisson)
-// STATA CODE ENDS
+```{r}
+q <- ggplot(d,aes(x=year,y=y))
+q <- q + geom_point()
+q <- q + stat_smooth(method="lm",se=F,colour="red")
+q <- q + scale_x_continuous("Year")
+q <- q + scale_y_continuous("Cases")
+q
 ```
 
-```{r warning=FALSE}
-# R CODE
-d[,yearMinus2000:=year-2000]
-summary(fit <- lme4::glmer(y~x + yearMinus2000 + (1|fylke),data=d,family=poisson()))
+However, once we reveal the geographical clustering in the data, we can see that our regression model is extremely wrong: 
+
+```{r}
+q <- ggplot(d,aes(x=year,y=y))
+q <- q + geom_point(mapping=aes(colour=as.factor(fylke)))
+q <- q + stat_smooth(method="lm",se=F,colour="red")
+q <- q + scale_x_continuous("Year")
+q <- q + scale_y_continuous("Cases")
+q <- q + scale_colour_brewer("Area",palette="Set1")
+q
 ```
 
-You can see that the format of the results is the same as an ordinary regression.
+## Time Trend Within Geographical Areas
 
+What we actually want to do, is observe the time trends `within` each geographical area:
 
+```{r}
+fit <- lm(y~as.factor(fylke) + yearMinus1950,data=d)
+d[,p:=predict(fit,newdata=d)]
+
+q <- ggplot(d,aes(x=year,y=y))
+q <- q + geom_point(mapping=aes(colour=as.factor(fylke)))
+q <- q + geom_line(mapping=aes(y=p,group=as.factor(fylke)),colour="red")
+q <- q + scale_x_continuous("Year")
+q <- q + scale_y_continuous("Cases")
+q <- q + scale_colour_brewer("Area",palette="Set1")
+q
+```
+
+So how do we achieve this? Basically, by identifying how the areas differ from each other, and then raising/lowering each area as appropriate. The amount that each area differs from the global average is called the `area-specific intercept`.
+
+Once we have removed the `area-specific intercept` from each geographical area, we can (basically) just run a normal regression to find the overall time trend.
+
+```{r}
+d[,yMinusIntercept:=y]
+d[fylke==2,yMinusIntercept:=y--30.0944]
+d[fylke==3,yMinusIntercept:=y--59.6795]
+
+q <- ggplot(d,aes(x=year,y=yMinusIntercept))
+q <- q + geom_point(mapping=aes(colour=as.factor(fylke)))
+q <- q + stat_smooth(method="lm",se=F,colour="red")
+q <- q + scale_x_continuous("Year")
+q <- q + scale_y_continuous("Cases Minus Area-Specific Intercept")
+q <- q + scale_colour_brewer("Area",palette="Set1")
+q
+```
+
+## Applying The Regression Models
+
+blah blah

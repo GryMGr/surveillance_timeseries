@@ -12,8 +12,8 @@ When you have panel data, autocorrelation is the correlation between subsequent 
 
 In this course we will consider two scenarios where we have multiple observations for each geographical area:
 
-- Panel data: One geographical area, with/without autocorrelation
-- Multiple geographical areas without autocorrelation
+- Panel data: One geographical area with/without autocorrelation
+- Panel data: Multiple geographical areas without autocorrelation
 
 Note, the following scenario can be covered by standard regression models:
 
