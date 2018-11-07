@@ -115,4 +115,16 @@ q
 
 ## Applying The Regression Models
 
-blah blah
+So how do you obtain `area-specific intercepts`? If you have a large amount of datapoints for each area, and not many areas, you can just include `area` as a categorical variable in your regression. These `area-specific intercepts` are called `fixed effects`.
+
+If you have few datapoints for each area, and a lot of areas, you will need to use a `mixed effects` regression model, including `random intercepts` for each `area`. 
+
+## Hints For Future Analyses
+
+In general:
+
+$$\text{number of observations} = \text{number of time points} \times \text{number of areas}$$
+
+So 5 years of data for aggregated Norway is worse than 5 years of data for every municipality in Norway.
+
+
