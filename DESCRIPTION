@@ -10,5 +10,6 @@ Imports:
   lmtest,
   MASS,
   lme4,
-  sykdomspuls
+  sykdomspuls,
+  RAWmisc
 Remotes: rstudio/bookdown

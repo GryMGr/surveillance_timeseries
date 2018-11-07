@@ -10,11 +10,10 @@ When you have panel data, autocorrelation is the correlation between subsequent 
 
 ## Scenarios
 
-In this course we will consider three scenarios where we have multiple observations for each geographical area:
+In this course we will consider two scenarios where we have multiple observations for each geographical area:
 
 - Panel data: One geographical area, with/without autocorrelation
-- Not panel data: Multiple geographical areas
-- Panel data: Multiple geographical areas, with/without autocorrelation
+- Multiple geographical areas without autocorrelation
 
 Note, the following scenario can be covered by standard regression models:
 
@@ -25,10 +24,12 @@ Note, the following scenario can be covered by standard regression models:
 This code is used to calculate prediction intervals. In its most basic form it is:
 
 $$
-95\% \text{ CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
+95\% \text{ prediction interval} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
 $$
 However, due to the skewness of the count data, we often choose to use a `2/3s transformation`.
 
 ```{r}
 sykdomspuls::FarringtonThreshold
 ```
+
+Please note that a prediction interval is not the same as a confidence interval!

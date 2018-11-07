@@ -4,10 +4,11 @@
 
 We are given a dataset containing daily counts of diseases from one geographical area. We want to identify:
 
-- Does seasonality exist?
-- If seasonality exists, when are the high/low seasons?
-- Is there a general yearly trend (i.e. increasing or decreasing from year to year?)
-- Is daily rainfall associated with the number of cases?
+1. Does seasonality exist?
+2. If seasonality exists, when are the high/low seasons?
+3. Is there a general yearly trend (i.e. increasing or decreasing from year to year?)
+4. Is daily rainfall associated with the number of cases?
+5. When are there outbreaks?
 
 ```{r warning=FALSE}
 library(data.table)
@@ -47,12 +48,12 @@ q
 
 We split out the data for a few years and see a clear seasonal trend:
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 q <- ggplot(d[year %in% c(2005:2010)],aes(x=dayOfYear,y=y))
 q <- q + facet_wrap(~year)
 q <- q + geom_point()
 q <- q + stat_smooth(colour="red")
-q <- q + scale_y_continuous("Day of year")
+q <- q + scale_x_continuous("Day of year")
 q <- q + scale_y_continuous("Cases")
 q
 ```
@@ -69,11 +70,15 @@ nfit0 <- glm(y~yearMinus2000 + dailyrainfall, data=d, family=poisson())
 nfit1 <- glm(y~yearMinus2000 + dailyrainfall + as.factor(month), data=d, family=poisson())
 ```
 
+### Seasonality
+
 We can test the `month` categorical variable using a likelihood ratio test:
 
 ```{r}
 lmtest::lrtest(nfit0, nfit1)
 ```
+
+**Question 1:** Does seasonality exist?
 
 And then we can look at the output of our regression:
 
@@ -83,10 +88,22 @@ summary(nfit1)
 
 *NOTE:* See that this is basically the same as a normal regression.
 
+**Question 2:** If seasonality exists, when are the high/low seasons?
+
+### Yearly trend
+
+**Question 3:** Is there a general yearly trend (i.e. increasing or decreasing from year to year?)
+
+### Association With Rainfall
+
+**Question 4:** Is daily rainfall associated with the number of cases?
+
+### Outbreaks
+
 If we want to identify outbreaks, then we need to use the standard prediction interval formula:
 
 $$
-95\% \text{ CI} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
+95\% \text{ prediction interval} = \text{sample average} \pm 1.96 \times \text{sample standard deviation} \sqrt{ 1 + 1 / n}
 $$
 This allows us to identify what the expected thresholds are:
 
@@ -95,6 +112,8 @@ pred <- predict(nfit1, type = "response", se.fit = T, newdata = d)
 d[, threshold0 := pred$fit]
 d[, threshold2 := sykdomspuls::FarringtonThreshold(pred, phi = 1, z = 2, skewness.transform = "2/3")]
 ```
+
+**Question 5:** When are there outbreaks?
 
 ```{r}
 q <- ggplot(d[year>2015],aes(x=date,y=y))
@@ -118,6 +137,8 @@ Parametric approaches are more powerful but require more effort:
 - Back-transform these estimates into human-understandable values (day of peak, day of trough)
 
 *NOTE:* You don't always have to investigate seasonality! It depends entirely on what the purpose of your analysis is!
+
+### Seasonality
 
 The Lomb-Scargle Periodogram shows a clear seasonality with a period of 365 days.
 
@@ -143,6 +164,8 @@ We can test the seasonality using a likelihood ratio test (which we already stro
 lmtest::lrtest(pfit0, pfit1)
 ```
 
+**Question 1:** Does seasonality exist?
+
 And then we can look at the output of our regression:
 
 ```{r}
@@ -154,30 +177,37 @@ We also see that the (significant!) coefficient for `year` is `0.1` which means 
 *NOTE:* See that this is basically the same as a normal regression.
 
 Through the likelihood ratio test we saw a clear significant seasonal effect. We can now use trigonometry to back-calculate the amplitude and location of peak/troughs from the `cos365` and `sin365` estimates:
+
 ```{r}
-b1 <- 1.428417 # sin coefficient
-b2 <- -0.512912 # cos coefficient
-amplitude <- sqrt(b1^2 + b2^2)
-p <- atan(b1/b2) * 365/2/pi
-if (p > 0) {
-    peak <- p
-    trough <- p + 365/2
-} else {
-    peak <- p + 365/2
-    trough <- p + 365
-}
-if (b1 < 0) {
-    g <- peak
-    peak <- trough
-    trough <- g
-}
-print(sprintf("amplitude is estimated as %s, peak is estimated as %s, trough is estimated as %s",round(amplitude,2),round(peak),round(trough)))
+RAWmisc::TransformCosSinToAmplitudePeakTrough
+```
 
-print(sprintf("true values are: amplitude: %s, peak: %s, trough: %s",round(AMPLITUDE,2),round(365/4+SEASONAL_HORIZONTAL_SHIFT),round(3*365/4+SEASONAL_HORIZONTAL_SHIFT)))
+```{r}
+retval <- RAWmisc::TransformCosSinToAmplitudePeakTrough(
+  cos_b = -0.512912, # cos coefficient
+  sin_b = 1.428417 # sin coefficient
+  )
 
+print(sprintf("amplitude is estimated as %s",round(retval$amplitude,2)))
+print(sprintf("peak is estimated as %s",round(retval$peak)))
+print(sprintf("trough is estimated as %s",round(retval$trough)))
+
+print(sprintf("true amplitude is %s",round(AMPLITUDE,2)))
+print(sprintf("true peak is %s",round(365/4+SEASONAL_HORIZONTAL_SHIFT)))
+print(sprintf("true trough is %s",round(3*365/4+SEASONAL_HORIZONTAL_SHIFT)))
 ```
 
 *NOTE:* An amplitude of 1.5 means that when comparing the average time of year to the peak, the peak is expected to be `exp(1.5)=4.5` times higher than average. We take the exponential because we have run a poisson regression (so think incident rate ratio).
+
+**Question 2:** If seasonality exists, when are the high/low seasons?
+
+### Yearly trend
+
+**Question 3:** Is there a general yearly trend (i.e. increasing or decreasing from year to year?)
+
+### Association With Rainfall
+
+**Question 4:** Is daily rainfall associated with the number of cases?
 
 ## Autocorrelation
 
@@ -198,3 +228,67 @@ d[,residuals:=residuals(pfit1, type = "response")]
 d[,predicted:=predict(pfit1, type = "response")]
 pacf(d$residuals)
 ```
+
+## Hints For Future Analyses
+
+### Zeroes In Your Individial -> Aggregated Dataset
+
+If your data is at the individual level (i.e. one row per case), then you will need to aggregate it to daily/weekly/monthly levels. If your data source is a registry, and you assume that your dataset contains all of the reported cases, then this means `"no reports"="no cases"`. This means that after aggregating, **you need to make sure that your collapsed/aggregated dataset has zeroes in it!!**
+
+In the following dataset, we have one case per day from `2000-01-01` until `2000-01-29` and then again one case per day from `2000-08-08` until `2000-12-31`.
+
+```{r}
+d <- data.table(date=seq.Date(
+  from=as.Date("2000-01-01"),
+  to=as.Date("2000-12-31"),
+  by=1))
+d <- d[-c(30:220)]
+d[,id:=1:.N]
+d[,month:=as.numeric(format.Date(date,"%m"))]
+
+print(d)
+```
+
+If we collapse the data into months:
+
+```{r}
+collapsed <- d[,.(
+  n=.N
+), keyby=.(month)]
+
+print(collapsed)
+```
+
+You see that we are missing months `1` through to `6`. We cannot analyse this data, because **we do not have any zeros**.
+
+How do we fix this? We create a `skeleton` of our results:
+
+```{r}
+skeleton <- data.table(month=1:12)
+print(skeleton)
+```
+
+We then merge our collapsed data with the skeleton:
+
+```{r}
+final <- merge(skeleton, collapsed, by="month", all.x=TRUE)
+print(final)
+```
+
+We then set all of the "missing" to 0:
+
+```{r}
+final[is.na(n), n:=0]
+print(final)
+```
+
+Now we can analyze our data!
+
+### Lagging Of Exposures
+
+If you are interested in seeing how exposures affect your outcome (e.g. `rainfall`) then you might want to consider lagging your exposure. This will show you `how did the rainfall from last week affect the number of cases this week?`
+
+
+
+
+
