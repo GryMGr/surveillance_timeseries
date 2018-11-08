@@ -240,7 +240,7 @@ d <- data.table(
   Cases = c(350000, 530000),
   Population = c(3500000, 5300000)
 )
-d[, `Cases per 100.000 Pop` := Cases / Population * 100000]
+d[, `Cases per\n100.000 Pop` := Cases / Population * 100000]
 d <- melt.data.table(d, id.vars = "year")
 ```
 
