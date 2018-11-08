@@ -128,7 +128,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#autocorrelation-1"><i class="fa fa-check"></i><b>2.5</b> Autocorrelation</a></li>
 <li class="chapter" data-level="2.6" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#hints-for-future-analyses"><i class="fa fa-check"></i><b>2.6</b> Hints For Future Analyses</a><ul>
 <li class="chapter" data-level="2.6.1" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#always-use-a-denominator"><i class="fa fa-check"></i><b>2.6.1</b> Always Use A Denominator</a></li>
-<li class="chapter" data-level="2.6.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#negative-binomial-poisson"><i class="fa fa-check"></i><b>2.6.2</b> Negative Binomial &gt; Poisson</a></li>
+<li class="chapter" data-level="2.6.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#negative-binomial-is-generally-better-than-poisson"><i class="fa fa-check"></i><b>2.6.2</b> Negative Binomial Is Generally Better Than Poisson</a></li>
 <li class="chapter" data-level="2.6.3" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#zeroes-in-your-individial---aggregated-dataset"><i class="fa fa-check"></i><b>2.6.3</b> Zeroes In Your Individial -&gt; Aggregated Dataset</a></li>
 <li class="chapter" data-level="2.6.4" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#lagging-of-exposures"><i class="fa fa-check"></i><b>2.6.4</b> Lagging Of Exposures</a></li>
 </ul></li>
@@ -177,21 +177,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">set.seed</span>(<span class="dv">4</span>)
 
-fylkeIntercepts &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">fylke=</span><span class="dv">1</span><span class="op">:</span><span class="dv">3</span>,<span class="dt">fylkeIntercepts=</span><span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">30</span>))
+fylkeIntercepts &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">fylke =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">fylkeIntercepts =</span> <span class="kw">c</span>(<span class="dv">30</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">30</span>))
 
-d &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">fylke=</span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>,<span class="dt">each=</span><span class="dv">100</span>))
-d &lt;-<span class="st"> </span><span class="kw">merge</span>(d,fylkeIntercepts,<span class="dt">by=</span><span class="st">&quot;fylke&quot;</span>)
-d[,mainIntercept<span class="op">:</span><span class="er">=</span><span class="dv">5</span>]
-d[,x<span class="op">:</span><span class="er">=</span><span class="kw">runif</span>(.N)]
-d[,year<span class="op">:</span><span class="er">=</span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">1950</span><span class="op">:</span><span class="dv">2020</span>),.N,<span class="dt">replace=</span>T)]
-d[,yearMinus1950<span class="op">:</span><span class="er">=</span>year<span class="op">-</span><span class="dv">1950</span>]
-d[,mu <span class="op">:</span><span class="er">=</span><span class="st"> </span>mainIntercept <span class="op">+</span><span class="st"> </span>fylkeIntercepts <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span><span class="op">*</span>yearMinus1950]
-d[,y<span class="op">:</span><span class="er">=</span><span class="kw">round</span>(<span class="kw">rnorm</span>(.N,mu,<span class="dt">sd=</span><span class="dv">1</span>))]
-<span class="co">#d[,y:=rpois(.N,mu)]</span>
+d &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">fylke =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">each =</span> <span class="dv">100</span>))
+d &lt;-<span class="st"> </span><span class="kw">merge</span>(d, fylkeIntercepts, <span class="dt">by =</span> <span class="st">&quot;fylke&quot;</span>)
+d[, mainIntercept <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="dv">5</span>]
+d[, x <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">runif</span>(.N)]
+d[, year <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">1950</span><span class="op">:</span><span class="dv">2020</span>), .N, <span class="dt">replace =</span> T)]
+d[, yearMinus1950 <span class="op">:</span><span class="er">=</span><span class="st"> </span>year <span class="op">-</span><span class="st"> </span><span class="dv">1950</span>]
+d[, mu <span class="op">:</span><span class="er">=</span><span class="st"> </span>mainIntercept <span class="op">+</span><span class="st"> </span>fylkeIntercepts <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>yearMinus1950]
+d[, y <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">round</span>(<span class="kw">rnorm</span>(.N, mu, <span class="dt">sd =</span> <span class="dv">1</span>))]
+<span class="co"># d[,y:=rpois(.N,mu)]</span>
 
-d[fylke<span class="op">==</span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">1950</span><span class="op">:</span><span class="dv">1980</span>),y<span class="op">:</span><span class="er">=</span><span class="ot">NA</span>]
-d[fylke<span class="op">==</span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">1980</span><span class="op">:</span><span class="dv">2000</span>),y<span class="op">:</span><span class="er">=</span><span class="ot">NA</span>]
-d[fylke<span class="op">==</span><span class="dv">3</span> <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2020</span>),y<span class="op">:</span><span class="er">=</span><span class="ot">NA</span>]
+d[fylke <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">1950</span><span class="op">:</span><span class="dv">1980</span>), y <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="ot">NA</span>]
+d[fylke <span class="op">==</span><span class="st"> </span><span class="dv">2</span> <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">1980</span><span class="op">:</span><span class="dv">2000</span>), y <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="ot">NA</span>]
+d[fylke <span class="op">==</span><span class="st"> </span><span class="dv">3</span> <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span>year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2000</span><span class="op">:</span><span class="dv">2020</span>), y <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="ot">NA</span>]
 
 d &lt;-<span class="st"> </span><span class="kw">na.omit</span>(d)</code></pre></div>
 
@@ -199,27 +199,27 @@ d &lt;-<span class="st"> </span><span class="kw">na.omit</span>(d)</code></pre><
 <div id="investigating-the-data" class="section level2">
 <h2><span class="header-section-number">3.3</span> Investigating the data</h2>
 <p>We begin by blindly looking at the data.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>y))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> y))
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <p>We then blindly run a linear regression and we see that the number of cases is decreasing over time.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>y))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> y))
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>,<span class="dt">se=</span>F,<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> F, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 <p>However, once we reveal the geographical clustering in the data, we can see that our regression model is extremely wrong:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>y))
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">colour=</span><span class="kw">as.factor</span>(fylke)))
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>,<span class="dt">se=</span>F,<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">colour =</span> <span class="kw">as.factor</span>(fylke)))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> F, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)
 q</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
 <p><strong>Note:</strong> The differing <code>number of cases</code> in each geographical area could also be due to differing <code>populations</code>. Always remember to <code>use a denominator</code>!!!</p>
@@ -227,36 +227,90 @@ q</code></pre></div>
 <div id="time-trend-within-geographical-areas" class="section level2">
 <h2><span class="header-section-number">3.4</span> Time Trend Within Geographical Areas</h2>
 <p>What we actually want to do, is observe the time trends <code>within</code> each geographical area:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">lm</span>(y<span class="op">~</span><span class="kw">as.factor</span>(fylke) <span class="op">+</span><span class="st"> </span>yearMinus1950,<span class="dt">data=</span>d)
-d[,p<span class="op">:</span><span class="er">=</span><span class="kw">predict</span>(fit,<span class="dt">newdata=</span>d)]
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">as.factor</span>(fylke) <span class="op">+</span><span class="st"> </span>yearMinus1950, <span class="dt">data =</span> d)
+d[, p <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">predict</span>(fit, <span class="dt">newdata =</span> d)]
 
-q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>y))
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">colour=</span><span class="kw">as.factor</span>(fylke)))
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">y=</span>p,<span class="dt">group=</span><span class="kw">as.factor</span>(fylke)),<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)
+q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">colour =</span> <span class="kw">as.factor</span>(fylke)))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> p, <span class="dt">group =</span> <span class="kw">as.factor</span>(fylke)), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)
 q</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
 <p>So how do we achieve this? Basically, by identifying how the areas differ from each other, and then raising/lowering each area as appropriate. The amount that each area differs from the global average is called the <code>area-specific intercept</code>.</p>
 <p>Once we have removed the <code>area-specific intercept</code> from each geographical area, we can (basically) just run a normal regression to find the overall time trend.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[,yMinusIntercept<span class="op">:</span><span class="er">=</span>y]
-d[fylke<span class="op">==</span><span class="dv">2</span>,yMinusIntercept<span class="op">:</span><span class="er">=</span>y<span class="op">--</span><span class="fl">30.0944</span>]
-d[fylke<span class="op">==</span><span class="dv">3</span>,yMinusIntercept<span class="op">:</span><span class="er">=</span>y<span class="op">--</span><span class="fl">59.6795</span>]
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[, yMinusIntercept <span class="op">:</span><span class="er">=</span><span class="st"> </span>y]
+d[fylke <span class="op">==</span><span class="st"> </span><span class="dv">2</span>, yMinusIntercept <span class="op">:</span><span class="er">=</span><span class="st"> </span>y <span class="op">-</span><span class="st"> </span><span class="op">-</span><span class="fl">30.0944</span>]
+d[fylke <span class="op">==</span><span class="st"> </span><span class="dv">3</span>, yMinusIntercept <span class="op">:</span><span class="er">=</span><span class="st"> </span>y <span class="op">-</span><span class="st"> </span><span class="op">-</span><span class="fl">59.6795</span>]
 
-q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>yMinusIntercept))
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">colour=</span><span class="kw">as.factor</span>(fylke)))
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>,<span class="dt">se=</span>F,<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)
+q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> yMinusIntercept))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">colour =</span> <span class="kw">as.factor</span>(fylke)))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> F, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases Minus Area-Specific Intercept&quot;</span>)
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)
 q</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
 </div>
 <div id="applying-the-regression-models" class="section level2">
 <h2><span class="header-section-number">3.5</span> Applying The Regression Models</h2>
 <p>So how do you obtain <code>area-specific intercepts</code>? If you have a large amount of datapoints for each area, and not many areas, you can just include <code>area</code> as a categorical variable in your regression. These <code>area-specific intercepts</code> are called <code>fixed effects</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span><span class="kw">as.factor</span>(fylke) <span class="op">+</span><span class="st"> </span>yearMinus1950, <span class="dt">data =</span> d)
+<span class="kw">summary</span>(fit)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ as.factor(fylke) + yearMinus1950, data = d)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.49741 -0.50980  0.03513  0.55371  2.58931 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        35.01599    0.22624  154.78   &lt;2e-16 ***
+## as.factor(fylke)2 -30.09439    0.36891  -81.58   &lt;2e-16 ***
+## as.factor(fylke)3 -59.67945    0.60794  -98.17   &lt;2e-16 ***
+## yearMinus1950       0.49381    0.01243   39.73   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.9244 on 105 degrees of freedom
+## Multiple R-squared:  0.9966, Adjusted R-squared:  0.9965 
+## F-statistic: 1.016e+04 on 3 and 105 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>If you have few datapoints for each area, and a lot of areas, you will need to use a <code>mixed effects</code> regression model, including <code>random intercepts</code> for each <code>area</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span>lme4<span class="op">::</span><span class="kw">lmer</span>(y <span class="op">~</span><span class="st"> </span>yearMinus1950 <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">|</span><span class="st"> </span>fylke), <span class="dt">data =</span> d)
+<span class="kw">summary</span>(fit)</code></pre></div>
+<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+## Formula: y ~ yearMinus1950 + (1 | fylke)
+##    Data: d
+## 
+## REML criterion at convergence: 321.1
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -2.70424 -0.55449  0.03668  0.59846  2.80231 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  fylke    (Intercept) 890.1680 29.8357 
+##  Residual               0.8544  0.9244 
+## Number of obs: 109, groups:  fylke, 3
+## 
+## Fixed effects:
+##               Estimate Std. Error t value
+## (Intercept)    5.10060   17.23247   0.296
+## yearMinus1950  0.49357    0.01243  39.718
+## 
+## Correlation of Fixed Effects:
+##             (Intr)
+## yearMns1950 -0.028</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lme4<span class="op">::</span><span class="kw">ranef</span>(fit)</code></pre></div>
+<pre><code>## $fylke
+##   (Intercept)
+## 1  29.9183802
+## 2  -0.1696969
+## 3 -29.7486833</code></pre>
 </div>
 <div id="hints-for-future-analyses-1" class="section level2">
 <h2><span class="header-section-number">3.6</span> Hints For Future Analyses</h2>

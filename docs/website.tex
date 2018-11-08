@@ -253,7 +253,7 @@ use a \texttt{2/3s\ transformation}.
 ##     lu <- (mu0^exponent + z * se)^(1/exponent)
 ##     return(lu)
 ## }
-## <bytecode: 0x473c400>
+## <bytecode: 0x5545a40>
 ## <environment: namespace:sykdomspuls>
 \end{verbatim}
 
@@ -292,21 +292,22 @@ geographical area. We want to identify:
 \NormalTok{AMPLITUDE <-}\StringTok{ }\FloatTok{1.5}
 \NormalTok{SEASONAL_HORIZONTAL_SHIFT <-}\StringTok{ }\DecValTok{20}
 
-\NormalTok{d <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{date=}\KeywordTok{seq.Date}\NormalTok{(}
-  \DataTypeTok{from=}\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2000-01-01"}\NormalTok{),}
-  \DataTypeTok{to=}\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2018-12-31"}\NormalTok{),}
-  \DataTypeTok{by=}\DecValTok{1}\NormalTok{))}
-\NormalTok{d[,date}\OperatorTok{:}\ErrorTok{=}\KeywordTok{as.Date}\NormalTok{(date,}\DataTypeTok{origin=}\StringTok{"1970-01-1"}\NormalTok{)]}
-\NormalTok{d[,year}\OperatorTok{:}\ErrorTok{=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date,}\StringTok{"%G"}\NormalTok{))]}
-\NormalTok{d[,week}\OperatorTok{:}\ErrorTok{=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date,}\StringTok{"%V"}\NormalTok{))]}
-\NormalTok{d[,month}\OperatorTok{:}\ErrorTok{=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date,}\StringTok{"%m"}\NormalTok{))]}
-\NormalTok{d[,yearMinus2000}\OperatorTok{:}\ErrorTok{=}\NormalTok{year}\OperatorTok{-}\DecValTok{2000}\NormalTok{]}
-\NormalTok{d[,dailyrainfall}\OperatorTok{:}\ErrorTok{=}\KeywordTok{runif}\NormalTok{(.N, }\DataTypeTok{min=}\DecValTok{0}\NormalTok{, }\DataTypeTok{max=}\DecValTok{10}\NormalTok{)]}
+\NormalTok{d <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{date =} \KeywordTok{seq.Date}\NormalTok{(}
+  \DataTypeTok{from =} \KeywordTok{as.Date}\NormalTok{(}\StringTok{"2000-01-01"}\NormalTok{),}
+  \DataTypeTok{to =} \KeywordTok{as.Date}\NormalTok{(}\StringTok{"2018-12-31"}\NormalTok{),}
+  \DataTypeTok{by =} \DecValTok{1}
+\NormalTok{))}
+\NormalTok{d[, date }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{as.Date}\NormalTok{(date, }\DataTypeTok{origin =} \StringTok{"1970-01-1"}\NormalTok{)]}
+\NormalTok{d[, year }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date, }\StringTok{"%G"}\NormalTok{))]}
+\NormalTok{d[, week }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date, }\StringTok{"%V"}\NormalTok{))]}
+\NormalTok{d[, month }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date, }\StringTok{"%m"}\NormalTok{))]}
+\NormalTok{d[, yearMinus2000 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{year }\OperatorTok{-}\StringTok{ }\DecValTok{2000}\NormalTok{]}
+\NormalTok{d[, dailyrainfall }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{runif}\NormalTok{(.N, }\DataTypeTok{min =} \DecValTok{0}\NormalTok{, }\DataTypeTok{max =} \DecValTok{10}\NormalTok{)]}
 
-\NormalTok{d[,dayOfYear}\OperatorTok{:}\ErrorTok{=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date,}\StringTok{"%j"}\NormalTok{))]}
-\NormalTok{d[,seasonalEffect}\OperatorTok{:}\ErrorTok{=}\KeywordTok{sin}\NormalTok{(}\DecValTok{2}\OperatorTok{*}\NormalTok{pi}\OperatorTok{*}\NormalTok{(dayOfYear}\OperatorTok{-}\NormalTok{SEASONAL_HORIZONTAL_SHIFT)}\OperatorTok{/}\DecValTok{365}\NormalTok{)]}
-\NormalTok{d[,mu }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{exp}\NormalTok{(}\FloatTok{0.1} \OperatorTok{+}\StringTok{ }\NormalTok{yearMinus2000}\OperatorTok{*}\FloatTok{0.1} \OperatorTok{+}\StringTok{ }\NormalTok{seasonalEffect}\OperatorTok{*}\NormalTok{AMPLITUDE)]}
-\NormalTok{d[,y}\OperatorTok{:}\ErrorTok{=}\KeywordTok{rpois}\NormalTok{(.N,mu)]}
+\NormalTok{d[, dayOfYear }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date, }\StringTok{"%j"}\NormalTok{))]}
+\NormalTok{d[, seasonalEffect }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{sin}\NormalTok{(}\DecValTok{2} \OperatorTok{*}\StringTok{ }\NormalTok{pi }\OperatorTok{*}\StringTok{ }\NormalTok{(dayOfYear }\OperatorTok{-}\StringTok{ }\NormalTok{SEASONAL_HORIZONTAL_SHIFT) }\OperatorTok{/}\StringTok{ }\DecValTok{365}\NormalTok{)]}
+\NormalTok{d[, mu }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{exp}\NormalTok{(}\FloatTok{0.1} \OperatorTok{+}\StringTok{ }\NormalTok{yearMinus2000 }\OperatorTok{*}\StringTok{ }\FloatTok{0.1} \OperatorTok{+}\StringTok{ }\NormalTok{seasonalEffect }\OperatorTok{*}\StringTok{ }\NormalTok{AMPLITUDE)]}
+\NormalTok{d[, y }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{rpois}\NormalTok{(.N, mu)]}
 \end{Highlighting}
 \end{Shaded}
 
@@ -318,8 +319,8 @@ pattern (one peak/trough per year)
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{date,}\DataTypeTok{y=}\NormalTok{y))}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd=}\FloatTok{0.25}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ date, }\DataTypeTok{y =}\NormalTok{ y))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd =} \FloatTok{0.25}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_date}\NormalTok{(}\StringTok{"Time"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Cases"}\NormalTok{)}
 \NormalTok{q}
@@ -332,10 +333,10 @@ We split out the data for a few years and see a clear seasonal trend:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d[year }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{2005}\OperatorTok{:}\DecValTok{2010}\NormalTok{)],}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{dayOfYear,}\DataTypeTok{y=}\NormalTok{y))}
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d[year }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{2005}\OperatorTok{:}\DecValTok{2010}\NormalTok{)], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ dayOfYear, }\DataTypeTok{y =}\NormalTok{ y))}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\NormalTok{year)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{()}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_smooth}\NormalTok{(}\DataTypeTok{colour=}\StringTok{"red"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_smooth}\NormalTok{(}\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_continuous}\NormalTok{(}\StringTok{"Day of year"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Cases"}\NormalTok{)}
 \NormalTok{q}
@@ -366,8 +367,8 @@ to interpret:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{nfit0 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall, }\DataTypeTok{data=}\NormalTok{d, }\DataTypeTok{family=}\KeywordTok{poisson}\NormalTok{())}
-\NormalTok{nfit1 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall }\OperatorTok{+}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(month), }\DataTypeTok{data=}\NormalTok{d, }\DataTypeTok{family=}\KeywordTok{poisson}\NormalTok{())}
+\NormalTok{nfit0 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall, }\DataTypeTok{data =}\NormalTok{ d, }\DataTypeTok{family =} \KeywordTok{poisson}\NormalTok{())}
+\NormalTok{nfit1 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall }\OperatorTok{+}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(month), }\DataTypeTok{data =}\NormalTok{ d, }\DataTypeTok{family =} \KeywordTok{poisson}\NormalTok{())}
 \end{Highlighting}
 \end{Shaded}
 
@@ -478,12 +479,12 @@ prediction interval formula:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d[year}\OperatorTok{>}\DecValTok{2015}\NormalTok{],}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{date,}\DataTypeTok{y=}\NormalTok{y))}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{mapping=}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin=}\OperatorTok{-}\OtherTok{Inf}\NormalTok{,}\DataTypeTok{ymax=}\NormalTok{threshold2),}\DataTypeTok{fill=}\StringTok{"green"}\NormalTok{,}\DataTypeTok{alpha=}\FloatTok{0.5}\NormalTok{)}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{mapping=}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin=}\NormalTok{threshold2,}\DataTypeTok{ymax=}\OtherTok{Inf}\NormalTok{),}\DataTypeTok{fill=}\StringTok{"red"}\NormalTok{,}\DataTypeTok{alpha=}\FloatTok{0.5}\NormalTok{)}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd=}\FloatTok{0.25}\NormalTok{)}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data=}\NormalTok{d[year}\OperatorTok{>}\DecValTok{2015} \OperatorTok{&}\StringTok{ }\NormalTok{y}\OperatorTok{>}\NormalTok{threshold2],}\DataTypeTok{colour=}\StringTok{"black"}\NormalTok{,}\DataTypeTok{size=}\FloatTok{2.5}\NormalTok{)}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data=}\NormalTok{d[year}\OperatorTok{>}\DecValTok{2015} \OperatorTok{&}\StringTok{ }\NormalTok{y}\OperatorTok{>}\NormalTok{threshold2],}\DataTypeTok{colour=}\StringTok{"red"}\NormalTok{,}\DataTypeTok{size=}\FloatTok{1.5}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d[year }\OperatorTok{>}\StringTok{ }\DecValTok{2015}\NormalTok{], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ date, }\DataTypeTok{y =}\NormalTok{ y))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =} \OperatorTok{-}\OtherTok{Inf}\NormalTok{, }\DataTypeTok{ymax =}\NormalTok{ threshold2), }\DataTypeTok{fill =} \StringTok{"blue"}\NormalTok{, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =}\NormalTok{ threshold2, }\DataTypeTok{ymax =} \OtherTok{Inf}\NormalTok{), }\DataTypeTok{fill =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{lwd =} \FloatTok{0.25}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ d[year }\OperatorTok{>}\StringTok{ }\DecValTok{2015} \OperatorTok{&}\StringTok{ }\NormalTok{y }\OperatorTok{>}\StringTok{ }\NormalTok{threshold2], }\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{, }\DataTypeTok{size =} \FloatTok{2.5}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ d[year }\OperatorTok{>}\StringTok{ }\DecValTok{2015} \OperatorTok{&}\StringTok{ }\NormalTok{y }\OperatorTok{>}\StringTok{ }\NormalTok{threshold2], }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{size =} \FloatTok{1.5}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_date}\NormalTok{(}\StringTok{"Time"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Cases"}\NormalTok{)}
 \NormalTok{q}
@@ -522,8 +523,8 @@ The Lomb-Scargle Periodogram shows a clear seasonality with a period of
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# R CODE }
-\NormalTok{lomb}\OperatorTok{::}\KeywordTok{lsp}\NormalTok{(d}\OperatorTok{$}\NormalTok{y,}\DataTypeTok{from=}\DecValTok{100}\NormalTok{,}\DataTypeTok{to=}\DecValTok{500}\NormalTok{,}\DataTypeTok{ofac=}\DecValTok{1}\NormalTok{,}\DataTypeTok{type=}\StringTok{"period"}\NormalTok{)}
+\CommentTok{# R CODE}
+\NormalTok{lomb}\OperatorTok{::}\KeywordTok{lsp}\NormalTok{(d}\OperatorTok{$}\NormalTok{y, }\DataTypeTok{from =} \DecValTok{100}\NormalTok{, }\DataTypeTok{to =} \DecValTok{500}\NormalTok{, }\DataTypeTok{ofac =} \DecValTok{1}\NormalTok{, }\DataTypeTok{type =} \StringTok{"period"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -536,11 +537,11 @@ not. This is done with two simple poisson regressions.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# R CODE}
-\NormalTok{d[,cos365}\OperatorTok{:}\ErrorTok{=}\KeywordTok{cos}\NormalTok{(dayOfYear}\OperatorTok{*}\DecValTok{2}\OperatorTok{*}\NormalTok{pi}\OperatorTok{/}\DecValTok{365}\NormalTok{)]}
-\NormalTok{d[,sin365}\OperatorTok{:}\ErrorTok{=}\KeywordTok{sin}\NormalTok{(dayOfYear}\OperatorTok{*}\DecValTok{2}\OperatorTok{*}\NormalTok{pi}\OperatorTok{/}\DecValTok{365}\NormalTok{)]}
+\NormalTok{d[, cos365 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{cos}\NormalTok{(dayOfYear }\OperatorTok{*}\StringTok{ }\DecValTok{2} \OperatorTok{*}\StringTok{ }\NormalTok{pi }\OperatorTok{/}\StringTok{ }\DecValTok{365}\NormalTok{)]}
+\NormalTok{d[, sin365 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{sin}\NormalTok{(dayOfYear }\OperatorTok{*}\StringTok{ }\DecValTok{2} \OperatorTok{*}\StringTok{ }\NormalTok{pi }\OperatorTok{/}\StringTok{ }\DecValTok{365}\NormalTok{)]}
 
-\NormalTok{pfit0 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall, }\DataTypeTok{data=}\NormalTok{d, }\DataTypeTok{family=}\KeywordTok{poisson}\NormalTok{())}
-\NormalTok{pfit1 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y}\OperatorTok{~}\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall }\OperatorTok{+}\StringTok{ }\NormalTok{sin365 }\OperatorTok{+}\StringTok{ }\NormalTok{cos365, }\DataTypeTok{data=}\NormalTok{d, }\DataTypeTok{family=}\KeywordTok{poisson}\NormalTok{())}
+\NormalTok{pfit0 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall, }\DataTypeTok{data =}\NormalTok{ d, }\DataTypeTok{family =} \KeywordTok{poisson}\NormalTok{())}
+\NormalTok{pfit1 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{yearMinus2000 }\OperatorTok{+}\StringTok{ }\NormalTok{dailyrainfall }\OperatorTok{+}\StringTok{ }\NormalTok{sin365 }\OperatorTok{+}\StringTok{ }\NormalTok{cos365, }\DataTypeTok{data =}\NormalTok{ d, }\DataTypeTok{family =} \KeywordTok{poisson}\NormalTok{())}
 \end{Highlighting}
 \end{Shaded}
 
@@ -646,7 +647,7 @@ estimates:
 ##     }
 ##     return(list(amplitude = amplitude, peak = peak, trough = trough))
 ## }
-## <bytecode: 0x51ef748>
+## <bytecode: 0x5cea230>
 ## <environment: namespace:RAWmisc>
 \end{verbatim}
 
@@ -655,9 +656,9 @@ estimates:
 \NormalTok{retval <-}\StringTok{ }\NormalTok{RAWmisc}\OperatorTok{::}\KeywordTok{TransformCosSinToAmplitudePeakTrough}\NormalTok{(}
   \DataTypeTok{cos_b =} \OperatorTok{-}\FloatTok{0.512912}\NormalTok{, }\CommentTok{# cos coefficient}
   \DataTypeTok{sin_b =} \FloatTok{1.428417} \CommentTok{# sin coefficient}
-\NormalTok{  )}
+\NormalTok{)}
 
-\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"amplitude is estimated as %s"}\NormalTok{,}\KeywordTok{round}\NormalTok{(retval}\OperatorTok{$}\NormalTok{amplitude,}\DecValTok{2}\NormalTok{)))}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"amplitude is estimated as %s"}\NormalTok{, }\KeywordTok{round}\NormalTok{(retval}\OperatorTok{$}\NormalTok{amplitude, }\DecValTok{2}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -667,7 +668,7 @@ estimates:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"peak is estimated as %s"}\NormalTok{,}\KeywordTok{round}\NormalTok{(retval}\OperatorTok{$}\NormalTok{peak)))}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"peak is estimated as %s"}\NormalTok{, }\KeywordTok{round}\NormalTok{(retval}\OperatorTok{$}\NormalTok{peak)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -677,7 +678,7 @@ estimates:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"trough is estimated as %s"}\NormalTok{,}\KeywordTok{round}\NormalTok{(retval}\OperatorTok{$}\NormalTok{trough)))}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"trough is estimated as %s"}\NormalTok{, }\KeywordTok{round}\NormalTok{(retval}\OperatorTok{$}\NormalTok{trough)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -687,7 +688,7 @@ estimates:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"true amplitude is %s"}\NormalTok{,}\KeywordTok{round}\NormalTok{(AMPLITUDE,}\DecValTok{2}\NormalTok{)))}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"true amplitude is %s"}\NormalTok{, }\KeywordTok{round}\NormalTok{(AMPLITUDE, }\DecValTok{2}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -697,7 +698,7 @@ estimates:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"true peak is %s"}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\DecValTok{365}\OperatorTok{/}\DecValTok{4}\OperatorTok{+}\NormalTok{SEASONAL_HORIZONTAL_SHIFT)))}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"true peak is %s"}\NormalTok{, }\KeywordTok{round}\NormalTok{(}\DecValTok{365} \OperatorTok{/}\StringTok{ }\DecValTok{4} \OperatorTok{+}\StringTok{ }\NormalTok{SEASONAL_HORIZONTAL_SHIFT)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -707,7 +708,7 @@ estimates:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"true trough is %s"}\NormalTok{,}\KeywordTok{round}\NormalTok{(}\DecValTok{3}\OperatorTok{*}\DecValTok{365}\OperatorTok{/}\DecValTok{4}\OperatorTok{+}\NormalTok{SEASONAL_HORIZONTAL_SHIFT)))}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{sprintf}\NormalTok{(}\StringTok{"true trough is %s"}\NormalTok{, }\KeywordTok{round}\NormalTok{(}\DecValTok{3} \OperatorTok{*}\StringTok{ }\DecValTok{365} \OperatorTok{/}\StringTok{ }\DecValTok{4} \OperatorTok{+}\StringTok{ }\NormalTok{SEASONAL_HORIZONTAL_SHIFT)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -747,8 +748,8 @@ autocorrelation in the residuals:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{d[,residuals}\OperatorTok{:}\ErrorTok{=}\KeywordTok{residuals}\NormalTok{(nfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
-\NormalTok{d[,predicted}\OperatorTok{:}\ErrorTok{=}\KeywordTok{predict}\NormalTok{(nfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
+\NormalTok{d[, residuals }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{residuals}\NormalTok{(nfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
+\NormalTok{d[, predicted }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{predict}\NormalTok{(nfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
 \KeywordTok{pacf}\NormalTok{(d}\OperatorTok{$}\NormalTok{residuals)}
 \end{Highlighting}
 \end{Shaded}
@@ -761,8 +762,8 @@ residuals:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{d[,residuals}\OperatorTok{:}\ErrorTok{=}\KeywordTok{residuals}\NormalTok{(pfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
-\NormalTok{d[,predicted}\OperatorTok{:}\ErrorTok{=}\KeywordTok{predict}\NormalTok{(pfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
+\NormalTok{d[, residuals }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{residuals}\NormalTok{(pfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
+\NormalTok{d[, predicted }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{predict}\NormalTok{(pfit1, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
 \KeywordTok{pacf}\NormalTok{(d}\OperatorTok{$}\NormalTok{residuals)}
 \end{Highlighting}
 \end{Shaded}
@@ -776,12 +777,12 @@ residuals:
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{d <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}
-  \DataTypeTok{year=}\KeywordTok{c}\NormalTok{(}\StringTok{"1950"}\NormalTok{,}\StringTok{"2018"}\NormalTok{),}
-  \DataTypeTok{Cases=}\KeywordTok{c}\NormalTok{(}\DecValTok{350000}\NormalTok{,}\DecValTok{530000}\NormalTok{),}
-  \DataTypeTok{Population=}\KeywordTok{c}\NormalTok{(}\DecValTok{3500000}\NormalTok{,}\DecValTok{5300000}\NormalTok{)}
+  \DataTypeTok{year =} \KeywordTok{c}\NormalTok{(}\StringTok{"1950"}\NormalTok{, }\StringTok{"2018"}\NormalTok{),}
+  \DataTypeTok{Cases =} \KeywordTok{c}\NormalTok{(}\DecValTok{350000}\NormalTok{, }\DecValTok{530000}\NormalTok{),}
+  \DataTypeTok{Population =} \KeywordTok{c}\NormalTok{(}\DecValTok{3500000}\NormalTok{, }\DecValTok{5300000}\NormalTok{)}
 \NormalTok{)}
-\NormalTok{d[,}\StringTok{`}\DataTypeTok{Cases per 100.000 Pop}\StringTok{`}\OperatorTok{:}\ErrorTok{=}\NormalTok{Cases}\OperatorTok{/}\NormalTok{Population}\OperatorTok{*}\DecValTok{100000}\NormalTok{]}
-\NormalTok{d <-}\StringTok{ }\KeywordTok{melt.data.table}\NormalTok{(d,}\DataTypeTok{id.vars=}\StringTok{"year"}\NormalTok{)}
+\NormalTok{d[, }\StringTok{`}\DataTypeTok{Cases per 100.000 Pop}\StringTok{`} \OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{Cases }\OperatorTok{/}\StringTok{ }\NormalTok{Population }\OperatorTok{*}\StringTok{ }\DecValTok{100000}\NormalTok{]}
+\NormalTok{d <-}\StringTok{ }\KeywordTok{melt.data.table}\NormalTok{(d, }\DataTypeTok{id.vars =} \StringTok{"year"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -791,11 +792,15 @@ this time period!
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d[variable}\OperatorTok{==}\StringTok{"Cases"}\NormalTok{], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{year,}\DataTypeTok{y=}\NormalTok{value,}\DataTypeTok{fill=}\NormalTok{variable))}
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d[variable }\OperatorTok{==}\StringTok{ "Cases"}\NormalTok{], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{fill =}\NormalTok{ variable))}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_col}\NormalTok{()}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_discrete}\NormalTok{(}\StringTok{"Year"}\NormalTok{)}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Number of people"}\NormalTok{, }\DataTypeTok{labels=}\NormalTok{scales}\OperatorTok{::}\KeywordTok{format_format}\NormalTok{(}\DataTypeTok{big.mark =} \StringTok{"."}\NormalTok{, }\DataTypeTok{decimal.mark =} \StringTok{","}\NormalTok{, }\DataTypeTok{scientific =} \OtherTok{FALSE}\NormalTok{))}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_fill_brewer}\NormalTok{(}\StringTok{""}\NormalTok{,}\DataTypeTok{palette=}\StringTok{"Set1"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Number of people"}\NormalTok{, }\DataTypeTok{labels =}\NormalTok{ scales}\OperatorTok{::}\KeywordTok{format_format}\NormalTok{(}
+  \DataTypeTok{big.mark =} \StringTok{"."}\NormalTok{,}
+  \DataTypeTok{decimal.mark =} \StringTok{","}\NormalTok{, }
+  \DataTypeTok{scientific =} \OtherTok{FALSE}
+\NormalTok{  ))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_fill_brewer}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{palette =} \StringTok{"Set1"}\NormalTok{)}
 \NormalTok{q}
 \end{Highlighting}
 \end{Shaded}
@@ -807,20 +812,24 @@ consideration, we can see that the rate is consistent over time.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{year,}\DataTypeTok{y=}\NormalTok{value,}\DataTypeTok{fill=}\NormalTok{variable))}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_col}\NormalTok{(}\DataTypeTok{position=}\StringTok{"dodge"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{fill =}\NormalTok{ variable))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_col}\NormalTok{(}\DataTypeTok{position =} \StringTok{"dodge"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_discrete}\NormalTok{(}\StringTok{""}\NormalTok{)}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{labels=}\NormalTok{scales}\OperatorTok{::}\KeywordTok{format_format}\NormalTok{(}\DataTypeTok{big.mark =} \StringTok{"."}\NormalTok{, }\DataTypeTok{decimal.mark =} \StringTok{","}\NormalTok{, }\DataTypeTok{scientific =} \OtherTok{FALSE}\NormalTok{))}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_fill_brewer}\NormalTok{(}\StringTok{"Year"}\NormalTok{,}\DataTypeTok{palette=}\StringTok{"Set1"}\NormalTok{)}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\NormalTok{variable,}\DataTypeTok{scales=}\StringTok{"free"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{labels =}\NormalTok{ scales}\OperatorTok{::}\KeywordTok{format_format}\NormalTok{(}
+  \DataTypeTok{big.mark =} \StringTok{"."}\NormalTok{, }
+  \DataTypeTok{decimal.mark =} \StringTok{","}\NormalTok{, }
+  \DataTypeTok{scientific =} \OtherTok{FALSE}
+\NormalTok{  ))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_fill_brewer}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{palette =} \StringTok{"Set1"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\NormalTok{variable, }\DataTypeTok{scales =} \StringTok{"free"}\NormalTok{)}
 \NormalTok{q}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{website_files/figure-latex/unnamed-chunk-20-1.pdf}
 
-\subsection{Negative Binomial \textgreater{}
-Poisson}\label{negative-binomial-poisson}
+\subsection{Negative Binomial Is Generally Better Than
+Poisson}\label{negative-binomial-is-generally-better-than-poisson}
 
 \subsection{Zeroes In Your Individial -\textgreater{} Aggregated
 Dataset}\label{zeroes-in-your-individial---aggregated-dataset}
@@ -839,13 +848,14 @@ per day from \texttt{2000-08-08} until \texttt{2000-12-31}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{d <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{date=}\KeywordTok{seq.Date}\NormalTok{(}
-  \DataTypeTok{from=}\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2000-01-01"}\NormalTok{),}
-  \DataTypeTok{to=}\KeywordTok{as.Date}\NormalTok{(}\StringTok{"2000-12-31"}\NormalTok{),}
-  \DataTypeTok{by=}\DecValTok{1}\NormalTok{))}
+\NormalTok{d <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{date =} \KeywordTok{seq.Date}\NormalTok{(}
+  \DataTypeTok{from =} \KeywordTok{as.Date}\NormalTok{(}\StringTok{"2000-01-01"}\NormalTok{),}
+  \DataTypeTok{to =} \KeywordTok{as.Date}\NormalTok{(}\StringTok{"2000-12-31"}\NormalTok{),}
+  \DataTypeTok{by =} \DecValTok{1}
+\NormalTok{))}
 \NormalTok{d <-}\StringTok{ }\NormalTok{d[}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{30}\OperatorTok{:}\DecValTok{220}\NormalTok{)]}
-\NormalTok{d[,id}\OperatorTok{:}\ErrorTok{=}\DecValTok{1}\OperatorTok{:}\NormalTok{.N]}
-\NormalTok{d[,month}\OperatorTok{:}\ErrorTok{=}\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date,}\StringTok{"%m"}\NormalTok{))]}
+\NormalTok{d[, id }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\DecValTok{1}\OperatorTok{:}\NormalTok{.N]}
+\NormalTok{d[, month }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{format.Date}\NormalTok{(date, }\StringTok{"%m"}\NormalTok{))]}
 
 \KeywordTok{print}\NormalTok{(d)}
 \end{Highlighting}
@@ -871,8 +881,10 @@ If we collapse the data into months:
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{collapsed <-}\StringTok{ }\NormalTok{d[,.(}
-  \DataTypeTok{n=}\NormalTok{.N}
-\NormalTok{), keyby=.(month)]}
+  \DataTypeTok{n =}\NormalTok{ .N}
+\NormalTok{), keyby =}\StringTok{ }\NormalTok{.(}
+\NormalTok{  month}
+\NormalTok{)]}
 
 \KeywordTok{print}\NormalTok{(collapsed)}
 \end{Highlighting}
@@ -895,7 +907,7 @@ How do we fix this? We create a \texttt{skeleton} of our results:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{skeleton <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{month=}\DecValTok{1}\OperatorTok{:}\DecValTok{12}\NormalTok{)}
+\NormalTok{skeleton <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{month =} \DecValTok{1}\OperatorTok{:}\DecValTok{12}\NormalTok{)}
 \KeywordTok{print}\NormalTok{(skeleton)}
 \end{Highlighting}
 \end{Shaded}
@@ -920,7 +932,7 @@ We then merge our collapsed data with the skeleton:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{final <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(skeleton, collapsed, }\DataTypeTok{by=}\StringTok{"month"}\NormalTok{, }\DataTypeTok{all.x=}\OtherTok{TRUE}\NormalTok{)}
+\NormalTok{final <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(skeleton, collapsed, }\DataTypeTok{by =} \StringTok{"month"}\NormalTok{, }\DataTypeTok{all.x =} \OtherTok{TRUE}\NormalTok{)}
 \KeywordTok{print}\NormalTok{(final)}
 \end{Highlighting}
 \end{Shaded}
@@ -945,7 +957,7 @@ We then set all of the ``missing'' to 0:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{final[}\KeywordTok{is.na}\NormalTok{(n), n}\OperatorTok{:}\ErrorTok{=}\DecValTok{0}\NormalTok{]}
+\NormalTok{final[}\KeywordTok{is.na}\NormalTok{(n), n }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\DecValTok{0}\NormalTok{]}
 \KeywordTok{print}\NormalTok{(final)}
 \end{Highlighting}
 \end{Shaded}
@@ -1006,21 +1018,21 @@ negative binomial regression.
 \KeywordTok{library}\NormalTok{(ggplot2)}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{4}\NormalTok{)}
 
-\NormalTok{fylkeIntercepts <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{fylke=}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{,}\DataTypeTok{fylkeIntercepts=}\KeywordTok{c}\NormalTok{(}\DecValTok{30}\NormalTok{,}\DecValTok{0}\NormalTok{,}\OperatorTok{-}\DecValTok{30}\NormalTok{))}
+\NormalTok{fylkeIntercepts <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{fylke =} \DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DataTypeTok{fylkeIntercepts =} \KeywordTok{c}\NormalTok{(}\DecValTok{30}\NormalTok{, }\DecValTok{0}\NormalTok{, }\OperatorTok{-}\DecValTok{30}\NormalTok{))}
 
-\NormalTok{d <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{fylke=}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{,}\DataTypeTok{each=}\DecValTok{100}\NormalTok{))}
-\NormalTok{d <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(d,fylkeIntercepts,}\DataTypeTok{by=}\StringTok{"fylke"}\NormalTok{)}
-\NormalTok{d[,mainIntercept}\OperatorTok{:}\ErrorTok{=}\DecValTok{5}\NormalTok{]}
-\NormalTok{d[,x}\OperatorTok{:}\ErrorTok{=}\KeywordTok{runif}\NormalTok{(.N)]}
-\NormalTok{d[,year}\OperatorTok{:}\ErrorTok{=}\KeywordTok{sample}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1950}\OperatorTok{:}\DecValTok{2020}\NormalTok{),.N,}\DataTypeTok{replace=}\NormalTok{T)]}
-\NormalTok{d[,yearMinus1950}\OperatorTok{:}\ErrorTok{=}\NormalTok{year}\OperatorTok{-}\DecValTok{1950}\NormalTok{]}
-\NormalTok{d[,mu }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{mainIntercept }\OperatorTok{+}\StringTok{ }\NormalTok{fylkeIntercepts }\OperatorTok{+}\StringTok{ }\FloatTok{0.5}\OperatorTok{*}\NormalTok{yearMinus1950]}
-\NormalTok{d[,y}\OperatorTok{:}\ErrorTok{=}\KeywordTok{round}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(.N,mu,}\DataTypeTok{sd=}\DecValTok{1}\NormalTok{))]}
-\CommentTok{#d[,y:=rpois(.N,mu)]}
+\NormalTok{d <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{fylke =} \KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DataTypeTok{each =} \DecValTok{100}\NormalTok{))}
+\NormalTok{d <-}\StringTok{ }\KeywordTok{merge}\NormalTok{(d, fylkeIntercepts, }\DataTypeTok{by =} \StringTok{"fylke"}\NormalTok{)}
+\NormalTok{d[, mainIntercept }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\DecValTok{5}\NormalTok{]}
+\NormalTok{d[, x }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{runif}\NormalTok{(.N)]}
+\NormalTok{d[, year }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1950}\OperatorTok{:}\DecValTok{2020}\NormalTok{), .N, }\DataTypeTok{replace =}\NormalTok{ T)]}
+\NormalTok{d[, yearMinus1950 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{year }\OperatorTok{-}\StringTok{ }\DecValTok{1950}\NormalTok{]}
+\NormalTok{d[, mu }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{mainIntercept }\OperatorTok{+}\StringTok{ }\NormalTok{fylkeIntercepts }\OperatorTok{+}\StringTok{ }\FloatTok{0.5} \OperatorTok{*}\StringTok{ }\NormalTok{yearMinus1950]}
+\NormalTok{d[, y }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{round}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(.N, mu, }\DataTypeTok{sd =} \DecValTok{1}\NormalTok{))]}
+\CommentTok{# d[,y:=rpois(.N,mu)]}
 
-\NormalTok{d[fylke}\OperatorTok{==}\DecValTok{1} \OperatorTok{&}\StringTok{ }\OperatorTok{!}\NormalTok{year }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1950}\OperatorTok{:}\DecValTok{1980}\NormalTok{),y}\OperatorTok{:}\ErrorTok{=}\OtherTok{NA}\NormalTok{]}
-\NormalTok{d[fylke}\OperatorTok{==}\DecValTok{2} \OperatorTok{&}\StringTok{ }\OperatorTok{!}\NormalTok{year }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1980}\OperatorTok{:}\DecValTok{2000}\NormalTok{),y}\OperatorTok{:}\ErrorTok{=}\OtherTok{NA}\NormalTok{]}
-\NormalTok{d[fylke}\OperatorTok{==}\DecValTok{3} \OperatorTok{&}\StringTok{ }\OperatorTok{!}\NormalTok{year }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{2000}\OperatorTok{:}\DecValTok{2020}\NormalTok{),y}\OperatorTok{:}\ErrorTok{=}\OtherTok{NA}\NormalTok{]}
+\NormalTok{d[fylke }\OperatorTok{==}\StringTok{ }\DecValTok{1} \OperatorTok{&}\StringTok{ }\OperatorTok{!}\NormalTok{year }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1950}\OperatorTok{:}\DecValTok{1980}\NormalTok{), y }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\OtherTok{NA}\NormalTok{]}
+\NormalTok{d[fylke }\OperatorTok{==}\StringTok{ }\DecValTok{2} \OperatorTok{&}\StringTok{ }\OperatorTok{!}\NormalTok{year }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1980}\OperatorTok{:}\DecValTok{2000}\NormalTok{), y }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\OtherTok{NA}\NormalTok{]}
+\NormalTok{d[fylke }\OperatorTok{==}\StringTok{ }\DecValTok{3} \OperatorTok{&}\StringTok{ }\OperatorTok{!}\NormalTok{year }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{2000}\OperatorTok{:}\DecValTok{2020}\NormalTok{), y }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\OtherTok{NA}\NormalTok{]}
 
 \NormalTok{d <-}\StringTok{ }\KeywordTok{na.omit}\NormalTok{(d)}
 \end{Highlighting}
@@ -1034,7 +1046,7 @@ We begin by blindly looking at the data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{year,}\DataTypeTok{y=}\NormalTok{y))}
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ y))}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{()}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_continuous}\NormalTok{(}\StringTok{"Year"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Cases"}\NormalTok{)}
@@ -1049,9 +1061,9 @@ cases is decreasing over time.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{year,}\DataTypeTok{y=}\NormalTok{y))}
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ y))}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{()}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{"lm"}\NormalTok{,}\DataTypeTok{se=}\NormalTok{F,}\DataTypeTok{colour=}\StringTok{"red"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{, }\DataTypeTok{se =}\NormalTok{ F, }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_continuous}\NormalTok{(}\StringTok{"Year"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Cases"}\NormalTok{)}
 \NormalTok{q}
@@ -1065,12 +1077,12 @@ see that our regression model is extremely wrong:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{year,}\DataTypeTok{y=}\NormalTok{y))}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping=}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour=}\KeywordTok{as.factor}\NormalTok{(fylke)))}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{"lm"}\NormalTok{,}\DataTypeTok{se=}\NormalTok{F,}\DataTypeTok{colour=}\StringTok{"red"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ y))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =} \KeywordTok{as.factor}\NormalTok{(fylke)))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{, }\DataTypeTok{se =}\NormalTok{ F, }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_continuous}\NormalTok{(}\StringTok{"Year"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Cases"}\NormalTok{)}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_colour_brewer}\NormalTok{(}\StringTok{"Area"}\NormalTok{,}\DataTypeTok{palette=}\StringTok{"Set1"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_colour_brewer}\NormalTok{(}\StringTok{"Area"}\NormalTok{, }\DataTypeTok{palette =} \StringTok{"Set1"}\NormalTok{)}
 \NormalTok{q}
 \end{Highlighting}
 \end{Shaded}
@@ -1089,15 +1101,15 @@ each geographical area:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{fit <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(y}\OperatorTok{~}\KeywordTok{as.factor}\NormalTok{(fylke) }\OperatorTok{+}\StringTok{ }\NormalTok{yearMinus1950,}\DataTypeTok{data=}\NormalTok{d)}
-\NormalTok{d[,p}\OperatorTok{:}\ErrorTok{=}\KeywordTok{predict}\NormalTok{(fit,}\DataTypeTok{newdata=}\NormalTok{d)]}
+\NormalTok{fit <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(fylke) }\OperatorTok{+}\StringTok{ }\NormalTok{yearMinus1950, }\DataTypeTok{data =}\NormalTok{ d)}
+\NormalTok{d[, p }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit, }\DataTypeTok{newdata =}\NormalTok{ d)]}
 
-\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{year,}\DataTypeTok{y=}\NormalTok{y))}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping=}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour=}\KeywordTok{as.factor}\NormalTok{(fylke)))}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping=}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y=}\NormalTok{p,}\DataTypeTok{group=}\KeywordTok{as.factor}\NormalTok{(fylke)),}\DataTypeTok{colour=}\StringTok{"red"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ y))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =} \KeywordTok{as.factor}\NormalTok{(fylke)))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ p, }\DataTypeTok{group =} \KeywordTok{as.factor}\NormalTok{(fylke)), }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_continuous}\NormalTok{(}\StringTok{"Year"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Cases"}\NormalTok{)}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_colour_brewer}\NormalTok{(}\StringTok{"Area"}\NormalTok{,}\DataTypeTok{palette=}\StringTok{"Set1"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_colour_brewer}\NormalTok{(}\StringTok{"Area"}\NormalTok{, }\DataTypeTok{palette =} \StringTok{"Set1"}\NormalTok{)}
 \NormalTok{q}
 \end{Highlighting}
 \end{Shaded}
@@ -1115,16 +1127,16 @@ find the overall time trend.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{d[,yMinusIntercept}\OperatorTok{:}\ErrorTok{=}\NormalTok{y]}
-\NormalTok{d[fylke}\OperatorTok{==}\DecValTok{2}\NormalTok{,yMinusIntercept}\OperatorTok{:}\ErrorTok{=}\NormalTok{y}\OperatorTok{--}\FloatTok{30.0944}\NormalTok{]}
-\NormalTok{d[fylke}\OperatorTok{==}\DecValTok{3}\NormalTok{,yMinusIntercept}\OperatorTok{:}\ErrorTok{=}\NormalTok{y}\OperatorTok{--}\FloatTok{59.6795}\NormalTok{]}
+\NormalTok{d[, yMinusIntercept }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{y]}
+\NormalTok{d[fylke }\OperatorTok{==}\StringTok{ }\DecValTok{2}\NormalTok{, yMinusIntercept }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{y }\OperatorTok{-}\StringTok{ }\OperatorTok{-}\FloatTok{30.0944}\NormalTok{]}
+\NormalTok{d[fylke }\OperatorTok{==}\StringTok{ }\DecValTok{3}\NormalTok{, yMinusIntercept }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{y }\OperatorTok{-}\StringTok{ }\OperatorTok{-}\FloatTok{59.6795}\NormalTok{]}
 
-\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{year,}\DataTypeTok{y=}\NormalTok{yMinusIntercept))}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping=}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour=}\KeywordTok{as.factor}\NormalTok{(fylke)))}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{"lm"}\NormalTok{,}\DataTypeTok{se=}\NormalTok{F,}\DataTypeTok{colour=}\StringTok{"red"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ yMinusIntercept))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =} \KeywordTok{as.factor}\NormalTok{(fylke)))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{, }\DataTypeTok{se =}\NormalTok{ F, }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_continuous}\NormalTok{(}\StringTok{"Year"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Cases Minus Area-Specific Intercept"}\NormalTok{)}
-\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_colour_brewer}\NormalTok{(}\StringTok{"Area"}\NormalTok{,}\DataTypeTok{palette=}\StringTok{"Set1"}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_colour_brewer}\NormalTok{(}\StringTok{"Area"}\NormalTok{, }\DataTypeTok{palette =} \StringTok{"Set1"}\NormalTok{)}
 \NormalTok{q}
 \end{Highlighting}
 \end{Shaded}
@@ -1140,9 +1152,87 @@ just include \texttt{area} as a categorical variable in your regression.
 These \texttt{area-specific\ intercepts} are called
 \texttt{fixed\ effects}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(fylke) }\OperatorTok{+}\StringTok{ }\NormalTok{yearMinus1950, }\DataTypeTok{data =}\NormalTok{ d)}
+\KeywordTok{summary}\NormalTok{(fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = y ~ as.factor(fylke) + yearMinus1950, data = d)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.49741 -0.50980  0.03513  0.55371  2.58931 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)        35.01599    0.22624  154.78   <2e-16 ***
+## as.factor(fylke)2 -30.09439    0.36891  -81.58   <2e-16 ***
+## as.factor(fylke)3 -59.67945    0.60794  -98.17   <2e-16 ***
+## yearMinus1950       0.49381    0.01243   39.73   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.9244 on 105 degrees of freedom
+## Multiple R-squared:  0.9966, Adjusted R-squared:  0.9965 
+## F-statistic: 1.016e+04 on 3 and 105 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
 If you have few datapoints for each area, and a lot of areas, you will
 need to use a \texttt{mixed\ effects} regression model, including
 \texttt{random\ intercepts} for each \texttt{area}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit <-}\StringTok{ }\NormalTok{lme4}\OperatorTok{::}\KeywordTok{lmer}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{yearMinus1950 }\OperatorTok{+}\StringTok{ }\NormalTok{(}\DecValTok{1} \OperatorTok{|}\StringTok{ }\NormalTok{fylke), }\DataTypeTok{data =}\NormalTok{ d)}
+\KeywordTok{summary}\NormalTok{(fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Linear mixed model fit by REML ['lmerMod']
+## Formula: y ~ yearMinus1950 + (1 | fylke)
+##    Data: d
+## 
+## REML criterion at convergence: 321.1
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -2.70424 -0.55449  0.03668  0.59846  2.80231 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  fylke    (Intercept) 890.1680 29.8357 
+##  Residual               0.8544  0.9244 
+## Number of obs: 109, groups:  fylke, 3
+## 
+## Fixed effects:
+##               Estimate Std. Error t value
+## (Intercept)    5.10060   17.23247   0.296
+## yearMinus1950  0.49357    0.01243  39.718
+## 
+## Correlation of Fixed Effects:
+##             (Intr)
+## yearMns1950 -0.028
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lme4}\OperatorTok{::}\KeywordTok{ranef}\NormalTok{(fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $fylke
+##   (Intercept)
+## 1  29.9183802
+## 2  -0.1696969
+## 3 -29.7486833
+\end{verbatim}
 
 \section{Hints For Future Analyses}\label{hints-for-future-analyses-1}
 
