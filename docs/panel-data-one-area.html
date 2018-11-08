@@ -25,7 +25,7 @@
 <meta name="author" content="Richard White">
 
 
-<meta name="date" content="2018-11-07">
+<meta name="date" content="2018-11-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -127,8 +127,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#autocorrelation-1"><i class="fa fa-check"></i><b>2.5</b> Autocorrelation</a></li>
 <li class="chapter" data-level="2.6" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#hints-for-future-analyses"><i class="fa fa-check"></i><b>2.6</b> Hints For Future Analyses</a><ul>
-<li class="chapter" data-level="2.6.1" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#zeroes-in-your-individial---aggregated-dataset"><i class="fa fa-check"></i><b>2.6.1</b> Zeroes In Your Individial -&gt; Aggregated Dataset</a></li>
-<li class="chapter" data-level="2.6.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#lagging-of-exposures"><i class="fa fa-check"></i><b>2.6.2</b> Lagging Of Exposures</a></li>
+<li class="chapter" data-level="2.6.1" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#always-use-a-denominator"><i class="fa fa-check"></i><b>2.6.1</b> Always Use A Denominator</a></li>
+<li class="chapter" data-level="2.6.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#negative-binomial-poisson"><i class="fa fa-check"></i><b>2.6.2</b> Negative Binomial &gt; Poisson</a></li>
+<li class="chapter" data-level="2.6.3" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#zeroes-in-your-individial---aggregated-dataset"><i class="fa fa-check"></i><b>2.6.3</b> Zeroes In Your Individial -&gt; Aggregated Dataset</a></li>
+<li class="chapter" data-level="2.6.4" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#lagging-of-exposures"><i class="fa fa-check"></i><b>2.6.4</b> Lagging Of Exposures</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html"><i class="fa fa-check"></i><b>3</b> Panel data - Multiple Areas</a><ul>
@@ -394,7 +396,7 @@ pfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op
 ##     }
 ##     return(list(amplitude = amplitude, peak = peak, trough = trough))
 ## }
-## &lt;bytecode: 0x66fbbe0&gt;
+## &lt;bytecode: 0x613c718&gt;
 ## &lt;environment: namespace:RAWmisc&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">retval &lt;-<span class="st"> </span>RAWmisc<span class="op">::</span><span class="kw">TransformCosSinToAmplitudePeakTrough</span>(
   <span class="dt">cos_b =</span> <span class="op">-</span><span class="fl">0.512912</span>, <span class="co"># cos coefficient</span>
@@ -441,8 +443,38 @@ d[,predicted<span class="op">:</span><span class="er">=</span><span class="kw">p
 </div>
 <div id="hints-for-future-analyses" class="section level2">
 <h2><span class="header-section-number">2.6</span> Hints For Future Analyses</h2>
+<div id="always-use-a-denominator" class="section level3">
+<h3><span class="header-section-number">2.6.1</span> Always Use A Denominator</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.table</span>(
+  <span class="dt">year=</span><span class="kw">c</span>(<span class="st">&quot;1950&quot;</span>,<span class="st">&quot;2018&quot;</span>),
+  <span class="dt">Cases=</span><span class="kw">c</span>(<span class="dv">350000</span>,<span class="dv">530000</span>),
+  <span class="dt">Population=</span><span class="kw">c</span>(<span class="dv">3500000</span>,<span class="dv">5300000</span>)
+)
+d[,<span class="st">`</span><span class="dt">Cases per 100.000 Pop</span><span class="st">`</span><span class="op">:</span><span class="er">=</span>Cases<span class="op">/</span>Population<span class="op">*</span><span class="dv">100000</span>]
+d &lt;-<span class="st"> </span><span class="kw">melt.data.table</span>(d,<span class="dt">id.vars=</span><span class="st">&quot;year&quot;</span>)</code></pre></div>
+<p>We start out by considering the number of cases of a disease in 1950 and 2018. We see that the number of cases has increased dramatically over this time period!</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d[variable<span class="op">==</span><span class="st">&quot;Cases&quot;</span>], <span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>value,<span class="dt">fill=</span>variable))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>()
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_discrete</span>(<span class="st">&quot;Year&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Number of people&quot;</span>, <span class="dt">labels=</span>scales<span class="op">::</span><span class="kw">format_format</span>(<span class="dt">big.mark =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">decimal.mark =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">scientific =</span> <span class="ot">FALSE</span>))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_fill_brewer</span>(<span class="st">&quot;&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
+q</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>However, upon taking the denominator (i.e. population) into consideration, we can see that the rate is consistent over time.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>value,<span class="dt">fill=</span>variable))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">position=</span><span class="st">&quot;dodge&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_discrete</span>(<span class="st">&quot;&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;&quot;</span>, <span class="dt">labels=</span>scales<span class="op">::</span><span class="kw">format_format</span>(<span class="dt">big.mark =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">decimal.mark =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">scientific =</span> <span class="ot">FALSE</span>))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_fill_brewer</span>(<span class="st">&quot;Year&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>variable,<span class="dt">scales=</span><span class="st">&quot;free&quot;</span>)
+q</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+</div>
+<div id="negative-binomial-poisson" class="section level3">
+<h3><span class="header-section-number">2.6.2</span> Negative Binomial &gt; Poisson</h3>
+</div>
 <div id="zeroes-in-your-individial---aggregated-dataset" class="section level3">
-<h3><span class="header-section-number">2.6.1</span> Zeroes In Your Individial -&gt; Aggregated Dataset</h3>
+<h3><span class="header-section-number">2.6.3</span> Zeroes In Your Individial -&gt; Aggregated Dataset</h3>
 <p>If your data is at the individual level (i.e. one row per case), then you will need to aggregate it to daily/weekly/monthly levels. If your data source is a registry, and you assume that your dataset contains all of the reported cases, then this means <code>&quot;no reports&quot;=&quot;no cases&quot;</code>. This means that after aggregating, <strong>you need to make sure that your collapsed/aggregated dataset has zeroes in it!!</strong></p>
 <p>In the following dataset, we have one case per day from <code>2000-01-01</code> until <code>2000-01-29</code> and then again one case per day from <code>2000-08-08</code> until <code>2000-12-31</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">date=</span><span class="kw">seq.Date</span>(
@@ -531,7 +563,7 @@ d[,month<span class="op">:</span><span class="er">=</span><span class="kw">as.nu
 <p>Now we can analyze our data!</p>
 </div>
 <div id="lagging-of-exposures" class="section level3">
-<h3><span class="header-section-number">2.6.2</span> Lagging Of Exposures</h3>
+<h3><span class="header-section-number">2.6.4</span> Lagging Of Exposures</h3>
 <p>If you are interested in seeing how exposures affect your outcome (e.g. <code>rainfall</code>) then you might want to consider lagging your exposure. This will show you <code>how did the rainfall from last week affect the number of cases this week?</code></p>
 
 </div>

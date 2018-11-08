@@ -25,7 +25,7 @@
 <meta name="author" content="Richard White">
 
 
-<meta name="date" content="2018-11-07">
+<meta name="date" content="2018-11-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -127,8 +127,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#autocorrelation-1"><i class="fa fa-check"></i><b>2.5</b> Autocorrelation</a></li>
 <li class="chapter" data-level="2.6" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#hints-for-future-analyses"><i class="fa fa-check"></i><b>2.6</b> Hints For Future Analyses</a><ul>
-<li class="chapter" data-level="2.6.1" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#zeroes-in-your-individial---aggregated-dataset"><i class="fa fa-check"></i><b>2.6.1</b> Zeroes In Your Individial -&gt; Aggregated Dataset</a></li>
-<li class="chapter" data-level="2.6.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#lagging-of-exposures"><i class="fa fa-check"></i><b>2.6.2</b> Lagging Of Exposures</a></li>
+<li class="chapter" data-level="2.6.1" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#always-use-a-denominator"><i class="fa fa-check"></i><b>2.6.1</b> Always Use A Denominator</a></li>
+<li class="chapter" data-level="2.6.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#negative-binomial-poisson"><i class="fa fa-check"></i><b>2.6.2</b> Negative Binomial &gt; Poisson</a></li>
+<li class="chapter" data-level="2.6.3" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#zeroes-in-your-individial---aggregated-dataset"><i class="fa fa-check"></i><b>2.6.3</b> Zeroes In Your Individial -&gt; Aggregated Dataset</a></li>
+<li class="chapter" data-level="2.6.4" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#lagging-of-exposures"><i class="fa fa-check"></i><b>2.6.4</b> Lagging Of Exposures</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html"><i class="fa fa-check"></i><b>3</b> Panel data - Multiple Areas</a><ul>
@@ -202,7 +204,7 @@ q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </s
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q</code></pre></div>
-<p><img src="website_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><img src="website_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <p>We then blindly run a linear regression and we see that the number of cases is decreasing over time.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>y))
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
@@ -210,7 +212,7 @@ q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </s
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q</code></pre></div>
-<p><img src="website_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p><img src="website_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 <p>However, once we reveal the geographical clustering in the data, we can see that our regression model is extremely wrong:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>y))
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">colour=</span><span class="kw">as.factor</span>(fylke)))
@@ -219,7 +221,8 @@ q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </s
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
 q</code></pre></div>
-<p><img src="website_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p><img src="website_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p><strong>Note:</strong> The differing <code>number of cases</code> in each geographical area could also be due to differing <code>populations</code>. Always remember to <code>use a denominator</code>!!!</p>
 </div>
 <div id="time-trend-within-geographical-areas" class="section level2">
 <h2><span class="header-section-number">3.4</span> Time Trend Within Geographical Areas</h2>
@@ -234,7 +237,7 @@ q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </s
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
 q</code></pre></div>
-<p><img src="website_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="website_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
 <p>So how do we achieve this? Basically, by identifying how the areas differ from each other, and then raising/lowering each area as appropriate. The amount that each area differs from the global average is called the <code>area-specific intercept</code>.</p>
 <p>Once we have removed the <code>area-specific intercept</code> from each geographical area, we can (basically) just run a normal regression to find the overall time trend.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[,yMinusIntercept<span class="op">:</span><span class="er">=</span>y]
@@ -248,7 +251,7 @@ q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </s
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases Minus Area-Specific Intercept&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
 q</code></pre></div>
-<p><img src="website_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="website_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
 </div>
 <div id="applying-the-regression-models" class="section level2">
 <h2><span class="header-section-number">3.5</span> Applying The Regression Models</h2>
