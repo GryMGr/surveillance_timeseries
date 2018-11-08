@@ -253,7 +253,7 @@ use a \texttt{2/3s\ transformation}.
 ##     lu <- (mu0^exponent + z * se)^(1/exponent)
 ##     return(lu)
 ## }
-## <bytecode: 0x5545a40>
+## <bytecode: 0x4080170>
 ## <environment: namespace:sykdomspuls>
 \end{verbatim}
 
@@ -647,7 +647,7 @@ estimates:
 ##     }
 ##     return(list(amplitude = amplitude, peak = peak, trough = trough))
 ## }
-## <bytecode: 0x5cea230>
+## <bytecode: 0x47ea6b8>
 ## <environment: namespace:RAWmisc>
 \end{verbatim}
 
@@ -781,7 +781,7 @@ residuals:
   \DataTypeTok{Cases =} \KeywordTok{c}\NormalTok{(}\DecValTok{350000}\NormalTok{, }\DecValTok{530000}\NormalTok{),}
   \DataTypeTok{Population =} \KeywordTok{c}\NormalTok{(}\DecValTok{3500000}\NormalTok{, }\DecValTok{5300000}\NormalTok{)}
 \NormalTok{)}
-\NormalTok{d[, }\StringTok{`}\DataTypeTok{Cases per 100.000 Pop}\StringTok{`} \OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{Cases }\OperatorTok{/}\StringTok{ }\NormalTok{Population }\OperatorTok{*}\StringTok{ }\DecValTok{100000}\NormalTok{]}
+\NormalTok{d[, }\StringTok{`}\DataTypeTok{Cases per}\CharTok{\textbackslash{}n}\DataTypeTok{100.000 Pop}\StringTok{`} \OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{Cases }\OperatorTok{/}\StringTok{ }\NormalTok{Population }\OperatorTok{*}\StringTok{ }\DecValTok{100000}\NormalTok{]}
 \NormalTok{d <-}\StringTok{ }\KeywordTok{melt.data.table}\NormalTok{(d, }\DataTypeTok{id.vars =} \StringTok{"year"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -797,9 +797,9 @@ this time period!
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_discrete}\NormalTok{(}\StringTok{"Year"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{"Number of people"}\NormalTok{, }\DataTypeTok{labels =}\NormalTok{ scales}\OperatorTok{::}\KeywordTok{format_format}\NormalTok{(}
   \DataTypeTok{big.mark =} \StringTok{"."}\NormalTok{,}
-  \DataTypeTok{decimal.mark =} \StringTok{","}\NormalTok{, }
+  \DataTypeTok{decimal.mark =} \StringTok{","}\NormalTok{,}
   \DataTypeTok{scientific =} \OtherTok{FALSE}
-\NormalTok{  ))}
+\NormalTok{))}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_fill_brewer}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{palette =} \StringTok{"Set1"}\NormalTok{)}
 \NormalTok{q}
 \end{Highlighting}
@@ -816,10 +816,10 @@ consideration, we can see that the rate is consistent over time.
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_col}\NormalTok{(}\DataTypeTok{position =} \StringTok{"dodge"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_discrete}\NormalTok{(}\StringTok{""}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{labels =}\NormalTok{ scales}\OperatorTok{::}\KeywordTok{format_format}\NormalTok{(}
-  \DataTypeTok{big.mark =} \StringTok{"."}\NormalTok{, }
-  \DataTypeTok{decimal.mark =} \StringTok{","}\NormalTok{, }
+  \DataTypeTok{big.mark =} \StringTok{"."}\NormalTok{,}
+  \DataTypeTok{decimal.mark =} \StringTok{","}\NormalTok{,}
   \DataTypeTok{scientific =} \OtherTok{FALSE}
-\NormalTok{  ))}
+\NormalTok{))}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_fill_brewer}\NormalTok{(}\StringTok{""}\NormalTok{, }\DataTypeTok{palette =} \StringTok{"Set1"}\NormalTok{)}
 \NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\NormalTok{variable, }\DataTypeTok{scales =} \StringTok{"free"}\NormalTok{)}
 \NormalTok{q}
@@ -830,6 +830,92 @@ consideration, we can see that the rate is consistent over time.
 
 \subsection{Negative Binomial Is Generally Better Than
 Poisson}\label{negative-binomial-is-generally-better-than-poisson}
+
+Let us consider linear regression.
+
+A linear regression model takes the form:
+
+\[
+y_i = \beta_0 + \beta_1 \times x_i + \text{error}_i
+\]
+
+Where
+
+\[
+\text{error}_i \sim N(0, \sigma)
+\] So basically, we have a straight line, and then the data is expected
+to be in a parallel band surrounding it:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{runif}\NormalTok{(}\DecValTok{1000}\NormalTok{) }\OperatorTok{*}\StringTok{ }\DecValTok{10}\NormalTok{)}
+\NormalTok{d[, y }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\DecValTok{3} \OperatorTok{+}\StringTok{ }\DecValTok{2} \OperatorTok{*}\StringTok{ }\NormalTok{x }\OperatorTok{+}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(.N)]}
+
+\NormalTok{fit <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{x, }\DataTypeTok{data =}\NormalTok{ d)}
+\NormalTok{resid_sd <-}\StringTok{ }\KeywordTok{sd}\NormalTok{(fit}\OperatorTok{$}\NormalTok{residuals)}
+
+\NormalTok{thresholds <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\OperatorTok{:}\DecValTok{10}\NormalTok{))}
+\NormalTok{thresholds[, pred }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit, }\DataTypeTok{newdata =}\NormalTok{ thresholds)]}
+\NormalTok{thresholds[, pred_l95 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{pred }\OperatorTok{-}\StringTok{ }\FloatTok{1.96} \OperatorTok{*}\StringTok{ }\NormalTok{resid_sd]}
+\NormalTok{thresholds[, pred_u95 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\NormalTok{pred }\OperatorTok{+}\StringTok{ }\FloatTok{1.96} \OperatorTok{*}\StringTok{ }\NormalTok{resid_sd]}
+
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ y))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ thresholds, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =}\NormalTok{ pred_l95, }\DataTypeTok{ymax =}\NormalTok{ pred_u95), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ thresholds, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ pred), }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\NormalTok{q}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{website_files/figure-latex/unnamed-chunk-21-1.pdf}
+
+Poisson regression operates under the strong assumption that
+\texttt{mean=variance}. This means that when the mean is 150 (e.g.~150
+cases per day), then the variance is also 150 (e.g.~we expect between
+126 and 174 cases each day). When the mean is 5 (e.g.~5 cases per day),
+then the variance is also 5 (e.g.~we expect between 1 and 10 cases each
+day).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{d <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{runif}\NormalTok{(}\DecValTok{1000}\NormalTok{) }\OperatorTok{*}\StringTok{ }\DecValTok{5}\NormalTok{)}
+\NormalTok{d[, mu }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{exp}\NormalTok{(}\FloatTok{0.1} \OperatorTok{+}\StringTok{ }\NormalTok{x)]}
+\NormalTok{d[, y }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{rpois}\NormalTok{(.N, mu)]}
+
+\NormalTok{fit <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{x, }\DataTypeTok{data =}\NormalTok{ d, }\DataTypeTok{family =} \StringTok{"poisson"}\NormalTok{)}
+\NormalTok{resid_sd <-}\StringTok{ }\KeywordTok{sd}\NormalTok{(fit}\OperatorTok{$}\NormalTok{residuals)}
+
+\NormalTok{thresholds <-}\StringTok{ }\KeywordTok{data.table}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\OperatorTok{:}\DecValTok{50}\NormalTok{) }\OperatorTok{/}\StringTok{ }\DecValTok{10}\NormalTok{)}
+\NormalTok{thresholds[, pred }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit, }\DataTypeTok{newdata =}\NormalTok{ thresholds, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)]}
+\NormalTok{thresholds[, pred_l95 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{qpois}\NormalTok{(}\FloatTok{0.025}\NormalTok{, pred)]}
+\NormalTok{thresholds[, pred_u95 }\OperatorTok{:}\ErrorTok{=}\StringTok{ }\KeywordTok{qpois}\NormalTok{(}\FloatTok{0.975}\NormalTok{, pred)]}
+
+\NormalTok{q <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ y))}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_ribbon}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ thresholds, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{ymin =}\NormalTok{ pred_l95, }\DataTypeTok{ymax =}\NormalTok{ pred_u95), }\DataTypeTok{alpha =} \FloatTok{0.5}\NormalTok{)}
+\NormalTok{q <-}\StringTok{ }\NormalTok{q }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ thresholds, }\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ pred), }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{lwd =} \DecValTok{2}\NormalTok{)}
+\NormalTok{q}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{website_files/figure-latex/unnamed-chunk-22-1.pdf}
+
+This assumption may be true, or it may not be true. However, the main
+point is that it is a strong assumption, which makes the poisson
+regression less flexible.
+
+A more flexible regression model for count data is the negative binomial
+model. Here, the ``dispersion'' (i.e.~variance of the data) is estimated
+separately from the mean. You can think of it as being similar to a
+linear regression.
+
+The benefits of the negative binomial regression model is that it is
+more flexible and is more likely to fit your data.
+
+The downside of the negative binomial regression model is that it needs
+more data and may not converge. It is recommended to try and run a
+negative binomial regression model first, and then if it fails to
+converge, then run a poisson regression.
 
 \subsection{Zeroes In Your Individial -\textgreater{} Aggregated
 Dataset}\label{zeroes-in-your-individial---aggregated-dataset}
@@ -880,7 +966,7 @@ If we collapse the data into months:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{collapsed <-}\StringTok{ }\NormalTok{d[,.(}
+\NormalTok{collapsed <-}\StringTok{ }\NormalTok{d[, .(}
   \DataTypeTok{n =}\NormalTok{ .N}
 \NormalTok{), keyby =}\StringTok{ }\NormalTok{.(}
 \NormalTok{  month}
@@ -1054,7 +1140,7 @@ We begin by blindly looking at the data.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{website_files/figure-latex/unnamed-chunk-27-1.pdf}
+\includegraphics{website_files/figure-latex/unnamed-chunk-29-1.pdf}
 
 We then blindly run a linear regression and we see that the number of
 cases is decreasing over time.
@@ -1070,7 +1156,7 @@ cases is decreasing over time.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{website_files/figure-latex/unnamed-chunk-28-1.pdf}
+\includegraphics{website_files/figure-latex/unnamed-chunk-30-1.pdf}
 
 However, once we reveal the geographical clustering in the data, we can
 see that our regression model is extremely wrong:
@@ -1087,7 +1173,7 @@ see that our regression model is extremely wrong:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{website_files/figure-latex/unnamed-chunk-29-1.pdf}
+\includegraphics{website_files/figure-latex/unnamed-chunk-31-1.pdf}
 
 \textbf{Note:} The differing \texttt{number\ of\ cases} in each
 geographical area could also be due to differing \texttt{populations}.
@@ -1114,7 +1200,7 @@ each geographical area:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{website_files/figure-latex/unnamed-chunk-30-1.pdf}
+\includegraphics{website_files/figure-latex/unnamed-chunk-32-1.pdf}
 
 So how do we achieve this? Basically, by identifying how the areas
 differ from each other, and then raising/lowering each area as
@@ -1141,7 +1227,7 @@ find the overall time trend.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{website_files/figure-latex/unnamed-chunk-31-1.pdf}
+\includegraphics{website_files/figure-latex/unnamed-chunk-33-1.pdf}
 
 \section{Applying The Regression
 Models}\label{applying-the-regression-models}

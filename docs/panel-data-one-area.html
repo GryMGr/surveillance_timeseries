@@ -397,7 +397,7 @@ pfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y <span class="o
 ##     }
 ##     return(list(amplitude = amplitude, peak = peak, trough = trough))
 ## }
-## &lt;bytecode: 0x6b3e6f8&gt;
+## &lt;bytecode: 0x6baf7c8&gt;
 ## &lt;environment: namespace:RAWmisc&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">retval &lt;-<span class="st"> </span>RAWmisc<span class="op">::</span><span class="kw">TransformCosSinToAmplitudePeakTrough</span>(
   <span class="dt">cos_b =</span> <span class="op">-</span><span class="fl">0.512912</span>, <span class="co"># cos coefficient</span>
@@ -451,7 +451,7 @@ d[, predicted <span class="op">:</span><span class="er">=</span><span class="st"
   <span class="dt">Cases =</span> <span class="kw">c</span>(<span class="dv">350000</span>, <span class="dv">530000</span>),
   <span class="dt">Population =</span> <span class="kw">c</span>(<span class="dv">3500000</span>, <span class="dv">5300000</span>)
 )
-d[, <span class="st">`</span><span class="dt">Cases per 100.000 Pop</span><span class="st">`</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span>Cases <span class="op">/</span><span class="st"> </span>Population <span class="op">*</span><span class="st"> </span><span class="dv">100000</span>]
+d[, <span class="st">`</span><span class="dt">Cases per</span><span class="ch">\n</span><span class="dt">100.000 Pop</span><span class="st">`</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span>Cases <span class="op">/</span><span class="st"> </span>Population <span class="op">*</span><span class="st"> </span><span class="dv">100000</span>]
 d &lt;-<span class="st"> </span><span class="kw">melt.data.table</span>(d, <span class="dt">id.vars =</span> <span class="st">&quot;year&quot;</span>)</code></pre></div>
 <p>We start out by considering the number of cases of a disease in 1950 and 2018. We see that the number of cases has increased dramatically over this time period!</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d[variable <span class="op">==</span><span class="st"> &quot;Cases&quot;</span>], <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> value, <span class="dt">fill =</span> variable))
@@ -459,9 +459,9 @@ q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </s
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_discrete</span>(<span class="st">&quot;Year&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Number of people&quot;</span>, <span class="dt">labels =</span> scales<span class="op">::</span><span class="kw">format_format</span>(
   <span class="dt">big.mark =</span> <span class="st">&quot;.&quot;</span>,
-  <span class="dt">decimal.mark =</span> <span class="st">&quot;,&quot;</span>, 
+  <span class="dt">decimal.mark =</span> <span class="st">&quot;,&quot;</span>,
   <span class="dt">scientific =</span> <span class="ot">FALSE</span>
-  ))
+))
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_fill_brewer</span>(<span class="st">&quot;&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)
 q</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
@@ -470,10 +470,10 @@ q</code></pre></div>
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_discrete</span>(<span class="st">&quot;&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;&quot;</span>, <span class="dt">labels =</span> scales<span class="op">::</span><span class="kw">format_format</span>(
-  <span class="dt">big.mark =</span> <span class="st">&quot;.&quot;</span>, 
-  <span class="dt">decimal.mark =</span> <span class="st">&quot;,&quot;</span>, 
+  <span class="dt">big.mark =</span> <span class="st">&quot;.&quot;</span>,
+  <span class="dt">decimal.mark =</span> <span class="st">&quot;,&quot;</span>,
   <span class="dt">scientific =</span> <span class="ot">FALSE</span>
-  ))
+))
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_fill_brewer</span>(<span class="st">&quot;&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>variable, <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>)
 q</code></pre></div>
@@ -481,6 +481,55 @@ q</code></pre></div>
 </div>
 <div id="negative-binomial-is-generally-better-than-poisson" class="section level3">
 <h3><span class="header-section-number">2.6.2</span> Negative Binomial Is Generally Better Than Poisson</h3>
+<p>Let us consider linear regression.</p>
+<p>A linear regression model takes the form:</p>
+<p><span class="math display">\[
+y_i = \beta_0 + \beta_1 \times x_i + \text{error}_i
+\]</span></p>
+<p>Where</p>
+<p><span class="math display">\[
+\text{error}_i \sim N(0, \sigma)
+\]</span> So basically, we have a straight line, and then the data is expected to be in a parallel band surrounding it:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">x =</span> <span class="kw">runif</span>(<span class="dv">1000</span>) <span class="op">*</span><span class="st"> </span><span class="dv">10</span>)
+d[, y <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="dv">3</span> <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(.N)]
+
+fit &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x, <span class="dt">data =</span> d)
+resid_sd &lt;-<span class="st"> </span><span class="kw">sd</span>(fit<span class="op">$</span>residuals)
+
+thresholds &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">10</span>))
+thresholds[, pred <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">predict</span>(fit, <span class="dt">newdata =</span> thresholds)]
+thresholds[, pred_l95 <span class="op">:</span><span class="er">=</span><span class="st"> </span>pred <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>resid_sd]
+thresholds[, pred_u95 <span class="op">:</span><span class="er">=</span><span class="st"> </span>pred <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>resid_sd]
+
+q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x =</span> x))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_ribbon</span>(<span class="dt">data =</span> thresholds, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">ymin =</span> pred_l95, <span class="dt">ymax =</span> pred_u95), <span class="dt">alpha =</span> <span class="fl">0.5</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">data =</span> thresholds, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)
+q</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>Poisson regression operates under the strong assumption that <code>mean=variance</code>. This means that when the mean is 150 (e.g. 150 cases per day), then the variance is also 150 (e.g. we expect between 126 and 174 cases each day). When the mean is 5 (e.g. 5 cases per day), then the variance is also 5 (e.g. we expect between 1 and 10 cases each day).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">x =</span> <span class="kw">runif</span>(<span class="dv">1000</span>) <span class="op">*</span><span class="st"> </span><span class="dv">5</span>)
+d[, mu <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">exp</span>(<span class="fl">0.1</span> <span class="op">+</span><span class="st"> </span>x)]
+d[, y <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">rpois</span>(.N, mu)]
+
+fit &lt;-<span class="st"> </span><span class="kw">glm</span>(y <span class="op">~</span><span class="st"> </span>x, <span class="dt">data =</span> d, <span class="dt">family =</span> <span class="st">&quot;poisson&quot;</span>)
+resid_sd &lt;-<span class="st"> </span><span class="kw">sd</span>(fit<span class="op">$</span>residuals)
+
+thresholds &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">50</span>) <span class="op">/</span><span class="st"> </span><span class="dv">10</span>)
+thresholds[, pred <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">predict</span>(fit, <span class="dt">newdata =</span> thresholds, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
+thresholds[, pred_l95 <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">qpois</span>(<span class="fl">0.025</span>, pred)]
+thresholds[, pred_u95 <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">qpois</span>(<span class="fl">0.975</span>, pred)]
+
+q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x =</span> x))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_ribbon</span>(<span class="dt">data =</span> thresholds, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">ymin =</span> pred_l95, <span class="dt">ymax =</span> pred_u95), <span class="dt">alpha =</span> <span class="fl">0.5</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">data =</span> thresholds, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">y =</span> pred), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)
+q</code></pre></div>
+<p><img src="website_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>This assumption may be true, or it may not be true. However, the main point is that it is a strong assumption, which makes the poisson regression less flexible.</p>
+<p>A more flexible regression model for count data is the negative binomial model. Here, the “dispersion” (i.e. variance of the data) is estimated separately from the mean. You can think of it as being similar to a linear regression.</p>
+<p>The benefits of the negative binomial regression model is that it is more flexible and is more likely to fit your data.</p>
+<p>The downside of the negative binomial regression model is that it needs more data and may not converge. It is recommended to try and run a negative binomial regression model first, and then if it fails to converge, then run a poisson regression.</p>
 </div>
 <div id="zeroes-in-your-individial---aggregated-dataset" class="section level3">
 <h3><span class="header-section-number">2.6.3</span> Zeroes In Your Individial -&gt; Aggregated Dataset</h3>
@@ -509,7 +558,7 @@ d[, month <span class="op">:</span><span class="er">=</span><span class="st"> </
 ## 174: 2000-12-30 174    12
 ## 175: 2000-12-31 175    12</code></pre>
 <p>If we collapse the data into months:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">collapsed &lt;-<span class="st"> </span>d[,.(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">collapsed &lt;-<span class="st"> </span>d[, .(
   <span class="dt">n =</span> .N
 ), keyby =<span class="st"> </span>.(
   month

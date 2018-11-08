@@ -204,7 +204,7 @@ q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </s
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q</code></pre></div>
-<p><img src="website_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="website_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
 <p>We then blindly run a linear regression and we see that the number of cases is decreasing over time.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> y))
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
@@ -212,7 +212,7 @@ q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </s
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Year&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q</code></pre></div>
-<p><img src="website_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="website_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
 <p>However, once we reveal the geographical clustering in the data, we can see that our regression model is extremely wrong:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> y))
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">colour =</span> <span class="kw">as.factor</span>(fylke)))
@@ -221,7 +221,7 @@ q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </s
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)
 q</code></pre></div>
-<p><img src="website_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p><img src="website_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
 <p><strong>Note:</strong> The differing <code>number of cases</code> in each geographical area could also be due to differing <code>populations</code>. Always remember to <code>use a denominator</code>!!!</p>
 </div>
 <div id="time-trend-within-geographical-areas" class="section level2">
@@ -237,7 +237,7 @@ q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </s
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)
 q</code></pre></div>
-<p><img src="website_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p><img src="website_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
 <p>So how do we achieve this? Basically, by identifying how the areas differ from each other, and then raising/lowering each area as appropriate. The amount that each area differs from the global average is called the <code>area-specific intercept</code>.</p>
 <p>Once we have removed the <code>area-specific intercept</code> from each geographical area, we can (basically) just run a normal regression to find the overall time trend.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[, yMinusIntercept <span class="op">:</span><span class="er">=</span><span class="st"> </span>y]
@@ -251,7 +251,7 @@ q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </s
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases Minus Area-Specific Intercept&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;Area&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)
 q</code></pre></div>
-<p><img src="website_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p><img src="website_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
 </div>
 <div id="applying-the-regression-models" class="section level2">
 <h2><span class="header-section-number">3.5</span> Applying The Regression Models</h2>
