@@ -78,6 +78,8 @@ q <- q + scale_colour_brewer("Area",palette="Set1")
 q
 ```
 
+**Note:** The differing `number of cases` in each geographical area could also be due to differing `populations`. Always remember to `use a denominator`!!!
+
 ## Time Trend Within Geographical Areas
 
 What we actually want to do, is observe the time trends `within` each geographical area:

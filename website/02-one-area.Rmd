@@ -231,6 +231,43 @@ pacf(d$residuals)
 
 ## Hints For Future Analyses
 
+### Always Use A Denominator
+
+```{r}
+d <- data.table(
+  year=c("1950","2018"),
+  Cases=c(350000,530000),
+  Population=c(3500000,5300000)
+)
+d[,`Cases per 100.000 Pop`:=Cases/Population*100000]
+d <- melt.data.table(d,id.vars="year")
+```
+
+We start out by considering the number of cases of a disease in 1950 and 2018. We see that the number of cases has increased dramatically over this time period!
+
+```{r}
+q <- ggplot(d[variable=="Cases"], aes(x=year,y=value,fill=variable))
+q <- q + geom_col()
+q <- q + scale_x_discrete("Year")
+q <- q + scale_y_continuous("Number of people", labels=scales::format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE))
+q <- q + scale_fill_brewer("",palette="Set1")
+q
+```
+
+However, upon taking the denominator (i.e. population) into consideration, we can see that the rate is consistent over time.
+
+```{r}
+q <- ggplot(d, aes(x=year,y=value,fill=variable))
+q <- q + geom_col(position="dodge")
+q <- q + scale_x_discrete("")
+q <- q + scale_y_continuous("", labels=scales::format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE))
+q <- q + scale_fill_brewer("Year",palette="Set1")
+q <- q + facet_wrap(~variable,scales="free")
+q
+```
+
+### Negative Binomial > Poisson 
+
 ### Zeroes In Your Individial -> Aggregated Dataset
 
 If your data is at the individual level (i.e. one row per case), then you will need to aggregate it to daily/weekly/monthly levels. If your data source is a registry, and you assume that your dataset contains all of the reported cases, then this means `"no reports"="no cases"`. This means that after aggregating, **you need to make sure that your collapsed/aggregated dataset has zeroes in it!!**
