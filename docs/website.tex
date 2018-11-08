@@ -253,7 +253,7 @@ use a \texttt{2/3s\ transformation}.
 ##     lu <- (mu0^exponent + z * se)^(1/exponent)
 ##     return(lu)
 ## }
-## <bytecode: 0x285f430>
+## <bytecode: 0x3076658>
 ## <environment: namespace:sykdomspuls>
 \end{verbatim}
 
@@ -646,7 +646,7 @@ estimates:
 ##     }
 ##     return(list(amplitude = amplitude, peak = peak, trough = trough))
 ## }
-## <bytecode: 0x61d7470>
+## <bytecode: 0x6a447e0>
 ## <environment: namespace:RAWmisc>
 \end{verbatim}
 
@@ -1079,7 +1079,24 @@ find the overall time trend.
 \section{Applying The Regression
 Models}\label{applying-the-regression-models}
 
-blah blah
+So how do you obtain \texttt{area-specific\ intercepts}? If you have a
+large amount of datapoints for each area, and not many areas, you can
+just include \texttt{area} as a categorical variable in your regression.
+These \texttt{area-specific\ intercepts} are called
+\texttt{fixed\ effects}.
+
+If you have few datapoints for each area, and a lot of areas, you will
+need to use a \texttt{mixed\ effects} regression model, including
+\texttt{random\ intercepts} for each \texttt{area}.
+
+\section{Hints For Future Analyses}\label{hints-for-future-analyses-1}
+
+In general:
+
+\[\text{number of observations} = \text{number of time points} \times \text{number of areas}\]
+
+So 5 years of data for aggregated Norway is worse than 5 years of data
+for every municipality in Norway.
 
 \bibliography{book.bib,packages.bib}
 

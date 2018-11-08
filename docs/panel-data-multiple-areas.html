@@ -137,6 +137,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.3" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html#investigating-the-data"><i class="fa fa-check"></i><b>3.3</b> Investigating the data</a></li>
 <li class="chapter" data-level="3.4" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html#time-trend-within-geographical-areas"><i class="fa fa-check"></i><b>3.4</b> Time Trend Within Geographical Areas</a></li>
 <li class="chapter" data-level="3.5" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html#applying-the-regression-models"><i class="fa fa-check"></i><b>3.5</b> Applying The Regression Models</a></li>
+<li class="chapter" data-level="3.6" data-path="panel-data-multiple-areas.html"><a href="panel-data-multiple-areas.html#hints-for-future-analyses-1"><i class="fa fa-check"></i><b>3.6</b> Hints For Future Analyses</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://www.fhi.no/" target="blank">www.fhi.no</a></li>
@@ -251,7 +252,14 @@ q</code></pre></div>
 </div>
 <div id="applying-the-regression-models" class="section level2">
 <h2><span class="header-section-number">3.5</span> Applying The Regression Models</h2>
-<p>blah blah</p>
+<p>So how do you obtain <code>area-specific intercepts</code>? If you have a large amount of datapoints for each area, and not many areas, you can just include <code>area</code> as a categorical variable in your regression. These <code>area-specific intercepts</code> are called <code>fixed effects</code>.</p>
+<p>If you have few datapoints for each area, and a lot of areas, you will need to use a <code>mixed effects</code> regression model, including <code>random intercepts</code> for each <code>area</code>.</p>
+</div>
+<div id="hints-for-future-analyses-1" class="section level2">
+<h2><span class="header-section-number">3.6</span> Hints For Future Analyses</h2>
+<p>In general:</p>
+<p><span class="math display">\[\text{number of observations} = \text{number of time points} \times \text{number of areas}\]</span></p>
+<p>So 5 years of data for aggregated Norway is worse than 5 years of data for every municipality in Norway.</p>
 
 </div>
 </div>
