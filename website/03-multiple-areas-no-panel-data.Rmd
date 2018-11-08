@@ -22,21 +22,21 @@ library(lme4)
 library(ggplot2)
 set.seed(4)
 
-fylkeIntercepts <- data.table(fylke=1:3,fylkeIntercepts=c(30,0,-30))
+fylkeIntercepts <- data.table(fylke = 1:3, fylkeIntercepts = c(30, 0, -30))
 
-d <- data.table(fylke=rep(1:3,each=100))
-d <- merge(d,fylkeIntercepts,by="fylke")
-d[,mainIntercept:=5]
-d[,x:=runif(.N)]
-d[,year:=sample(c(1950:2020),.N,replace=T)]
-d[,yearMinus1950:=year-1950]
-d[,mu := mainIntercept + fylkeIntercepts + 0.5*yearMinus1950]
-d[,y:=round(rnorm(.N,mu,sd=1))]
-#d[,y:=rpois(.N,mu)]
+d <- data.table(fylke = rep(1:3, each = 100))
+d <- merge(d, fylkeIntercepts, by = "fylke")
+d[, mainIntercept := 5]
+d[, x := runif(.N)]
+d[, year := sample(c(1950:2020), .N, replace = T)]
+d[, yearMinus1950 := year - 1950]
+d[, mu := mainIntercept + fylkeIntercepts + 0.5 * yearMinus1950]
+d[, y := round(rnorm(.N, mu, sd = 1))]
+# d[,y:=rpois(.N,mu)]
 
-d[fylke==1 & !year %in% c(1950:1980),y:=NA]
-d[fylke==2 & !year %in% c(1980:2000),y:=NA]
-d[fylke==3 & !year %in% c(2000:2020),y:=NA]
+d[fylke == 1 & !year %in% c(1950:1980), y := NA]
+d[fylke == 2 & !year %in% c(1980:2000), y := NA]
+d[fylke == 3 & !year %in% c(2000:2020), y := NA]
 
 d <- na.omit(d)
 ```
@@ -48,7 +48,7 @@ d <- na.omit(d)
 We begin by blindly looking at the data.
 
 ```{r}
-q <- ggplot(d,aes(x=year,y=y))
+q <- ggplot(d, aes(x = year, y = y))
 q <- q + geom_point()
 q <- q + scale_x_continuous("Year")
 q <- q + scale_y_continuous("Cases")
@@ -58,9 +58,9 @@ q
 We then blindly run a linear regression and we see that the number of cases is decreasing over time.
 
 ```{r}
-q <- ggplot(d,aes(x=year,y=y))
+q <- ggplot(d, aes(x = year, y = y))
 q <- q + geom_point()
-q <- q + stat_smooth(method="lm",se=F,colour="red")
+q <- q + stat_smooth(method = "lm", se = F, colour = "red")
 q <- q + scale_x_continuous("Year")
 q <- q + scale_y_continuous("Cases")
 q
@@ -69,12 +69,12 @@ q
 However, once we reveal the geographical clustering in the data, we can see that our regression model is extremely wrong: 
 
 ```{r}
-q <- ggplot(d,aes(x=year,y=y))
-q <- q + geom_point(mapping=aes(colour=as.factor(fylke)))
-q <- q + stat_smooth(method="lm",se=F,colour="red")
+q <- ggplot(d, aes(x = year, y = y))
+q <- q + geom_point(mapping = aes(colour = as.factor(fylke)))
+q <- q + stat_smooth(method = "lm", se = F, colour = "red")
 q <- q + scale_x_continuous("Year")
 q <- q + scale_y_continuous("Cases")
-q <- q + scale_colour_brewer("Area",palette="Set1")
+q <- q + scale_colour_brewer("Area", palette = "Set1")
 q
 ```
 
@@ -85,15 +85,15 @@ q
 What we actually want to do, is observe the time trends `within` each geographical area:
 
 ```{r}
-fit <- lm(y~as.factor(fylke) + yearMinus1950,data=d)
-d[,p:=predict(fit,newdata=d)]
+fit <- lm(y ~ as.factor(fylke) + yearMinus1950, data = d)
+d[, p := predict(fit, newdata = d)]
 
-q <- ggplot(d,aes(x=year,y=y))
-q <- q + geom_point(mapping=aes(colour=as.factor(fylke)))
-q <- q + geom_line(mapping=aes(y=p,group=as.factor(fylke)),colour="red")
+q <- ggplot(d, aes(x = year, y = y))
+q <- q + geom_point(mapping = aes(colour = as.factor(fylke)))
+q <- q + geom_line(mapping = aes(y = p, group = as.factor(fylke)), colour = "red")
 q <- q + scale_x_continuous("Year")
 q <- q + scale_y_continuous("Cases")
-q <- q + scale_colour_brewer("Area",palette="Set1")
+q <- q + scale_colour_brewer("Area", palette = "Set1")
 q
 ```
 
@@ -102,16 +102,16 @@ So how do we achieve this? Basically, by identifying how the areas differ from e
 Once we have removed the `area-specific intercept` from each geographical area, we can (basically) just run a normal regression to find the overall time trend.
 
 ```{r}
-d[,yMinusIntercept:=y]
-d[fylke==2,yMinusIntercept:=y--30.0944]
-d[fylke==3,yMinusIntercept:=y--59.6795]
+d[, yMinusIntercept := y]
+d[fylke == 2, yMinusIntercept := y - -30.0944]
+d[fylke == 3, yMinusIntercept := y - -59.6795]
 
-q <- ggplot(d,aes(x=year,y=yMinusIntercept))
-q <- q + geom_point(mapping=aes(colour=as.factor(fylke)))
-q <- q + stat_smooth(method="lm",se=F,colour="red")
+q <- ggplot(d, aes(x = year, y = yMinusIntercept))
+q <- q + geom_point(mapping = aes(colour = as.factor(fylke)))
+q <- q + stat_smooth(method = "lm", se = F, colour = "red")
 q <- q + scale_x_continuous("Year")
 q <- q + scale_y_continuous("Cases Minus Area-Specific Intercept")
-q <- q + scale_colour_brewer("Area",palette="Set1")
+q <- q + scale_colour_brewer("Area", palette = "Set1")
 q
 ```
 
@@ -119,7 +119,19 @@ q
 
 So how do you obtain `area-specific intercepts`? If you have a large amount of datapoints for each area, and not many areas, you can just include `area` as a categorical variable in your regression. These `area-specific intercepts` are called `fixed effects`.
 
+```{r}
+fit <- lm(y ~ as.factor(fylke) + yearMinus1950, data = d)
+summary(fit)
+```
+
 If you have few datapoints for each area, and a lot of areas, you will need to use a `mixed effects` regression model, including `random intercepts` for each `area`. 
+
+```{r}
+fit <- lme4::lmer(y ~ yearMinus1950 + (1 | fylke), data = d)
+summary(fit)
+
+lme4::ranef(fit)
+```
 
 ## Hints For Future Analyses
 
@@ -128,5 +140,6 @@ In general:
 $$\text{number of observations} = \text{number of time points} \times \text{number of areas}$$
 
 So 5 years of data for aggregated Norway is worse than 5 years of data for every municipality in Norway.
+
 
 

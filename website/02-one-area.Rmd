@@ -18,29 +18,30 @@ set.seed(4)
 AMPLITUDE <- 1.5
 SEASONAL_HORIZONTAL_SHIFT <- 20
 
-d <- data.table(date=seq.Date(
-  from=as.Date("2000-01-01"),
-  to=as.Date("2018-12-31"),
-  by=1))
-d[,date:=as.Date(date,origin="1970-01-1")]
-d[,year:=as.numeric(format.Date(date,"%G"))]
-d[,week:=as.numeric(format.Date(date,"%V"))]
-d[,month:=as.numeric(format.Date(date,"%m"))]
-d[,yearMinus2000:=year-2000]
-d[,dailyrainfall:=runif(.N, min=0, max=10)]
+d <- data.table(date = seq.Date(
+  from = as.Date("2000-01-01"),
+  to = as.Date("2018-12-31"),
+  by = 1
+))
+d[, date := as.Date(date, origin = "1970-01-1")]
+d[, year := as.numeric(format.Date(date, "%G"))]
+d[, week := as.numeric(format.Date(date, "%V"))]
+d[, month := as.numeric(format.Date(date, "%m"))]
+d[, yearMinus2000 := year - 2000]
+d[, dailyrainfall := runif(.N, min = 0, max = 10)]
 
-d[,dayOfYear:=as.numeric(format.Date(date,"%j"))]
-d[,seasonalEffect:=sin(2*pi*(dayOfYear-SEASONAL_HORIZONTAL_SHIFT)/365)]
-d[,mu := exp(0.1 + yearMinus2000*0.1 + seasonalEffect*AMPLITUDE)]
-d[,y:=rpois(.N,mu)]
+d[, dayOfYear := as.numeric(format.Date(date, "%j"))]
+d[, seasonalEffect := sin(2 * pi * (dayOfYear - SEASONAL_HORIZONTAL_SHIFT) / 365)]
+d[, mu := exp(0.1 + yearMinus2000 * 0.1 + seasonalEffect * AMPLITUDE)]
+d[, y := rpois(.N, mu)]
 ```
 
 ## Data
 
 Here we show the true data, and note that there is an increasing annual trend (the data gets higher as time goes on) and there is a seasonal pattern (one peak/trough per year)
 ```{r}
-q <- ggplot(d,aes(x=date,y=y))
-q <- q + geom_line(lwd=0.25)
+q <- ggplot(d, aes(x = date, y = y))
+q <- q + geom_line(lwd = 0.25)
 q <- q + scale_x_date("Time")
 q <- q + scale_y_continuous("Cases")
 q
@@ -49,10 +50,10 @@ q
 We split out the data for a few years and see a clear seasonal trend:
 
 ```{r message=FALSE, warning=FALSE}
-q <- ggplot(d[year %in% c(2005:2010)],aes(x=dayOfYear,y=y))
+q <- ggplot(d[year %in% c(2005:2010)], aes(x = dayOfYear, y = y))
 q <- q + facet_wrap(~year)
 q <- q + geom_point()
-q <- q + stat_smooth(colour="red")
+q <- q + stat_smooth(colour = "red")
 q <- q + scale_x_continuous("Day of year")
 q <- q + scale_y_continuous("Cases")
 q
@@ -66,8 +67,8 @@ If we want to investigate the seasonality of our data, and identify when are the
 - Create a categorical variable for the months (e.g. `Jan`, `Feb`, ..., `Dec`) and include this in the regression model
 
 ```{r}
-nfit0 <- glm(y~yearMinus2000 + dailyrainfall, data=d, family=poisson())
-nfit1 <- glm(y~yearMinus2000 + dailyrainfall + as.factor(month), data=d, family=poisson())
+nfit0 <- glm(y ~ yearMinus2000 + dailyrainfall, data = d, family = poisson())
+nfit1 <- glm(y ~ yearMinus2000 + dailyrainfall + as.factor(month), data = d, family = poisson())
 ```
 
 ### Seasonality
@@ -116,12 +117,12 @@ d[, threshold2 := sykdomspuls::FarringtonThreshold(pred, phi = 1, z = 2, skewnes
 **Question 5:** When are there outbreaks?
 
 ```{r}
-q <- ggplot(d[year>2015],aes(x=date,y=y))
-q <- q + geom_ribbon(mapping=aes(ymin=-Inf,ymax=threshold2),fill="green",alpha=0.5)
-q <- q + geom_ribbon(mapping=aes(ymin=threshold2,ymax=Inf),fill="red",alpha=0.5)
-q <- q + geom_line(lwd=0.25)
-q <- q + geom_point(data=d[year>2015 & y>threshold2],colour="black",size=2.5)
-q <- q + geom_point(data=d[year>2015 & y>threshold2],colour="red",size=1.5)
+q <- ggplot(d[year > 2015], aes(x = date, y = y))
+q <- q + geom_ribbon(mapping = aes(ymin = -Inf, ymax = threshold2), fill = "blue", alpha = 0.5)
+q <- q + geom_ribbon(mapping = aes(ymin = threshold2, ymax = Inf), fill = "red", alpha = 0.5)
+q <- q + geom_line(lwd = 0.25)
+q <- q + geom_point(data = d[year > 2015 & y > threshold2], colour = "black", size = 2.5)
+q <- q + geom_point(data = d[year > 2015 & y > threshold2], colour = "red", size = 1.5)
 q <- q + scale_x_date("Time")
 q <- q + scale_y_continuous("Cases")
 q
@@ -143,19 +144,19 @@ Parametric approaches are more powerful but require more effort:
 The Lomb-Scargle Periodogram shows a clear seasonality with a period of 365 days.
 
 ```{r}
-# R CODE 
-lomb::lsp(d$y,from=100,to=500,ofac=1,type="period")
+# R CODE
+lomb::lsp(d$y, from = 100, to = 500, ofac = 1, type = "period")
 ```
 
 We then generate two new variables `cos365` and `sin365` and perform a likelihood ratio test to see if they are significant or not. This is done with two simple poisson regressions.
 
 ```{r}
 # R CODE
-d[,cos365:=cos(dayOfYear*2*pi/365)]
-d[,sin365:=sin(dayOfYear*2*pi/365)]
+d[, cos365 := cos(dayOfYear * 2 * pi / 365)]
+d[, sin365 := sin(dayOfYear * 2 * pi / 365)]
 
-pfit0 <- glm(y~yearMinus2000 + dailyrainfall, data=d, family=poisson())
-pfit1 <- glm(y~yearMinus2000 + dailyrainfall + sin365 + cos365, data=d, family=poisson())
+pfit0 <- glm(y ~ yearMinus2000 + dailyrainfall, data = d, family = poisson())
+pfit1 <- glm(y ~ yearMinus2000 + dailyrainfall + sin365 + cos365, data = d, family = poisson())
 ```
 
 We can test the seasonality using a likelihood ratio test (which we already strongly suspected due to the periodogram):
@@ -186,15 +187,15 @@ RAWmisc::TransformCosSinToAmplitudePeakTrough
 retval <- RAWmisc::TransformCosSinToAmplitudePeakTrough(
   cos_b = -0.512912, # cos coefficient
   sin_b = 1.428417 # sin coefficient
-  )
+)
 
-print(sprintf("amplitude is estimated as %s",round(retval$amplitude,2)))
-print(sprintf("peak is estimated as %s",round(retval$peak)))
-print(sprintf("trough is estimated as %s",round(retval$trough)))
+print(sprintf("amplitude is estimated as %s", round(retval$amplitude, 2)))
+print(sprintf("peak is estimated as %s", round(retval$peak)))
+print(sprintf("trough is estimated as %s", round(retval$trough)))
 
-print(sprintf("true amplitude is %s",round(AMPLITUDE,2)))
-print(sprintf("true peak is %s",round(365/4+SEASONAL_HORIZONTAL_SHIFT)))
-print(sprintf("true trough is %s",round(3*365/4+SEASONAL_HORIZONTAL_SHIFT)))
+print(sprintf("true amplitude is %s", round(AMPLITUDE, 2)))
+print(sprintf("true peak is %s", round(365 / 4 + SEASONAL_HORIZONTAL_SHIFT)))
+print(sprintf("true trough is %s", round(3 * 365 / 4 + SEASONAL_HORIZONTAL_SHIFT)))
 ```
 
 *NOTE:* An amplitude of 1.5 means that when comparing the average time of year to the peak, the peak is expected to be `exp(1.5)=4.5` times higher than average. We take the exponential because we have run a poisson regression (so think incident rate ratio).
@@ -216,16 +217,16 @@ We check the `pacf` of the residuals to ensure that there is no autocorrelation.
 Here we see that our non-parametric seasonality model has not accounted for all of the associations in the data, so there is some autocorrelation in the residuals:
 
 ```{r}
-d[,residuals:=residuals(nfit1, type = "response")]
-d[,predicted:=predict(nfit1, type = "response")]
+d[, residuals := residuals(nfit1, type = "response")]
+d[, predicted := predict(nfit1, type = "response")]
 pacf(d$residuals)
 ```
 
 Here we see that our parametric seasonality model has  accounted for all of the associations in the data, so there is no autocorrelation in the residuals:
 
 ```{r}
-d[,residuals:=residuals(pfit1, type = "response")]
-d[,predicted:=predict(pfit1, type = "response")]
+d[, residuals := residuals(pfit1, type = "response")]
+d[, predicted := predict(pfit1, type = "response")]
 pacf(d$residuals)
 ```
 
@@ -235,38 +236,48 @@ pacf(d$residuals)
 
 ```{r}
 d <- data.table(
-  year=c("1950","2018"),
-  Cases=c(350000,530000),
-  Population=c(3500000,5300000)
+  year = c("1950", "2018"),
+  Cases = c(350000, 530000),
+  Population = c(3500000, 5300000)
 )
-d[,`Cases per 100.000 Pop`:=Cases/Population*100000]
-d <- melt.data.table(d,id.vars="year")
+d[, `Cases per 100.000 Pop` := Cases / Population * 100000]
+d <- melt.data.table(d, id.vars = "year")
 ```
 
 We start out by considering the number of cases of a disease in 1950 and 2018. We see that the number of cases has increased dramatically over this time period!
 
 ```{r}
-q <- ggplot(d[variable=="Cases"], aes(x=year,y=value,fill=variable))
+q <- ggplot(d[variable == "Cases"], aes(x = year, y = value, fill = variable))
 q <- q + geom_col()
 q <- q + scale_x_discrete("Year")
-q <- q + scale_y_continuous("Number of people", labels=scales::format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE))
-q <- q + scale_fill_brewer("",palette="Set1")
+q <- q + scale_y_continuous("Number of people", labels = scales::format_format(
+  big.mark = ".",
+  decimal.mark = ",", 
+  scientific = FALSE
+  ))
+q <- q + scale_fill_brewer("", palette = "Set1")
 q
 ```
 
 However, upon taking the denominator (i.e. population) into consideration, we can see that the rate is consistent over time.
 
 ```{r}
-q <- ggplot(d, aes(x=year,y=value,fill=variable))
-q <- q + geom_col(position="dodge")
+q <- ggplot(d, aes(x = year, y = value, fill = variable))
+q <- q + geom_col(position = "dodge")
 q <- q + scale_x_discrete("")
-q <- q + scale_y_continuous("", labels=scales::format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE))
-q <- q + scale_fill_brewer("Year",palette="Set1")
-q <- q + facet_wrap(~variable,scales="free")
+q <- q + scale_y_continuous("", labels = scales::format_format(
+  big.mark = ".", 
+  decimal.mark = ",", 
+  scientific = FALSE
+  ))
+q <- q + scale_fill_brewer("", palette = "Set1")
+q <- q + facet_wrap(~variable, scales = "free")
 q
 ```
 
-### Negative Binomial > Poisson 
+### Negative Binomial Is Generally Better Than Poisson
+
+
 
 ### Zeroes In Your Individial -> Aggregated Dataset
 
@@ -275,13 +286,14 @@ If your data is at the individual level (i.e. one row per case), then you will n
 In the following dataset, we have one case per day from `2000-01-01` until `2000-01-29` and then again one case per day from `2000-08-08` until `2000-12-31`.
 
 ```{r}
-d <- data.table(date=seq.Date(
-  from=as.Date("2000-01-01"),
-  to=as.Date("2000-12-31"),
-  by=1))
+d <- data.table(date = seq.Date(
+  from = as.Date("2000-01-01"),
+  to = as.Date("2000-12-31"),
+  by = 1
+))
 d <- d[-c(30:220)]
-d[,id:=1:.N]
-d[,month:=as.numeric(format.Date(date,"%m"))]
+d[, id := 1:.N]
+d[, month := as.numeric(format.Date(date, "%m"))]
 
 print(d)
 ```
@@ -290,8 +302,10 @@ If we collapse the data into months:
 
 ```{r}
 collapsed <- d[,.(
-  n=.N
-), keyby=.(month)]
+  n = .N
+), keyby = .(
+  month
+)]
 
 print(collapsed)
 ```
@@ -301,21 +315,21 @@ You see that we are missing months `1` through to `6`. We cannot analyse this da
 How do we fix this? We create a `skeleton` of our results:
 
 ```{r}
-skeleton <- data.table(month=1:12)
+skeleton <- data.table(month = 1:12)
 print(skeleton)
 ```
 
 We then merge our collapsed data with the skeleton:
 
 ```{r}
-final <- merge(skeleton, collapsed, by="month", all.x=TRUE)
+final <- merge(skeleton, collapsed, by = "month", all.x = TRUE)
 print(final)
 ```
 
 We then set all of the "missing" to 0:
 
 ```{r}
-final[is.na(n), n:=0]
+final[is.na(n), n := 0]
 print(final)
 ```
 
@@ -324,6 +338,7 @@ Now we can analyze our data!
 ### Lagging Of Exposures
 
 If you are interested in seeing how exposures affect your outcome (e.g. `rainfall`) then you might want to consider lagging your exposure. This will show you `how did the rainfall from last week affect the number of cases this week?`
+
 
 
 
