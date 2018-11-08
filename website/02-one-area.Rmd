@@ -252,9 +252,9 @@ q <- q + geom_col()
 q <- q + scale_x_discrete("Year")
 q <- q + scale_y_continuous("Number of people", labels = scales::format_format(
   big.mark = ".",
-  decimal.mark = ",", 
+  decimal.mark = ",",
   scientific = FALSE
-  ))
+))
 q <- q + scale_fill_brewer("", palette = "Set1")
 q
 ```
@@ -266,10 +266,10 @@ q <- ggplot(d, aes(x = year, y = value, fill = variable))
 q <- q + geom_col(position = "dodge")
 q <- q + scale_x_discrete("")
 q <- q + scale_y_continuous("", labels = scales::format_format(
-  big.mark = ".", 
-  decimal.mark = ",", 
+  big.mark = ".",
+  decimal.mark = ",",
   scientific = FALSE
-  ))
+))
 q <- q + scale_fill_brewer("", palette = "Set1")
 q <- q + facet_wrap(~variable, scales = "free")
 q
@@ -277,7 +277,70 @@ q
 
 ### Negative Binomial Is Generally Better Than Poisson
 
+Let us consider linear regression.
 
+A linear regression model takes the form:
+
+$$
+y_i = \beta_0 + \beta_1 \times x_i + \text{error}_i
+$$
+
+Where
+
+$$
+\text{error}_i \sim N(0, \sigma)
+$$
+So basically, we have a straight line, and then the data is expected to be in a parallel band surrounding it:
+
+```{r}
+d <- data.table(x = runif(1000) * 10)
+d[, y := 3 + 2 * x + rnorm(.N)]
+
+fit <- lm(y ~ x, data = d)
+resid_sd <- sd(fit$residuals)
+
+thresholds <- data.table(x = c(0:10))
+thresholds[, pred := predict(fit, newdata = thresholds)]
+thresholds[, pred_l95 := pred - 1.96 * resid_sd]
+thresholds[, pred_u95 := pred + 1.96 * resid_sd]
+
+q <- ggplot(d, aes(x = x))
+q <- q + geom_point(mapping = aes(y = y))
+q <- q + geom_ribbon(data = thresholds, mapping = aes(ymin = pred_l95, ymax = pred_u95), alpha = 0.5)
+q <- q + geom_line(data = thresholds, mapping = aes(y = pred), colour = "red", lwd = 2)
+q
+```
+
+Poisson regression operates under the strong assumption that `mean=variance`. This means that when the mean is 150 (e.g. 150 cases per day), then the variance is also 150 (e.g. we expect between `r qpois(0.025,150)` and `r qpois(0.975,150)` cases each day). When the mean is 5 (e.g. 5 cases per day), then the variance is also 5 (e.g. we expect between `r qpois(0.025,5)` and `r qpois(0.975,5)` cases each day).
+
+```{r}
+
+d <- data.table(x = runif(1000) * 5)
+d[, mu := exp(0.1 + x)]
+d[, y := rpois(.N, mu)]
+
+fit <- glm(y ~ x, data = d, family = "poisson")
+resid_sd <- sd(fit$residuals)
+
+thresholds <- data.table(x = c(0:50) / 10)
+thresholds[, pred := predict(fit, newdata = thresholds, type = "response")]
+thresholds[, pred_l95 := qpois(0.025, pred)]
+thresholds[, pred_u95 := qpois(0.975, pred)]
+
+q <- ggplot(d, aes(x = x))
+q <- q + geom_point(mapping = aes(y = y))
+q <- q + geom_ribbon(data = thresholds, mapping = aes(ymin = pred_l95, ymax = pred_u95), alpha = 0.5)
+q <- q + geom_line(data = thresholds, mapping = aes(y = pred), colour = "red", lwd = 2)
+q
+```
+
+This assumption may be true, or it may not be true. However, the main point is that it is a strong assumption, which makes the poisson regression less flexible.
+
+A more flexible regression model for count data is the negative binomial model. Here, the "dispersion" (i.e. variance of the data) is estimated separately from the mean. You can think of it as being similar to a linear regression.
+
+The benefits of the negative binomial regression model is that it is more flexible and is more likely to fit your data.
+
+The downside of the negative binomial regression model is that it needs more data and may not converge. It is recommended to try and run a negative binomial regression model first, and then if it fails to converge, then run a poisson regression.
 
 ### Zeroes In Your Individial -> Aggregated Dataset
 
@@ -301,7 +364,7 @@ print(d)
 If we collapse the data into months:
 
 ```{r}
-collapsed <- d[,.(
+collapsed <- d[, .(
   n = .N
 ), keyby = .(
   month
@@ -338,6 +401,7 @@ Now we can analyze our data!
 ### Lagging Of Exposures
 
 If you are interested in seeing how exposures affect your outcome (e.g. `rainfall`) then you might want to consider lagging your exposure. This will show you `how did the rainfall from last week affect the number of cases this week?`
+
 
 
 
