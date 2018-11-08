@@ -128,7 +128,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#autocorrelation-1"><i class="fa fa-check"></i><b>2.5</b> Autocorrelation</a></li>
 <li class="chapter" data-level="2.6" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#hints-for-future-analyses"><i class="fa fa-check"></i><b>2.6</b> Hints For Future Analyses</a><ul>
 <li class="chapter" data-level="2.6.1" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#always-use-a-denominator"><i class="fa fa-check"></i><b>2.6.1</b> Always Use A Denominator</a></li>
-<li class="chapter" data-level="2.6.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#negative-binomial-poisson"><i class="fa fa-check"></i><b>2.6.2</b> Negative Binomial &gt; Poisson</a></li>
+<li class="chapter" data-level="2.6.2" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#negative-binomial-is-generally-better-than-poisson"><i class="fa fa-check"></i><b>2.6.2</b> Negative Binomial Is Generally Better Than Poisson</a></li>
 <li class="chapter" data-level="2.6.3" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#zeroes-in-your-individial---aggregated-dataset"><i class="fa fa-check"></i><b>2.6.3</b> Zeroes In Your Individial -&gt; Aggregated Dataset</a></li>
 <li class="chapter" data-level="2.6.4" data-path="panel-data-one-area.html"><a href="panel-data-one-area.html#lagging-of-exposures"><i class="fa fa-check"></i><b>2.6.4</b> Lagging Of Exposures</a></li>
 </ul></li>
@@ -180,36 +180,37 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 AMPLITUDE &lt;-<span class="st"> </span><span class="fl">1.5</span>
 SEASONAL_HORIZONTAL_SHIFT &lt;-<span class="st"> </span><span class="dv">20</span>
 
-d &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">date=</span><span class="kw">seq.Date</span>(
-  <span class="dt">from=</span><span class="kw">as.Date</span>(<span class="st">&quot;2000-01-01&quot;</span>),
-  <span class="dt">to=</span><span class="kw">as.Date</span>(<span class="st">&quot;2018-12-31&quot;</span>),
-  <span class="dt">by=</span><span class="dv">1</span>))
-d[,date<span class="op">:</span><span class="er">=</span><span class="kw">as.Date</span>(date,<span class="dt">origin=</span><span class="st">&quot;1970-01-1&quot;</span>)]
-d[,year<span class="op">:</span><span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date,<span class="st">&quot;%G&quot;</span>))]
-d[,week<span class="op">:</span><span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date,<span class="st">&quot;%V&quot;</span>))]
-d[,month<span class="op">:</span><span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date,<span class="st">&quot;%m&quot;</span>))]
-d[,yearMinus2000<span class="op">:</span><span class="er">=</span>year<span class="op">-</span><span class="dv">2000</span>]
-d[,dailyrainfall<span class="op">:</span><span class="er">=</span><span class="kw">runif</span>(.N, <span class="dt">min=</span><span class="dv">0</span>, <span class="dt">max=</span><span class="dv">10</span>)]
+d &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">date =</span> <span class="kw">seq.Date</span>(
+  <span class="dt">from =</span> <span class="kw">as.Date</span>(<span class="st">&quot;2000-01-01&quot;</span>),
+  <span class="dt">to =</span> <span class="kw">as.Date</span>(<span class="st">&quot;2018-12-31&quot;</span>),
+  <span class="dt">by =</span> <span class="dv">1</span>
+))
+d[, date <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">as.Date</span>(date, <span class="dt">origin =</span> <span class="st">&quot;1970-01-1&quot;</span>)]
+d[, year <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date, <span class="st">&quot;%G&quot;</span>))]
+d[, week <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date, <span class="st">&quot;%V&quot;</span>))]
+d[, month <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date, <span class="st">&quot;%m&quot;</span>))]
+d[, yearMinus2000 <span class="op">:</span><span class="er">=</span><span class="st"> </span>year <span class="op">-</span><span class="st"> </span><span class="dv">2000</span>]
+d[, dailyrainfall <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">runif</span>(.N, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">10</span>)]
 
-d[,dayOfYear<span class="op">:</span><span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date,<span class="st">&quot;%j&quot;</span>))]
-d[,seasonalEffect<span class="op">:</span><span class="er">=</span><span class="kw">sin</span>(<span class="dv">2</span><span class="op">*</span>pi<span class="op">*</span>(dayOfYear<span class="op">-</span>SEASONAL_HORIZONTAL_SHIFT)<span class="op">/</span><span class="dv">365</span>)]
-d[,mu <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">exp</span>(<span class="fl">0.1</span> <span class="op">+</span><span class="st"> </span>yearMinus2000<span class="op">*</span><span class="fl">0.1</span> <span class="op">+</span><span class="st"> </span>seasonalEffect<span class="op">*</span>AMPLITUDE)]
-d[,y<span class="op">:</span><span class="er">=</span><span class="kw">rpois</span>(.N,mu)]</code></pre></div>
+d[, dayOfYear <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date, <span class="st">&quot;%j&quot;</span>))]
+d[, seasonalEffect <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">sin</span>(<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">*</span><span class="st"> </span>(dayOfYear <span class="op">-</span><span class="st"> </span>SEASONAL_HORIZONTAL_SHIFT) <span class="op">/</span><span class="st"> </span><span class="dv">365</span>)]
+d[, mu <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">exp</span>(<span class="fl">0.1</span> <span class="op">+</span><span class="st"> </span>yearMinus2000 <span class="op">*</span><span class="st"> </span><span class="fl">0.1</span> <span class="op">+</span><span class="st"> </span>seasonalEffect <span class="op">*</span><span class="st"> </span>AMPLITUDE)]
+d[, y <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">rpois</span>(.N, mu)]</code></pre></div>
 </div>
 <div id="data" class="section level2">
 <h2><span class="header-section-number">2.2</span> Data</h2>
 <p>Here we show the true data, and note that there is an increasing annual trend (the data gets higher as time goes on) and there is a seasonal pattern (one peak/trough per year)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d,<span class="kw">aes</span>(<span class="dt">x=</span>date,<span class="dt">y=</span>y))
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">lwd=</span><span class="fl">0.25</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">lwd =</span> <span class="fl">0.25</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_date</span>(<span class="st">&quot;Time&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>We split out the data for a few years and see a clear seasonal trend:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d[year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2005</span><span class="op">:</span><span class="dv">2010</span>)],<span class="kw">aes</span>(<span class="dt">x=</span>dayOfYear,<span class="dt">y=</span>y))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d[year <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">2005</span><span class="op">:</span><span class="dv">2010</span>)], <span class="kw">aes</span>(<span class="dt">x =</span> dayOfYear, <span class="dt">y =</span> y))
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>year)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">stat_smooth</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="st">&quot;Day of year&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q</code></pre></div>
@@ -222,8 +223,8 @@ q</code></pre></div>
 <li>Create a categorical variable for the seasons (e.g. <code>spring</code>, <code>summer</code>, <code>autumn</code>, <code>winter</code>) and include this in the regression model</li>
 <li>Create a categorical variable for the months (e.g. <code>Jan</code>, <code>Feb</code>, …, <code>Dec</code>) and include this in the regression model</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nfit0 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op">~</span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall, <span class="dt">data=</span>d, <span class="dt">family=</span><span class="kw">poisson</span>())
-nfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op">~</span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall <span class="op">+</span><span class="st"> </span><span class="kw">as.factor</span>(month), <span class="dt">data=</span>d, <span class="dt">family=</span><span class="kw">poisson</span>())</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nfit0 &lt;-<span class="st"> </span><span class="kw">glm</span>(y <span class="op">~</span><span class="st"> </span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall, <span class="dt">data =</span> d, <span class="dt">family =</span> <span class="kw">poisson</span>())
+nfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y <span class="op">~</span><span class="st"> </span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall <span class="op">+</span><span class="st"> </span><span class="kw">as.factor</span>(month), <span class="dt">data =</span> d, <span class="dt">family =</span> <span class="kw">poisson</span>())</code></pre></div>
 <div id="seasonality" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Seasonality</h3>
 <p>We can test the <code>month</code> categorical variable using a likelihood ratio test:</p>
@@ -296,12 +297,12 @@ nfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op
 d[, threshold0 <span class="op">:</span><span class="er">=</span><span class="st"> </span>pred<span class="op">$</span>fit]
 d[, threshold2 <span class="op">:</span><span class="er">=</span><span class="st"> </span>sykdomspuls<span class="op">::</span><span class="kw">FarringtonThreshold</span>(pred, <span class="dt">phi =</span> <span class="dv">1</span>, <span class="dt">z =</span> <span class="dv">2</span>, <span class="dt">skewness.transform =</span> <span class="st">&quot;2/3&quot;</span>)]</code></pre></div>
 <p><strong>Question 5:</strong> When are there outbreaks?</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d[year<span class="op">&gt;</span><span class="dv">2015</span>],<span class="kw">aes</span>(<span class="dt">x=</span>date,<span class="dt">y=</span>y))
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_ribbon</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">ymin=</span><span class="op">-</span><span class="ot">Inf</span>,<span class="dt">ymax=</span>threshold2),<span class="dt">fill=</span><span class="st">&quot;green&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.5</span>)
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_ribbon</span>(<span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">ymin=</span>threshold2,<span class="dt">ymax=</span><span class="ot">Inf</span>),<span class="dt">fill=</span><span class="st">&quot;red&quot;</span>,<span class="dt">alpha=</span><span class="fl">0.5</span>)
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">lwd=</span><span class="fl">0.25</span>)
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>d[year<span class="op">&gt;</span><span class="dv">2015</span> <span class="op">&amp;</span><span class="st"> </span>y<span class="op">&gt;</span>threshold2],<span class="dt">colour=</span><span class="st">&quot;black&quot;</span>,<span class="dt">size=</span><span class="fl">2.5</span>)
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>d[year<span class="op">&gt;</span><span class="dv">2015</span> <span class="op">&amp;</span><span class="st"> </span>y<span class="op">&gt;</span>threshold2],<span class="dt">colour=</span><span class="st">&quot;red&quot;</span>,<span class="dt">size=</span><span class="fl">1.5</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d[year <span class="op">&gt;</span><span class="st"> </span><span class="dv">2015</span>], <span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> y))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_ribbon</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">ymin =</span> <span class="op">-</span><span class="ot">Inf</span>, <span class="dt">ymax =</span> threshold2), <span class="dt">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_ribbon</span>(<span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">ymin =</span> threshold2, <span class="dt">ymax =</span> <span class="ot">Inf</span>), <span class="dt">fill =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">lwd =</span> <span class="fl">0.25</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data =</span> d[year <span class="op">&gt;</span><span class="st"> </span><span class="dv">2015</span> <span class="op">&amp;</span><span class="st"> </span>y <span class="op">&gt;</span><span class="st"> </span>threshold2], <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">size =</span> <span class="fl">2.5</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data =</span> d[year <span class="op">&gt;</span><span class="st"> </span><span class="dv">2015</span> <span class="op">&amp;</span><span class="st"> </span>y <span class="op">&gt;</span><span class="st"> </span>threshold2], <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.5</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_date</span>(<span class="st">&quot;Time&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Cases&quot;</span>)
 q</code></pre></div>
@@ -321,16 +322,16 @@ q</code></pre></div>
 <div id="seasonality-1" class="section level3">
 <h3><span class="header-section-number">2.4.1</span> Seasonality</h3>
 <p>The Lomb-Scargle Periodogram shows a clear seasonality with a period of 365 days.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R CODE </span>
-lomb<span class="op">::</span><span class="kw">lsp</span>(d<span class="op">$</span>y,<span class="dt">from=</span><span class="dv">100</span>,<span class="dt">to=</span><span class="dv">500</span>,<span class="dt">ofac=</span><span class="dv">1</span>,<span class="dt">type=</span><span class="st">&quot;period&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R CODE</span>
+lomb<span class="op">::</span><span class="kw">lsp</span>(d<span class="op">$</span>y, <span class="dt">from =</span> <span class="dv">100</span>, <span class="dt">to =</span> <span class="dv">500</span>, <span class="dt">ofac =</span> <span class="dv">1</span>, <span class="dt">type =</span> <span class="st">&quot;period&quot;</span>)</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>We then generate two new variables <code>cos365</code> and <code>sin365</code> and perform a likelihood ratio test to see if they are significant or not. This is done with two simple poisson regressions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R CODE</span>
-d[,cos365<span class="op">:</span><span class="er">=</span><span class="kw">cos</span>(dayOfYear<span class="op">*</span><span class="dv">2</span><span class="op">*</span>pi<span class="op">/</span><span class="dv">365</span>)]
-d[,sin365<span class="op">:</span><span class="er">=</span><span class="kw">sin</span>(dayOfYear<span class="op">*</span><span class="dv">2</span><span class="op">*</span>pi<span class="op">/</span><span class="dv">365</span>)]
+d[, cos365 <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">cos</span>(dayOfYear <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">/</span><span class="st"> </span><span class="dv">365</span>)]
+d[, sin365 <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">sin</span>(dayOfYear <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>pi <span class="op">/</span><span class="st"> </span><span class="dv">365</span>)]
 
-pfit0 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op">~</span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall, <span class="dt">data=</span>d, <span class="dt">family=</span><span class="kw">poisson</span>())
-pfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op">~</span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall <span class="op">+</span><span class="st"> </span>sin365 <span class="op">+</span><span class="st"> </span>cos365, <span class="dt">data=</span>d, <span class="dt">family=</span><span class="kw">poisson</span>())</code></pre></div>
+pfit0 &lt;-<span class="st"> </span><span class="kw">glm</span>(y <span class="op">~</span><span class="st"> </span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall, <span class="dt">data =</span> d, <span class="dt">family =</span> <span class="kw">poisson</span>())
+pfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y <span class="op">~</span><span class="st"> </span>yearMinus2000 <span class="op">+</span><span class="st"> </span>dailyrainfall <span class="op">+</span><span class="st"> </span>sin365 <span class="op">+</span><span class="st"> </span>cos365, <span class="dt">data =</span> d, <span class="dt">family =</span> <span class="kw">poisson</span>())</code></pre></div>
 <p>We can test the seasonality using a likelihood ratio test (which we already strongly suspected due to the periodogram):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lmtest<span class="op">::</span><span class="kw">lrtest</span>(pfit0, pfit1)</code></pre></div>
 <pre><code>## Likelihood ratio test
@@ -396,24 +397,24 @@ pfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op
 ##     }
 ##     return(list(amplitude = amplitude, peak = peak, trough = trough))
 ## }
-## &lt;bytecode: 0x613c718&gt;
+## &lt;bytecode: 0x6b3e6f8&gt;
 ## &lt;environment: namespace:RAWmisc&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">retval &lt;-<span class="st"> </span>RAWmisc<span class="op">::</span><span class="kw">TransformCosSinToAmplitudePeakTrough</span>(
   <span class="dt">cos_b =</span> <span class="op">-</span><span class="fl">0.512912</span>, <span class="co"># cos coefficient</span>
   <span class="dt">sin_b =</span> <span class="fl">1.428417</span> <span class="co"># sin coefficient</span>
-  )
+)
 
-<span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;amplitude is estimated as %s&quot;</span>,<span class="kw">round</span>(retval<span class="op">$</span>amplitude,<span class="dv">2</span>)))</code></pre></div>
+<span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;amplitude is estimated as %s&quot;</span>, <span class="kw">round</span>(retval<span class="op">$</span>amplitude, <span class="dv">2</span>)))</code></pre></div>
 <pre><code>## [1] &quot;amplitude is estimated as 1.52&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;peak is estimated as %s&quot;</span>,<span class="kw">round</span>(retval<span class="op">$</span>peak)))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;peak is estimated as %s&quot;</span>, <span class="kw">round</span>(retval<span class="op">$</span>peak)))</code></pre></div>
 <pre><code>## [1] &quot;peak is estimated as 112&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;trough is estimated as %s&quot;</span>,<span class="kw">round</span>(retval<span class="op">$</span>trough)))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;trough is estimated as %s&quot;</span>, <span class="kw">round</span>(retval<span class="op">$</span>trough)))</code></pre></div>
 <pre><code>## [1] &quot;trough is estimated as 295&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;true amplitude is %s&quot;</span>,<span class="kw">round</span>(AMPLITUDE,<span class="dv">2</span>)))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;true amplitude is %s&quot;</span>, <span class="kw">round</span>(AMPLITUDE, <span class="dv">2</span>)))</code></pre></div>
 <pre><code>## [1] &quot;true amplitude is 1.5&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;true peak is %s&quot;</span>,<span class="kw">round</span>(<span class="dv">365</span><span class="op">/</span><span class="dv">4</span><span class="op">+</span>SEASONAL_HORIZONTAL_SHIFT)))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;true peak is %s&quot;</span>, <span class="kw">round</span>(<span class="dv">365</span> <span class="op">/</span><span class="st"> </span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>SEASONAL_HORIZONTAL_SHIFT)))</code></pre></div>
 <pre><code>## [1] &quot;true peak is 111&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;true trough is %s&quot;</span>,<span class="kw">round</span>(<span class="dv">3</span><span class="op">*</span><span class="dv">365</span><span class="op">/</span><span class="dv">4</span><span class="op">+</span>SEASONAL_HORIZONTAL_SHIFT)))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">sprintf</span>(<span class="st">&quot;true trough is %s&quot;</span>, <span class="kw">round</span>(<span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="dv">365</span> <span class="op">/</span><span class="st"> </span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>SEASONAL_HORIZONTAL_SHIFT)))</code></pre></div>
 <pre><code>## [1] &quot;true trough is 294&quot;</code></pre>
 <p><em>NOTE:</em> An amplitude of 1.5 means that when comparing the average time of year to the peak, the peak is expected to be <code>exp(1.5)=4.5</code> times higher than average. We take the exponential because we have run a poisson regression (so think incident rate ratio).</p>
 <p><strong>Question 2:</strong> If seasonality exists, when are the high/low seasons?</p>
@@ -431,13 +432,13 @@ pfit1 &lt;-<span class="st"> </span><span class="kw">glm</span>(y<span class="op
 <h2><span class="header-section-number">2.5</span> Autocorrelation</h2>
 <p>We check the <code>pacf</code> of the residuals to ensure that there is no autocorrelation. If we observe autocorrelation in our residuals, then we need to use a <code>robust</code> variance estimator (i.e. it makes our estimated variances bigger to account for our poor model fitting).</p>
 <p>Here we see that our non-parametric seasonality model has not accounted for all of the associations in the data, so there is some autocorrelation in the residuals:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[,residuals<span class="op">:</span><span class="er">=</span><span class="kw">residuals</span>(nfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
-d[,predicted<span class="op">:</span><span class="er">=</span><span class="kw">predict</span>(nfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[, residuals <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">residuals</span>(nfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
+d[, predicted <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">predict</span>(nfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
 <span class="kw">pacf</span>(d<span class="op">$</span>residuals)</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p>Here we see that our parametric seasonality model has accounted for all of the associations in the data, so there is no autocorrelation in the residuals:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[,residuals<span class="op">:</span><span class="er">=</span><span class="kw">residuals</span>(pfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
-d[,predicted<span class="op">:</span><span class="er">=</span><span class="kw">predict</span>(pfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d[, residuals <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">residuals</span>(pfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
+d[, predicted <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">predict</span>(pfit1, <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)]
 <span class="kw">pacf</span>(d<span class="op">$</span>residuals)</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
@@ -446,44 +447,53 @@ d[,predicted<span class="op">:</span><span class="er">=</span><span class="kw">p
 <div id="always-use-a-denominator" class="section level3">
 <h3><span class="header-section-number">2.6.1</span> Always Use A Denominator</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.table</span>(
-  <span class="dt">year=</span><span class="kw">c</span>(<span class="st">&quot;1950&quot;</span>,<span class="st">&quot;2018&quot;</span>),
-  <span class="dt">Cases=</span><span class="kw">c</span>(<span class="dv">350000</span>,<span class="dv">530000</span>),
-  <span class="dt">Population=</span><span class="kw">c</span>(<span class="dv">3500000</span>,<span class="dv">5300000</span>)
+  <span class="dt">year =</span> <span class="kw">c</span>(<span class="st">&quot;1950&quot;</span>, <span class="st">&quot;2018&quot;</span>),
+  <span class="dt">Cases =</span> <span class="kw">c</span>(<span class="dv">350000</span>, <span class="dv">530000</span>),
+  <span class="dt">Population =</span> <span class="kw">c</span>(<span class="dv">3500000</span>, <span class="dv">5300000</span>)
 )
-d[,<span class="st">`</span><span class="dt">Cases per 100.000 Pop</span><span class="st">`</span><span class="op">:</span><span class="er">=</span>Cases<span class="op">/</span>Population<span class="op">*</span><span class="dv">100000</span>]
-d &lt;-<span class="st"> </span><span class="kw">melt.data.table</span>(d,<span class="dt">id.vars=</span><span class="st">&quot;year&quot;</span>)</code></pre></div>
+d[, <span class="st">`</span><span class="dt">Cases per 100.000 Pop</span><span class="st">`</span> <span class="op">:</span><span class="er">=</span><span class="st"> </span>Cases <span class="op">/</span><span class="st"> </span>Population <span class="op">*</span><span class="st"> </span><span class="dv">100000</span>]
+d &lt;-<span class="st"> </span><span class="kw">melt.data.table</span>(d, <span class="dt">id.vars =</span> <span class="st">&quot;year&quot;</span>)</code></pre></div>
 <p>We start out by considering the number of cases of a disease in 1950 and 2018. We see that the number of cases has increased dramatically over this time period!</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d[variable<span class="op">==</span><span class="st">&quot;Cases&quot;</span>], <span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>value,<span class="dt">fill=</span>variable))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d[variable <span class="op">==</span><span class="st"> &quot;Cases&quot;</span>], <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> value, <span class="dt">fill =</span> variable))
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>()
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_discrete</span>(<span class="st">&quot;Year&quot;</span>)
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Number of people&quot;</span>, <span class="dt">labels=</span>scales<span class="op">::</span><span class="kw">format_format</span>(<span class="dt">big.mark =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">decimal.mark =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">scientific =</span> <span class="ot">FALSE</span>))
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_fill_brewer</span>(<span class="st">&quot;&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;Number of people&quot;</span>, <span class="dt">labels =</span> scales<span class="op">::</span><span class="kw">format_format</span>(
+  <span class="dt">big.mark =</span> <span class="st">&quot;.&quot;</span>,
+  <span class="dt">decimal.mark =</span> <span class="st">&quot;,&quot;</span>, 
+  <span class="dt">scientific =</span> <span class="ot">FALSE</span>
+  ))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_fill_brewer</span>(<span class="st">&quot;&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)
 q</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <p>However, upon taking the denominator (i.e. population) into consideration, we can see that the rate is consistent over time.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x=</span>year,<span class="dt">y=</span>value,<span class="dt">fill=</span>variable))
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">position=</span><span class="st">&quot;dodge&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">q &lt;-<span class="st"> </span><span class="kw">ggplot</span>(d, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> value, <span class="dt">fill =</span> variable))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)
 q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_discrete</span>(<span class="st">&quot;&quot;</span>)
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;&quot;</span>, <span class="dt">labels=</span>scales<span class="op">::</span><span class="kw">format_format</span>(<span class="dt">big.mark =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">decimal.mark =</span> <span class="st">&quot;,&quot;</span>, <span class="dt">scientific =</span> <span class="ot">FALSE</span>))
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_fill_brewer</span>(<span class="st">&quot;Year&quot;</span>,<span class="dt">palette=</span><span class="st">&quot;Set1&quot;</span>)
-q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>variable,<span class="dt">scales=</span><span class="st">&quot;free&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_continuous</span>(<span class="st">&quot;&quot;</span>, <span class="dt">labels =</span> scales<span class="op">::</span><span class="kw">format_format</span>(
+  <span class="dt">big.mark =</span> <span class="st">&quot;.&quot;</span>, 
+  <span class="dt">decimal.mark =</span> <span class="st">&quot;,&quot;</span>, 
+  <span class="dt">scientific =</span> <span class="ot">FALSE</span>
+  ))
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">scale_fill_brewer</span>(<span class="st">&quot;&quot;</span>, <span class="dt">palette =</span> <span class="st">&quot;Set1&quot;</span>)
+q &lt;-<span class="st"> </span>q <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>variable, <span class="dt">scales =</span> <span class="st">&quot;free&quot;</span>)
 q</code></pre></div>
 <p><img src="website_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 </div>
-<div id="negative-binomial-poisson" class="section level3">
-<h3><span class="header-section-number">2.6.2</span> Negative Binomial &gt; Poisson</h3>
+<div id="negative-binomial-is-generally-better-than-poisson" class="section level3">
+<h3><span class="header-section-number">2.6.2</span> Negative Binomial Is Generally Better Than Poisson</h3>
 </div>
 <div id="zeroes-in-your-individial---aggregated-dataset" class="section level3">
 <h3><span class="header-section-number">2.6.3</span> Zeroes In Your Individial -&gt; Aggregated Dataset</h3>
 <p>If your data is at the individual level (i.e. one row per case), then you will need to aggregate it to daily/weekly/monthly levels. If your data source is a registry, and you assume that your dataset contains all of the reported cases, then this means <code>&quot;no reports&quot;=&quot;no cases&quot;</code>. This means that after aggregating, <strong>you need to make sure that your collapsed/aggregated dataset has zeroes in it!!</strong></p>
 <p>In the following dataset, we have one case per day from <code>2000-01-01</code> until <code>2000-01-29</code> and then again one case per day from <code>2000-08-08</code> until <code>2000-12-31</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">date=</span><span class="kw">seq.Date</span>(
-  <span class="dt">from=</span><span class="kw">as.Date</span>(<span class="st">&quot;2000-01-01&quot;</span>),
-  <span class="dt">to=</span><span class="kw">as.Date</span>(<span class="st">&quot;2000-12-31&quot;</span>),
-  <span class="dt">by=</span><span class="dv">1</span>))
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">date =</span> <span class="kw">seq.Date</span>(
+  <span class="dt">from =</span> <span class="kw">as.Date</span>(<span class="st">&quot;2000-01-01&quot;</span>),
+  <span class="dt">to =</span> <span class="kw">as.Date</span>(<span class="st">&quot;2000-12-31&quot;</span>),
+  <span class="dt">by =</span> <span class="dv">1</span>
+))
 d &lt;-<span class="st"> </span>d[<span class="op">-</span><span class="kw">c</span>(<span class="dv">30</span><span class="op">:</span><span class="dv">220</span>)]
-d[,id<span class="op">:</span><span class="er">=</span><span class="dv">1</span><span class="op">:</span>.N]
-d[,month<span class="op">:</span><span class="er">=</span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date,<span class="st">&quot;%m&quot;</span>))]
+d[, id <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="dv">1</span><span class="op">:</span>.N]
+d[, month <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">format.Date</span>(date, <span class="st">&quot;%m&quot;</span>))]
 
 <span class="kw">print</span>(d)</code></pre></div>
 <pre><code>##            date  id month
@@ -500,8 +510,10 @@ d[,month<span class="op">:</span><span class="er">=</span><span class="kw">as.nu
 ## 175: 2000-12-31 175    12</code></pre>
 <p>If we collapse the data into months:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">collapsed &lt;-<span class="st"> </span>d[,.(
-  <span class="dt">n=</span>.N
-), keyby=.(month)]
+  <span class="dt">n =</span> .N
+), keyby =<span class="st"> </span>.(
+  month
+)]
 
 <span class="kw">print</span>(collapsed)</code></pre></div>
 <pre><code>##    month  n
@@ -513,7 +525,7 @@ d[,month<span class="op">:</span><span class="er">=</span><span class="kw">as.nu
 ## 6:    12 31</code></pre>
 <p>You see that we are missing months <code>1</code> through to <code>6</code>. We cannot analyse this data, because <strong>we do not have any zeros</strong>.</p>
 <p>How do we fix this? We create a <code>skeleton</code> of our results:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">skeleton &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">month=</span><span class="dv">1</span><span class="op">:</span><span class="dv">12</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">skeleton &lt;-<span class="st"> </span><span class="kw">data.table</span>(<span class="dt">month =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>)
 <span class="kw">print</span>(skeleton)</code></pre></div>
 <pre><code>##     month
 ##  1:     1
@@ -529,7 +541,7 @@ d[,month<span class="op">:</span><span class="er">=</span><span class="kw">as.nu
 ## 11:    11
 ## 12:    12</code></pre>
 <p>We then merge our collapsed data with the skeleton:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">final &lt;-<span class="st"> </span><span class="kw">merge</span>(skeleton, collapsed, <span class="dt">by=</span><span class="st">&quot;month&quot;</span>, <span class="dt">all.x=</span><span class="ot">TRUE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">final &lt;-<span class="st"> </span><span class="kw">merge</span>(skeleton, collapsed, <span class="dt">by =</span> <span class="st">&quot;month&quot;</span>, <span class="dt">all.x =</span> <span class="ot">TRUE</span>)
 <span class="kw">print</span>(final)</code></pre></div>
 <pre><code>##     month  n
 ##  1:     1 29
@@ -545,7 +557,7 @@ d[,month<span class="op">:</span><span class="er">=</span><span class="kw">as.nu
 ## 11:    11 30
 ## 12:    12 31</code></pre>
 <p>We then set all of the “missing” to 0:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">final[<span class="kw">is.na</span>(n), n<span class="op">:</span><span class="er">=</span><span class="dv">0</span>]
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">final[<span class="kw">is.na</span>(n), n <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="dv">0</span>]
 <span class="kw">print</span>(final)</code></pre></div>
 <pre><code>##     month  n
 ##  1:     1 29
